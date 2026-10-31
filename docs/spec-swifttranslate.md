@@ -1,9 +1,9 @@
-# Spec H: SwiftTranslate (competitor to Google Translate by Hark Translate)
+# Spec H: SwiftTranslate
 
 Approved by the user 2026-10-29 (full-queue automation authorization,
 voice call). Score 66.
 
-## The incumbent
+## The comparable listing
 
 Google Translate by Hark Translate: 5,975 subscribers, rated 4/5
 (41 votes), service level 84% (roughly one request in six fails at the
