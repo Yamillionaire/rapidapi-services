@@ -1,7 +1,7 @@
-# RapidAPI Competitor Services - Build Status
+# RapidAPI Services - Build Status
 
 DEPLOYED LIVE 2026-10-28 (free Render plan, from the public repo
-github.com/Yamillionaire/rapidapi-competitors, commit d3e7bf3):
+github.com/Yamillionaire/rapidapi-services, commit d3e7bf3):
 - Currency: https://stablefx-currency-rates.onrender.com (srv-dbh1vrtg1s2s73ci2pa0)
 - Email: https://cleanlist-email-verifier.onrender.com (srv-dbh1vtvf3r2c73atjoig)
 - Financials: https://edgar-fundamentals.onrender.com (srv-dbh1vv8ae00c73dl7obg)
@@ -17,24 +17,24 @@ RapidAPI provider listings pointing at these base URLs, with pricing from the
 specs, each shown to the user as a preview before publishing. RAPIDAPI_PROXY_SECRET
 env vars get set on each service once the listings exist.
 
-User directed 2026-10-28: build all three competitors (Currency, Email, Yahu Financials).
+User directed 2026-10-28: build all three services (Currency, Email, Financials).
 All three run on one shared zero-dependency Python scaffold (shared/rapidapi_server.py):
 stdlib HTTP server, explicit JSON error objects (never a silent 204 or bare 500),
 TTL cache with stale-on-error serving, optional RapidAPI proxy-secret check via
 RAPIDAPI_PROXY_SECRET env. Zero dependencies means free-tier hosting anywhere
 (Render free account is the planned deploy target) and instant cold starts.
 
-## 1. currency/ - StableFX Currency Rates (vs fyhao Currency Exchange)
+## 1. currency/ - StableFX Currency Rates
 Endpoints: /latest, /convert, /historical, /currencies, /health.
 Data: Frankfurter (ECB daily reference rates), Fawaz API fallback, last-good cache
 served flagged stale instead of a 503. Honest label: daily reference, not trading quotes.
 TESTED LIVE 2026-10-28:
 - /latest USD: EUR 0.89686, GBP 0.7503 (2026-10-27 ECB day). Cold 1,267ms (upstream-bound).
-- Same call warm from cache: 2ms. Incumbent's listed latency: 23,769ms at 22% service level.
+- Same call warm from cache: 2ms. Comparison listing's latency: 23,769ms at 22% service level.
 - /convert 100 USD to EUR = 89.686. Correct.
 - /historical 2024-01-15 returns that day's rates.
 Pricing (from spec): Basic free 1,000/mo; Pro free 10,000/mo (hook); Ultra $10 (net $7.50);
-Mega $20 (net $15). Incumbent: $10 / $20 / $30.
+Mega $20 (net $15). Comparable listing: $10 / $20 / $30.
 TERMS VERIFIED 2026-10-28: Frankfurter is open source (MIT) and its rates are
 free for commercial use (ECB and central-bank reference data). Fawaz is the
 fallback only. Deploy package ready (render.yaml at project root).
@@ -42,7 +42,7 @@ REMAINING: deploy to Render from the user's account, create RapidAPI provider
 listing (user's account, preview first). Noted upgrade path: Frankfurter v2
 covers 160+ currencies from 100+ central banks versus v1's ECB-only set.
 
-## 2. emailcheck/ - CleanList Email Verifier (vs Top-Rated E-mail Check)
+## 2. emailcheck/ - CleanList Email Verifier
 Endpoint: /check?email= with separately labeled checks: syntax, disposable,
 MX/DNS via DNS-over-HTTPS, role account. Mailbox probing deliberately NOT faked:
 it ships as a separate labeled mode later.
@@ -56,13 +56,13 @@ TESTED LIVE 2026-10-28 (5-case set, then re-tested after fixes, all passing):
 UPDATE 2026-10-28: the full open disposable list is loaded (FFraud-com list, MIT
 license, 224,300 domains in data/disposable_domains.txt, rebuilt upstream every
 30 minutes; production refetches daily). Verified live: addresses at idwager.com
-and bialode.com, the two domains the incumbent's own users publicly complained
-it missed, are both REJECTED here; Gmail regression still passes.
+and bialode.com, the two domains users of a comparable service publicly complained
+were missed, are both REJECTED here; Gmail regression still passes.
 REMAINING: accuracy test set publication, deploy, listing.
 First production run is planned as the dogfood pass on the user's own email database.
 
-## 3. financials/ - EDGAR Fundamentals (vs ApiDojo Yahu Financials)
-Endpoints mirror the incumbent's paths: /stock/get-fundamentals, /stock/v2/get-timeseries.
+## 3. financials/ - EDGAR Fundamentals
+Endpoints: /stock/get-fundamentals, /stock/v2/get-timeseries.
 Data: SEC EDGAR company-facts (free, public domain, no key), cached 24h.
 TESTED LIVE 2026-10-28:
 - AAPL annualTotalRevenues: 19 consecutive annual periods, 2007-2025, zero nulls,
@@ -70,14 +70,14 @@ TESTED LIVE 2026-10-28:
   years; merging was required - the first pass had gaps in 2018-2020 and the
   re-check caught it). FY2018 = 265,595,000,000 and FY2020 = 274,515,000,000,
   matching Apple's reported figures exactly. All-periods revenue count: 36.
-  Incumbent: series capped at 5, revenues null except the last period.
+  Comparable service: series capped at 5, revenues null except the last period.
 - TSLA annual revenues: 17 periods, 2009-2025.
 - pegRatio returns an explicit explanation object plus a real trailing
   earningsGrowth5yrPct computed from filings (AAPL 7.39%), never a silent null.
 FREE ENDPOINTS ADDED 2026-10-28 (user approved free-only launch the same day):
 /stock/v2/get-summary serves company name, exchange, SIC industry, fiscal year
-end and HQ from EDGAR (AAPL and TSLA verified live), filling the incumbent's
-missing name/exchange complaint at $0. /stock/v2/get-recommendations serves
+end and HQ from EDGAR (AAPL and TSLA verified live), filling the missing
+name/exchange gap at $0. /stock/v2/get-recommendations serves
 related tickers as SEC SIC industry peers (AAPL returns DELL, OMCL, OSS, OURA,
 SCKT; method labeled in the response, not passed off as a popularity feed).
 REMAINING (the one real cost decision, deferred by the user until revenue):
@@ -90,23 +90,23 @@ does not cover resale. Massive (formerly Polygon) marks every self-serve plan
 individual use; its Business plan with a commercial license runs about
 $2,000/mo. Financial Modeling Prep requires a separate Data Display and
 Licensing Agreement (no self-serve price). PLAN: launch fundamentals-only at
-$0 (that is where the incumbent's complaints and our proven fix are), and add
+$0 (that is where the documented complaints and our proven fix are), and add
 quotes only when the API's own subscription revenue covers the license
 (breakeven roughly 17 Ultra subs at $15 net or 2 Mega at $217.50 net against a
 $250/mo Tiingo startup redistribution tier), so the license is never an
 out-of-pocket cost. Then build the quote endpoints and related tickers
 (EDGAR industry peers), deploy, listing.
 
-## 8. swifttranslate/ - SwiftTranslate (vs Hark Translate Google Translate)
+## 8. swifttranslate/ - SwiftTranslate
 
 BUILT AND DEPLOYED 2026-10-29 (queue #8, score 66; user authorized the full
 automated queue run in a voice call). Render srv-dbhfe08n74is73d8e020,
 https://swifttranslate-72rx.onrender.com (GitHub commit 8e8ed8a0). Endpoints
-mirror the incumbent's v2 surface with the same response envelope:
+follow the familiar v2 surface with the same response envelope:
 GET /language/translate/v2 (q, target, optional source), /detect, /languages
 (107 codes), /health. Engine: Gemini 3.6 Flash (2.5-flash retired for new
-users; 3.8-flash too slow). Reliability design answers the incumbent's 84%
-service level and its unanswered "API unreachable" complaint: explicit JSON
+users; 3.8-flash too slow). Reliability design answers the 84%
+service level and unanswered "API unreachable" complaints seen in the market: explicit JSON
 errors always, one engine retry, 24h cache serving stale (flagged) on engine
 error. No key yet: translate/detect return an explicit 503
 engine_not_configured; nothing is faked.
@@ -117,7 +117,7 @@ with the production payload through the Gemini connector (Spanish to English
 correct, proper names intact, ~4.1s; French detection ~2.6s; two transient
 Google 503s observed during testing, hence the retry). Deployed /health live
 and reporting the engine as awaiting configuration.
-Pricing: BASIC $0/1,000mo; PRO $0/10,000mo (the incumbent's $9 tier, free);
+Pricing: BASIC $0/1,000mo; PRO $0/10,000mo (the $9 market tier, free);
 ULTRA $9/100,000mo; MEGA $29/500,000mo, hard limits.
 REMAINING: user adds GEMINI_API_KEY to this service's Render Environment
 (same one-time step as SwiftRewrite), then the Studio listing (PRIVATE),
@@ -125,7 +125,7 @@ proxy secret + gate verification, publish, Hub gateway test, and the
 Spotlight post (docs/swifttranslate-reliability.md) - all via the parent's
 browser tasks. Keep-warm now covers nine services, 09:00-11:00 ET.
 
-## 9. newsbase/ - NewsBase Headlines (vs BFD Google News)
+## 9. newsbase/ - NewsBase Headlines
 Endpoints: /headlines, /search, /topic/{topic}, /source/{source}, /topics, /health.
 Data: Google News RSS (editions, search, topic sections) plus direct outlet RSS
 (BBC, NPR, The Guardian, Al Jazeera, NYT), $0, no key. Complaint fixes are the
@@ -137,11 +137,11 @@ DEPLOYED 2026-10-29: https://newsbase-headlines.onrender.com
 16-case local set, every response strict-JSON-valid (27/27); GB and IN editions
 return their own headlines; a BBC story's image is the BBC CDN URL itself and
 answers HEAD 200 image/jpeg. Pricing (spec): Basic $0/250mo; Pro $15/10,000mo;
-Ultra $40/75,000mo; Mega $90/300,000mo hard. Incumbent: $25/$50/$100.
+Ultra $40/75,000mo; Mega $90/300,000mo hard. Comparable listing: $25/$50/$100.
 REMAINING: Studio listing, proxy gate, publish, Spotlight (parent browser route;
 package at listings/newsbase-openapi.json, proof doc docs/newsbase-reliability.md).
 
-## 10. whoisbase/ - WhoisBase (vs Zozor54 Whois Lookup)
+## 10. whoisbase/ - WhoisBase
 Endpoints: /lookup?domain= (fresh/force optional), /domain/{domain}, /tlds, /health.
 Data: live RDAP via the IANA bootstrap (data.iana.org/rdap/dns.json) plus a
 port-43 fallback to the registry's own whois server for TLDs with no RDAP
@@ -163,20 +163,20 @@ VERIFIED LIVE FROM RENDER - nic.at, eurid.eu, rnids.rs (6 nameservers after
 the DNS-label parser fix), example.de (DENIC restriction labeled); deployed
 cache, fresh and negative-result behavior all matching local results.
 Pricing (planned, hard limits): BASIC $0/250mo; PRO $0/10,000mo (the
-incumbent's $10 Pro, free); ULTRA $20/100,000mo; MEGA $70/500,000mo.
-Incumbent: $10/$30/$80. Keep-warm now covers ten services, 09:00-11:00 ET
+the market's $10 Pro tier, free); ULTRA $20/100,000mo; MEGA $70/500,000mo.
+Comparable listing: $10/$30/$80. Keep-warm now covers ten services, 09:00-11:00 ET
 (620h worst month vs the 750 cap).
 REMAINING: Studio listing, proxy-secret wiring with gate verification,
 publish, Hub gateway test, Spotlight (parent browser route; package at
 listings/whoisbase-openapi.json, proof doc docs/whoisbase-freshness.md).
 
-## 11. swiftread/ - SwiftRead (the user's own product; no incumbent)
+## 11. swiftread/ - SwiftRead (the user's own product)
 Endpoints: POST /read-url {url, voice?, rate?} -> audio/mpeg, POST /speak
 {text, voice?, rate?} -> audio/mpeg, GET /voices, GET /health.
 The user's own idea (2026-10-30 voice call): the "listen to this article"
-button as an API. No RapidAPI competitor offers URL-in article extraction
-at all; the fix list was built from the TTS rivals' public complaints
-(swiftread-competitor-fixlist-2026-10-30.md). Extraction is the
+button as an API. No comparable RapidAPI service offers URL-in article extraction
+at all; the fix list was built from public complaints about rival TTS services
+(swiftread-fixlist-2026-10-30.md). Extraction is the
 CleanExtract stack (SSRF-hardened); speech is the free Microsoft Edge
 neural set via edge-tts ($0 marginal). FULL CATALOG since 2026-10-31
 (owner directive): 322 voices, 142 locales, 75 languages shipped as
@@ -224,9 +224,9 @@ Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves
 each listing preview. PayPal payout linking on RapidAPI is the user's own tap.
 
-## wordbase/ - WordBase Dictionary (vs dpventures WordsAPI)
-Built 2026-10-29 (Spec G, docs/spec-wordsapi-competitor.md). Endpoints mirror
-WordsAPI: /words/{word} full record, per-relation endpoints (definitions,
+## wordbase/ - WordBase Dictionary
+Built 2026-10-29 (Spec G, docs/spec-wordsapi-competitor.md). Endpoints follow the
+established dictionary surface: /words/{word} full record, per-relation endpoints (definitions,
 synonyms, antonyms, examples, typeOf, hasTypes, partOf, hasParts, memberOf,
 hasMembers, substanceOf, hasSubstances, similarTo, also, derivation,
 pertainsTo, entails, cause), /pronunciation, /syllables, /frequency,
@@ -242,7 +242,7 @@ hasParts all correct; cat rhymes derived from CMU; geese resolves to goose
 and running to its base forms via the exception lists; unknown words return
 a clean documented 404 JSON error; bank (18 senses) answers in about 9ms.
 Pricing (planned, hard limits): BASIC $0/1,000mo, PRO $0/10,000mo (hook vs
-incumbent $10), ULTRA $39/300,000mo (vs $49), MEGA $79/1,000,000mo (vs $89),
+the $10 market tier free), ULTRA $39/300,000mo (market $49), MEGA $79/1,000,000mo (market $89),
 or the platform maximum at each price where RapidAPI caps lower.
 Keep-warm final fleet state: nine services, window 09:00-11:00 ET
 (2h x 9 x 31 = 558h worst month vs the 750 cap).
