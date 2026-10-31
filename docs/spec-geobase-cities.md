@@ -1,8 +1,8 @@
-# Spec D: GeoBase Cities (competitor to GeoDB Cities, wave 3, queue #4)
+# Spec D: GeoBase Cities (wave 3, queue #4)
 
 Approved by the user 2026-10-28 ("Build GeoDB Cities next"). Score 86.
 
-## The incumbent
+## The comparable listing
 
 GeoDB Cities by wirefreethought: 50,222 subscribers (live-verified
 2026-10-28), rated 3/5 (60 votes), pricing Basic $0 / 1,000 per day,
