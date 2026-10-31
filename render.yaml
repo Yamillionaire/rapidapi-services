@@ -67,3 +67,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: designbase
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: "python designbase/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"

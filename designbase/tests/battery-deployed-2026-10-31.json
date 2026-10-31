@@ -1,0 +1,112 @@
+{
+  "checks": [
+    {
+      "name": "deployed /health 200, reasoning awaiting_key, code engines live",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed gate: /palette without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed gate: /palette wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /palette through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /design-brief through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /critique through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /image-prompt through gate -> 200 (code-assembled)",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "samples": {
+    "health": {
+      "status": "ok",
+      "service": "designbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "awaiting_key",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "palette selection, design-brief writing, and critique judgments (/palette, /design-brief, /critique)"
+        },
+        "prompt_builder": {
+          "state": "live",
+          "engine": "code (deterministic prompt-grammar assembly)",
+          "role": "/image-prompt; needs no model and works while the reasoning engine awaits its key"
+        },
+        "color_math": {
+          "state": "live",
+          "engine": "code",
+          "role": "hex validation (invalid values dropped, never repaired) and WCAG 2.x contrast ratios for /palette"
+        }
+      },
+      "limits": {
+        "max_brief_chars": 2000,
+        "max_field_chars": 500,
+        "default_palette_count": 3,
+        "max_palette_count": 5,
+        "max_image_bytes": 8000000,
+        "image_formats": [
+          "png",
+          "jpeg",
+          "gif",
+          "webp"
+        ]
+      },
+      "endpoints": [
+        "POST /palette",
+        "POST /design-brief",
+        "POST /image-prompt",
+        "POST /critique",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "DesignBase returns design intelligence (palettes, briefs, image-generation prompts, critiques); it does not generate images. Critique scores are labeled model judgments; hex values and contrast ratios are computed in code."
+    },
+    "palette_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so this endpoint is not available. The service owner must add GEMINI_API_KEY to enable it. /image-prompt is code-assembled and remains available."
+    },
+    "image_prompt": {
+      "prompt": "a lighthouse at dawn. photorealistic photograph, shot on a 35mm lens. subject placed on a rule-of-thirds intersection, environment in soft focus behind the subject. natural directional light, realistic shadows and skin texture",
+      "negative_prompt": "no text, no lettering, no words, no watermark, no signature, no distorted hands, no extra limbs, no blurry or duplicated subject",
+      "components": {
+        "subject": "a lighthouse at dawn",
+        "style": "photorealistic photograph",
+        "medium": "photorealistic photograph, shot on a 35mm lens",
+        "composition": "subject placed on a rule-of-thirds intersection, environment in soft focus behind the subject",
+        "lighting": "natural directional light, realistic shadows and skin texture"
+      },
+      "notes": [
+        "Assembled in code from the prompt grammar; no model call was made."
+      ],
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "code",
+        "latency_ms": 0
+      }
+    }
+  },
+  "base": "https://designbase.onrender.com"
+}

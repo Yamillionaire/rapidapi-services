@@ -400,6 +400,71 @@ package ready: listings/factbase-openapi.json +
 listings/factbase-listing-notes.md; spec docs/spec-factbase.md;
 proof doc docs/factbase-reliability.md.
 
+## 15. designbase/ - DesignBase (the user's own product; no incumbent)
+Endpoints: POST /palette {brief, count? (default 3, cap 5)} ->
+structured palettes; POST /design-brief {product, audience,
+vibe} -> structured design brief; POST /image-prompt {subject,
+style, era?, product?} -> a production-ready image-generation
+prompt; POST /critique (multipart image) -> a scored critique;
+GET /health. The user's own direction (2026-10-31 voice call:
+"Also, can we create a creative design API?"). Scope is design
+INTELLIGENCE, not image generation: no endpoint returns an
+image. The honesty split is the product: hex values are
+validated in code (invalid values dropped and the drop count
+reported, never repaired), WCAG contrast ratios are computed in
+code, /image-prompt is assembled entirely in code from a written
+prompt-grammar table (subject, composition, lighting, era lock,
+negative constraints - the same discipline as the user's merch
+and character prompt work) and needs no engine, and critique
+scores are validated/clamped in code and labeled as model
+judgments. Engines: the owner's Gemini API (gemini-3.6-flash
+primary, gemini-3.1-flash-lite fallback; one extension over
+FactBase, made after this build's first battery met a persistent
+primary 503 on the critique call: a persistent 500/503 now also
+falls back instead of failing the call).
+DEPLOYED 2026-10-31: https://designbase.onrender.com
+(srv-dbj6q967bikc73ej2kq0; GitHub commit 30519fc0; final live
+deploy dep-dbj7097b9u1s73d7bef0). Stdlib only, build "true",
+start "python designbase/app.py".
+PROOF TESTS (local battery designbase/tests/battery-2026-10-31.json,
+16/16 with Gemini calls routed through the owner's connected
+Gemini API via a local test bridge): gate 401 without and with a
+wrong secret; awaiting mode answers an explicit 503
+engine_not_configured on the three engine endpoints while
+/image-prompt answers 200 (code-assembled, as /health promises);
+the merch-tee palette brief returned 2 valid palettes with
+computed contrast blocks (the battery independently recomputed
+white-on-black = 21.0); the poster design brief returned the
+full structure (5 dos, 5 donts); the era-locked image prompt
+carried the era lock, product framing and anachronism negatives;
+the critique of the real DJ Riot hoodie-back design (1254x1254
+PNG) scored 7.8 overall with four grounded dimension notes and
+4 specific fixes, image format/dimensions read from the header
+in code; invalid inputs return named 422s. Deployed battery
+(designbase/tests/battery-deployed-2026-10-31.json, 7/7):
+/health 200 awaiting_key; gate 401 without and with a wrong
+value; through the gate the three engine endpoints answer 503
+engine_not_configured and /image-prompt answers 200. The
+build-time test secret was then rotated to an unrecorded value
+and re-verified (old value 401, no header 401, /health open), so
+the origin sits gated under that value until the Studio step
+sets the real secret (the env-var API route worked for this
+build, unlike FactBase's build day).
+PARKED at the key step (decision queue item 11): the owner adds
+GEMINI_API_KEY to the Render service himself (the connector
+credential cannot be extracted into hosting). Publish is parked
+behind it by the lane's rule: the Hub gateway test must pass
+with real responses on the engine endpoints. On his word the
+finish runs unattended: redeploy, deployed proof battery with
+real briefs, Studio listing, proxy-secret wiring, publish,
+gateway test, Spotlight. Pricing (planned, hard limits, per
+request): BASIC $0/100mo; PRO $5/1,000mo; ULTRA $20/10,000mo;
+MEGA $60/50,000mo. Keep-warm fleet now fifteen services, window
+re-budgeted to 09:00-10:25 ET (659h worst month vs the 750h
+cap). Listing package ready: listings/designbase-openapi.json +
+listings/designbase-listing-notes.md; spec
+docs/spec-designbase.md; proof doc docs/designbase-reliability.md.
+
 ## Sequence
 Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves
