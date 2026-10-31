@@ -1,0 +1,413 @@
+{
+  "checks": [
+    {
+      "name": "awaiting /health 200: reasoning awaiting_key, performance installed, catalog counted",
+      "pass": true,
+      "detail": "voices=322"
+    },
+    {
+      "name": "gate: /perform without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /perform wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /character -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform invalid (empty text) -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform invalid (bad voice) -> 422 invalid_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform invalid (bad emotion) -> 422 invalid_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform invalid (bad intensity) -> 422 invalid_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform invalid (bad persona) -> 422 invalid_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/perform grief line -> real audio, duration measured, non-silent",
+      "pass": false,
+      "detail": "status=502"
+    },
+    {
+      "name": "/perform plan shows the table row + emphasis segment",
+      "pass": false,
+      "detail": "delivery=None"
+    },
+    {
+      "name": "/table-read: 3 lines, 2 distinct voices",
+      "pass": false,
+      "detail": "status=502"
+    },
+    {
+      "name": "/table-read uncast speaker -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "live /health: reasoning live, models named",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/character -> full actor's build (objective, tactics as verbs, backstory, voice + physicality)",
+      "pass": true,
+      "detail": "keys=['backstory_beats', 'given_circumstances', 'name', 'objective', 'obstacles', 'physicality_notes', 'super_objective', 'tactics', 'voice_notes']"
+    },
+    {
+      "name": "/scene-notes -> beats, power shifts, both characters with wants/hides/tactics",
+      "pass": true,
+      "detail": "beats=4, characters=['Mara', 'Eli']"
+    },
+    {
+      "name": "/three-reads -> 3 reads, distinct tactics, differing delivery params, real audio on each",
+      "pass": false,
+      "detail": "tactics=[], params=[]"
+    },
+    {
+      "name": "/table-read with direction (live) -> direction interpreted for the directed line",
+      "pass": false,
+      "detail": "map=[]"
+    }
+  ],
+  "samples": {
+    "health_awaiting": {
+      "status": "ok",
+      "service": "actorbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "awaiting_key",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "character builds, scene analysis, three-reads tactics and subtext, direction interpretation"
+        },
+        "performance": {
+          "state": "installed",
+          "engine": "edge-tts (Microsoft Edge neural voices), the SwiftRead synthesis path",
+          "voices": 322,
+          "locales": 142,
+          "languages": 75,
+          "role": "acted speech for /perform, /table-read, /three-reads; zero marginal cost, no key"
+        }
+      },
+      "delivery_table": {
+        "emotions": [
+          "anger",
+          "awe",
+          "contempt",
+          "fear",
+          "grief",
+          "guilt",
+          "joy",
+          "neutral",
+          "resolve",
+          "tenderness"
+        ],
+        "intensity_range": [
+          1,
+          5
+        ],
+        "note": "Fixed in code and shipped verbatim in the spec: signature prosody at intensity 3 plus a per-point step, clamped to the engine's range. Emphasis spans lift pitch +4 Hz, volume +6%, rate -4%, with a beat before them."
+      },
+      "personas": {
+        "ingenue": {
+          "voice": "en-US-AriaNeural",
+          "lean": "tenderness"
+        },
+        "leading-lady": {
+          "voice": "en-GB-SoniaNeural",
+          "lean": "resolve"
+        },
+        "leading-man": {
+          "voice": "en-US-GuyNeural",
+          "lean": "resolve"
+        },
+        "young-hero": {
+          "voice": "en-US-EricNeural",
+          "lean": "joy"
+        },
+        "matriarch": {
+          "voice": "en-US-MichelleNeural",
+          "lean": "resolve"
+        },
+        "patriarch": {
+          "voice": "en-GB-ThomasNeural",
+          "lean": "contempt"
+        },
+        "villain": {
+          "voice": "en-US-ChristopherNeural",
+          "lean": "contempt"
+        },
+        "trickster": {
+          "voice": "en-US-JennyNeural",
+          "lean": "joy"
+        },
+        "confidante": {
+          "voice": "en-GB-LibbyNeural",
+          "lean": "tenderness"
+        },
+        "narrator": {
+          "voice": "en-GB-RyanNeural",
+          "lean": "neutral"
+        }
+      },
+      "limits": {
+        "max_perform_chars": 2000,
+        "max_line_chars": 600,
+        "max_lines_per_read": 40,
+        "max_cast": 12,
+        "max_read_total_chars": 8000,
+        "max_scene_chars": 12000
+      },
+      "endpoints": [
+        "POST /perform",
+        "POST /table-read",
+        "POST /character",
+        "POST /three-reads",
+        "POST /scene-notes",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Performances are synthesized speech under generic craft archetypes, not human actors and not imitations of any real performer. Delivery is bounded by the fixed delivery table; emotional range beyond it is not claimed."
+    },
+    "character_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so the reasoning engine is not available. The service owner must add GEMINI_API_KEY to enable it. The performance endpoints (/perform, /table-read) do not need it and keep working."
+    },
+    "health_live": {
+      "status": "ok",
+      "service": "actorbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "live",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "character builds, scene analysis, three-reads tactics and subtext, direction interpretation"
+        },
+        "performance": {
+          "state": "installed",
+          "engine": "edge-tts (Microsoft Edge neural voices), the SwiftRead synthesis path",
+          "voices": 322,
+          "locales": 142,
+          "languages": 75,
+          "role": "acted speech for /perform, /table-read, /three-reads; zero marginal cost, no key"
+        }
+      },
+      "delivery_table": {
+        "emotions": [
+          "anger",
+          "awe",
+          "contempt",
+          "fear",
+          "grief",
+          "guilt",
+          "joy",
+          "neutral",
+          "resolve",
+          "tenderness"
+        ],
+        "intensity_range": [
+          1,
+          5
+        ],
+        "note": "Fixed in code and shipped verbatim in the spec: signature prosody at intensity 3 plus a per-point step, clamped to the engine's range. Emphasis spans lift pitch +4 Hz, volume +6%, rate -4%, with a beat before them."
+      },
+      "personas": {
+        "ingenue": {
+          "voice": "en-US-AriaNeural",
+          "lean": "tenderness"
+        },
+        "leading-lady": {
+          "voice": "en-GB-SoniaNeural",
+          "lean": "resolve"
+        },
+        "leading-man": {
+          "voice": "en-US-GuyNeural",
+          "lean": "resolve"
+        },
+        "young-hero": {
+          "voice": "en-US-EricNeural",
+          "lean": "joy"
+        },
+        "matriarch": {
+          "voice": "en-US-MichelleNeural",
+          "lean": "resolve"
+        },
+        "patriarch": {
+          "voice": "en-GB-ThomasNeural",
+          "lean": "contempt"
+        },
+        "villain": {
+          "voice": "en-US-ChristopherNeural",
+          "lean": "contempt"
+        },
+        "trickster": {
+          "voice": "en-US-JennyNeural",
+          "lean": "joy"
+        },
+        "confidante": {
+          "voice": "en-GB-LibbyNeural",
+          "lean": "tenderness"
+        },
+        "narrator": {
+          "voice": "en-GB-RyanNeural",
+          "lean": "neutral"
+        }
+      },
+      "limits": {
+        "max_perform_chars": 2000,
+        "max_line_chars": 600,
+        "max_lines_per_read": 40,
+        "max_cast": 12,
+        "max_read_total_chars": 8000,
+        "max_scene_chars": 12000
+      },
+      "endpoints": [
+        "POST /perform",
+        "POST /table-read",
+        "POST /character",
+        "POST /three-reads",
+        "POST /scene-notes",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Performances are synthesized speech under generic craft archetypes, not human actors and not imitations of any real performer. Delivery is bounded by the fixed delivery table; emotional range beyond it is not claimed."
+    },
+    "character": {
+      "character": {
+        "name": "Rosa Delgado",
+        "objective": "I want to force my son to reverse the plant closure decision by using the exact leverage strategies I taught him.",
+        "super_objective": "I want to protect the dignity and survival of my community so that my life's labor was not in vain.",
+        "voice_notes": "She speaks in a low, resonant register with deliberate cadence, using silence as a weapon to force others to fill the room. Her speech pattern is direct and unembellished, dropping tempo to emphasize key demands like a lawyer laying down evidence.",
+        "physicality_notes": "She stands with a heavy, rooted center and broad, squared shoulders that resist the natural weariness in her spine. Her hand gestures are spare and decisive\u2014table-taps and pointed index fingers\u2014never wasting energy on broad panic.",
+        "obstacles": [
+          "Her son holds the legal corporate authority and final sign-off power over the shutdown.",
+          "Her maternal love for her son constantly pulls against her rage at his betrayal.",
+          "The relentless economic decline of the 1994 Ohio steel industry makes saving the plant almost structurally impossible.",
+          "Her aging body and physical exhaustion after decades of high-stakes labor organizing."
+        ],
+        "tactics": [
+          "To corner - pin him down using his own corporate logic and past promises against him.",
+          "To shame - remind him of the specific sacrifices the town and his late father made to pay for his path out.",
+          "To interrogate - dissect his professional excuses piece by piece to expose his personal ambition.",
+          "To bargain - trade her remaining political influence and public silence in exchange for a delay on the mill's execution date.",
+          "To invoke - recall childhood memories of table-side union lessons to awaken his buried conscience."
+        ],
+        "backstory_beats": [
+          "Enduring the devastation of the late-1970s Ohio mill shutdowns, which cemented her resolve to become a union organizer.",
+          "Spending late nights at the kitchen table training her young son on contract clauses, leverage points, and negotiation tactics.",
+          "Burying her husband after an industrial accident, fighting the company for years to secure his full pension benefits.",
+          "Celebrating her son's promotion into corporate management under the foolish belief he would be labor's insider ally."
+        ],
+        "given_circumstances": [
+          "The setting is a dying industrial steel town in Ohio, 1994.",
+          "The steel plant is slated for permanent closure within days.",
+          "Her 58 years of life have been defined by local labor activism and community leadership.",
+          "Her son is the company executive who authorized the final closure order."
+        ]
+      },
+      "_meta": {
+        "service": "actorbase",
+        "version": "1.0.0",
+        "reasoning": "live",
+        "latency_ms": 20527
+      }
+    },
+    "scene_notes": {
+      "beats": [
+        {
+          "beat": "Mara confronts Eli about his whereabouts, moving from observation to accusation.",
+          "turn": "I called the station, Eli.",
+          "subtext": "I have been tracking your lies and I am waiting for you to crack."
+        },
+        {
+          "beat": "Eli attempts to deflect blame by attacking Mara's need for control.",
+          "turn": "You always know everything before I say it.",
+          "subtext": "Your vigilance is suffocating and makes it impossible for me to be honest."
+        },
+        {
+          "beat": "Mara traps Eli in a lie, forcing him into a corner.",
+          "turn": "With your suitcase packed?",
+          "subtext": "I have proof of your betrayal; stop pretending."
+        },
+        {
+          "beat": "Eli resorts to a desperate, transparent falsehood.",
+          "turn": "That isn't mine.",
+          "subtext": "I am terrified of the finality of this moment and will say anything to delay the inevitable."
+        }
+      ],
+      "power_shifts": [
+        {
+          "where": "When Mara reveals she called the station",
+          "from": "Eli",
+          "to": "Mara"
+        },
+        {
+          "where": "When Eli claims he was ending it",
+          "from": "Mara",
+          "to": "Eli"
+        },
+        {
+          "where": "When Mara mentions the suitcase",
+          "from": "Eli",
+          "to": "Mara"
+        }
+      ],
+      "characters": {
+        "Mara": {
+          "wants": "To force Eli to admit he is leaving her.",
+          "hides": "The depth of her devastation and fear of being alone.",
+          "tactics": [
+            "interrogate",
+            "corner",
+            "expose",
+            "confront"
+          ]
+        },
+        "Eli": {
+          "wants": "To escape the confrontation without taking responsibility for his departure.",
+          "hides": "That he has already fully committed to leaving.",
+          "tactics": [
+            "deflect",
+            "gaslight",
+            "deny",
+            "evade"
+          ]
+        }
+      },
+      "summary": "This scene is a tactical battle over the disintegration of a relationship where one partner seeks closure through truth and the other seeks escape through cowardice.",
+      "_meta": {
+        "service": "actorbase",
+        "version": "1.0.0",
+        "reasoning": "live",
+        "latency_ms": 22341
+      }
+    }
+  },
+  "environment": "Phase B Gemini calls routed through tests/connector_bridge.py via the custom.gemini connector (real engine, production request shapes). Performance ran on the local edge-tts install (Microsoft Edge neural voices)."
+}

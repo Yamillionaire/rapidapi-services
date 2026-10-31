@@ -76,3 +76,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: actorbase
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r actorbase/requirements.txt"
+    startCommand: "python actorbase/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
