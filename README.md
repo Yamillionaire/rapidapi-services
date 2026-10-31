@@ -225,7 +225,7 @@ third once the quote feed is chosen. Nothing is published until the user approve
 each listing preview. PayPal payout linking on RapidAPI is the user's own tap.
 
 ## wordbase/ - WordBase Dictionary
-Built 2026-10-29 (Spec G, docs/spec-wordsapi-competitor.md). Endpoints follow the
+Built 2026-10-29 (Spec G, docs/spec-wordsapi.md). Endpoints follow the
 established dictionary surface: /words/{word} full record, per-relation endpoints (definitions,
 synonyms, antonyms, examples, typeOf, hasTypes, partOf, hasParts, memberOf,
 hasMembers, substanceOf, hasSubstances, similarTo, also, derivation,
