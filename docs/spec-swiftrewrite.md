@@ -1,8 +1,8 @@
-# Spec F: SwiftRewrite (competitor to Paraphrasing and Rewriter API)
+# Spec F: SwiftRewrite
 
 Approved by the user 2026-10-28 ("Go"). Score 68.
 
-## The incumbent
+## The comparable listing
 
 Paraphrasing and Rewriter API by NeuralWriter: 5,632 subscribers,
 rated 3/5 (21 votes), service level 99% but latency 9,978ms against an
