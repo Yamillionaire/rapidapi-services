@@ -1,9 +1,9 @@
-# Spec: NewsBase Headlines (competitor to Google News by BFD, wave 3, queue #9)
+# Spec: NewsBase Headlines (wave 3, queue #9)
 
 Approved by the user 2026-10-29 (full-run authorization in a voice call:
 automate the whole queue, publish with Spotlights). Score 64.
 
-## The incumbent
+## The comparable listing
 
 Google News by BFD: 7,316 subscribers, rated 3/5, pricing Basic free,
 Pro $25, Ultra $50, Mega $100. Complaint themes from its own Discussions:
