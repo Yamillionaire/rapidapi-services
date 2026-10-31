@@ -3,8 +3,8 @@
 Originated by the user in a voice call on 2026-10-30: "an API that
 reads articles aloud - give it an article and it reads it, like the
 play button on a news article." Built and launched under his standing
-full-automation authorization for this lane (2026-10-29). Not a
-competitor clone: a new product in the lane's house style.
+full-automation authorization for this lane (2026-10-29). An original
+product, not a clone: new, in the lane's house style.
 
 ## The product
 
@@ -62,8 +62,8 @@ tools, newsletters, and content platforms.
   X-SwiftRead-Title headers, so callers can log what was read
   without parsing the audio.
 
-Competitor fix pass (2026-10-30, from
-swiftread-competitor-fixlist-2026-10-30.md - rival listings' public
+Fix pass (2026-10-30, from
+swiftread-fixlist-2026-10-30.md - rival listings' public
 complaints mined and fixed before listing): (a) chunk synthesis
 parallelized, the checklist's one real engineering gap (item 6);
 (b) the voice roster widened from English-only to 45 voices in 13
@@ -152,7 +152,7 @@ websocket causes), and a page whose paragraphs are all short
 returned the clean 422 no_article_text. Synthesis itself is
 verified on the deployed service (see docs/swiftread-reliability.md).
 
-## Fix-pass test log (2026-10-30, after the competitor fixes)
+## Fix-pass test log (2026-10-30, after the fixes)
 
 Offline unit checks of the new logic: 45 voices across 13 languages
 in the roster (zh-CN pair present; 20 voices in the African set);
