@@ -146,9 +146,10 @@ day.
 
 Render free plan, same repo: build `pip install -r
 driftcheck/requirements.txt` (Pillow + numpy only), start `python
-driftcheck/app.py`. ffmpeg/ffprobe ship in the local environment;
-on Render's native Python image their presence must be verified on
-the deployed /health (methods.video) - if absent there, /check-video
-answers an explicit 503 engine_not_configured and /check-image is
-unaffected. Keep-warm fleet becomes twelve services; the window is
-re-budgeted to 09:00-10:50 ET (682h worst month vs the 750h cap).
+driftcheck/app.py`. ffmpeg/ffprobe verified present on Render's
+native Python image at deploy (deployed /health reports
+methods.video as ffmpeg frame sampling), so /check-video runs
+deployed; on a host without them it answers an explicit 503
+engine_not_configured and /check-image is unaffected. Keep-warm
+fleet becomes twelve services; the window is re-budgeted to
+09:00-10:50 ET (682h worst month vs the 750h cap).

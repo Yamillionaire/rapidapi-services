@@ -219,6 +219,77 @@ REMAINING: Studio listing, proxy-secret wiring with gate
 verification, publish, Hub gateway test, Spotlight (parent browser
 route; proof doc docs/swiftread-reliability.md).
 
+## 12. driftcheck/ - DriftCheck (the user's own product; no incumbent)
+Endpoints: POST /check-image {candidate, reference, expected_text?}
+-> drift report; POST /check-video {video, reference, frames?} ->
+per-frame report; GET /health.
+The user's own idea (2026-10-31 voice call, "proceed" the same call):
+the drift gate from his generated-media production, productized.
+Send a candidate image or video plus the reference it was supposed
+to match; get a drift score and a pass/warn/fail verdict BEFORE the
+next regeneration credit is spent. Classical metrics only (Pillow +
+numpy, no model downloads): subject-crop dhash, phash (DCT), global
+SSIM and color histogram, full-frame and against the best-matching
+region of the reference; a foreground bounding-box-share proportion
+report with a flag past 20 points of divergence (the emblem-scale
+check); OCR of the candidate when a tesseract binary exists on the
+host, compared with caller-supplied expected_text. Headline drift =
+0.7 x similarity drift + 0.3 x proportion penalty (penalty =
+min(100, 2 x largest divergence)); verdict pass <= 50, warn <= 65,
+fail above, with proportion/text flags escalating to at least warn.
+Video: ffmpeg frame sampling across the full duration, per-frame
+drift, worst frames with timestamps, frozen-span detection (dhash
+similarity >= 0.97 sustained). DELIBERATE OMISSIONS, stated in
+/health: no anatomy check (no lightweight pose estimator deploys on
+the free tier; omitted, not faked) and OCR reports unavailable on
+this deployment (no tesseract on the host) instead of guessing.
+MEASURED IDENTITY LIMIT, disclosed in every /check-image response:
+against a multi-panel model sheet a wrong character graded
+similarity drift 57.2 vs the right one's 58.6 - v1 cannot verify
+identity against collage sheets; against same-class references
+(approved comps, start stills) the metrics separate cleanly.
+DEPLOYED 2026-10-31: https://driftcheck.onrender.com
+(srv-dbj39567bikc73ea2kt0; GitHub commit 12d894b4). First build
+failed in 18s: PYTHON_VERSION had to be set at service level via
+the API; the set plus a redeploy went live. ffmpeg IS present on
+Render's image (deployed /health methods.video), so /check-video
+runs deployed.
+PROOF TESTS (local battery and deployed reproduction with identical
+numbers; raw outputs driftcheck/tests/battery-2026-10-31.json,
+write-up docs/driftcheck-reliability.md): (1) the oversized Break
+emblem sticker vs Break's model sheet: drift 68.9 FAIL, proportion
+flag raised - candidate art fills 50.0% of frame width vs the
+sheet's 99.2% coverage, divergence 49.2 width / 36.5 height points
+(the four peer emblem stickers measure 17.4-18.6% of frame width);
+(2) the approved DJ Riot design vs its model sheet: 42.2 PASS,
+divergence 0.3 / 1.9 points; identical pair 0.0; (3) the Rosewood
+Chapter 5 motion clip (10.0s) vs its start still: PASS, worst frame
+39.4 at 5.5s, mean 29.9, no frozen spans; a synthetic still-loop
+clip flags its whole span (0.2s-3.8s) and escalates to WARN.
+GATE VERIFIED on the deployed service against its own gated deploy
+with a build-time test secret: 401 without the header, 422
+missing_parameter with it, 401 with a wrong value, /health open.
+The test value was not retained and the API rejects empty-value
+clears through the helper, so the origin sits gated under that
+unrecorded value until the listing step sets the Studio secret
+(wiring and re-verification steps in
+listings/driftcheck-listing-notes.md).
+INTERNAL GATE (user-directed 2026-10-31): DriftCheck is also the
+standing production gate for ALL of the user's generated imagery
+and video across every lane; the internal request shapes, default
+thresholds, and the Break worked example live in
+docs/spec-driftcheck.md ("Internal pipeline use").
+Pricing (planned, hard limits, per request): BASIC $0/100mo;
+PRO $5/1,000mo; ULTRA $20/10,000mo; MEGA $60/50,000mo. Keep-warm
+fleet now twelve services, window re-budgeted to 09:00-10:50 ET
+(682h worst month vs the 750h cap).
+REMAINING: Studio listing (PRIVATE first), proxy-secret wiring with
+the Studio value plus gate re-verification, publish, Hub gateway
+test, Spotlight (parent browser route; package at
+listings/driftcheck-openapi.json + listings/driftcheck-listing-notes.md,
+proof doc docs/driftcheck-reliability.md). SwiftRead (#11) remains
+separately queued for its own listing; it is not part of this build.
+
 ## Sequence
 Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves

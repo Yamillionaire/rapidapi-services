@@ -58,9 +58,13 @@ offers it.
    deploy, deploy once more and re-verify (the env write and the
    deploy can race; learned 2026-10-28 on GeoBase/SwiftRewrite).
    NOTE: the service was gate-tested at build time with a temporary
-   secret and the secret was then REMOVED, so pre-listing it answers
-   without a header like the lane's other unlisted services; the
-   Studio secret is the one that must end up set.
+   secret, verified against its own deploy (401 without the header,
+   422 missing_parameter with it, 401 with a wrong value, /health
+   open). The test value was not retained, and the Render API rejects
+   empty-value clears through the lane's helper, so the origin
+   currently sits GATED under that unrecorded test value. Setting
+   the Studio secret here overwrites it; re-verify the gate right
+   after, as above, before publishing.
 4. Publish, then run the Hub gateway test end to end (subscribe the
    owner's test account to BASIC first): POST /check-image through
    driftcheck.p.rapidapi.com with the Break emblem sticker vs the
@@ -79,7 +83,7 @@ detection. Proof inside."
 Post via the URL tab with the GitHub blob URL of
 docs/driftcheck-reliability.md (the File tab rejects markdown; use
 the blob URL of the pushed file on
-github.com/Yamillionaire/rapidapi-competitors).
+github.com/Yamillionaire/rapidapi-services).
 
 ## Honesty notes for the overview copy (do not oversell)
 
