@@ -341,6 +341,65 @@ fleet now thirteen services, window re-budgeted to 09:00-10:40 ET
 listings/xbase-openapi.json + listings/xbase-listing-notes.md;
 spec docs/spec-xbase.md; proof doc docs/xbase-reliability.md.
 
+## 14. factbase/ - FactBase (the user's own product; no incumbent)
+Endpoints: POST /check-text {text, max_claims? (default 5, cap
+10)} -> the checkable claims in the text, each verified; POST
+/check-claim {claim} -> one claim verified; POST /check-audio
+(multipart audio) -> transcript plus the same per-claim results;
+GET /health. The user's own direction (2026-10-31 voice call: a
+fact checker API for anything somebody says, spoken or written;
+this build covers both). Each result carries the claim, a verdict
+(supported / refuted / mixed / unverified), a confidence note
+computed from the evidence composition, a short explanation, and
+the evidence used (source title, URL, snippet). Honest by
+construction: no retrievable evidence means "unverified", never
+a guess, and a verdict with no source cannot be produced.
+Engines: the owner's Gemini API (gemini-3.6-flash primary,
+gemini-3.1-flash-lite fallback on the primary's 429, the quota
+buckets being per-model), Gemini audio transcription for
+speech, keyless evidence retrieval (paced DuckDuckGo with
+retries and Lite/Bing fallbacks, plus Wikipedia; published
+fact-checks first), and an optional Google Fact Check Tools API
+layer when a key is configured for it.
+DEPLOYED 2026-10-31: https://factbase.onrender.com
+(srv-dbj5slfb9u1s73d4kntg; GitHub commit f0fd127f; live deploy
+dep-dbj67putlv9c73cbhprg). Stdlib only, build "true", start
+"python factbase/app.py".
+PROOF TESTS (local battery factbase/tests/battery-2026-10-31.json,
+15/15, run with Gemini calls routed through the owner's connected
+Gemini API via a local test bridge; the deployed service calls
+the same endpoint directly once the key is set): gate 401
+without and with a wrong secret; awaiting mode answers an
+explicit 503 engine_not_configured; the Eiffel Tower claim
+supported, the Great Wall visibility claim refuted, the Amazon
+oxygen claim refuted, an obscure 1974 claim honestly unverified,
+a two-statement Obama text split into supported and refuted
+claims, opinion-only text returns zero claims, and both audio
+proofs (a synthesized claim clip and a real JFK clip) transcribe
+and check correctly. Deployed battery
+(factbase/tests/battery-deployed-2026-10-31.json): /health 200
+in the honest awaiting_key state; the three data endpoints
+answer 503 engine_not_configured.
+PARKED at the key step (decision queue item 11): the owner adds
+GEMINI_API_KEY to the Render service himself (the connector
+credential cannot be extracted into hosting). Publish is parked
+behind it by the lane's rule: the Hub gateway test must pass
+with real responses. One caveat on record: the build-time test
+proxy secret could not be set because the Render env-var API
+route timed out repeatedly at build time, so the origin passes
+the gate until the finish step sets the real secret (harmless
+while the endpoints can only answer 503; the dashboard is the
+fallback route). On his word the finish runs unattended:
+redeploy, deployed real-claims battery, Studio listing,
+proxy-secret wiring, publish, gateway test, Spotlight. Pricing
+(planned, hard limits, per request): BASIC $0/100mo; PRO
+$5/1,000mo; ULTRA $20/10,000mo; MEGA $60/50,000mo. Keep-warm
+fleet now fourteen services, window re-budgeted to
+09:00-10:30 ET (651h worst month vs the 750h cap). Listing
+package ready: listings/factbase-openapi.json +
+listings/factbase-listing-notes.md; spec docs/spec-factbase.md;
+proof doc docs/factbase-reliability.md.
+
 ## Sequence
 Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves
