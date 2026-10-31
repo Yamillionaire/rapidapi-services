@@ -64,17 +64,36 @@ gate; final job status with an empty retry queue.
 
 ## Deployed state
 
-DEPLOYED 2026-10-31: https://swiftrender.onrender.com
-(Render service id and commit recorded in the registry entry and
-README section 17 after the deploy lands.) The deployed battery
-(swiftrender/tests/run_tests_deployed.py) runs a real small job
-end to end through the gate because this service needs no engine
-key; its results are recorded in
-swiftrender/tests/battery-deployed-2026-10-31.json once run. The
-build-time test proxy secret is then rotated to an unrecorded
-value and re-verified (old value 401, no header 401, /health
-open), per the DesignBase precedent, so the origin sits gated
-under that value until the Studio step sets the real secret.
+DEPLOYED 2026-10-31: https://swiftrender-yqqd.onrender.com
+(Render srv-dbj7kocs728c7391u68g; GitHub commit a4b8b80f; the
+bare swiftrender subdomain was already taken elsewhere, so
+Render assigned the -yqqd suffix, the SwiftTranslate pattern).
+The deployed battery (swiftrender/tests/battery-deployed-
+2026-10-31.json) ran a real small job end to end through the
+gate because this service needs no engine key: **9/9** (health
+with honest adapter states, gate 401s, job creation with the
+duration math, the parked adapter's 503, a real clip import
+gating pass and installing, assembly with a clean decode, and
+the output downloading at 845,860 bytes). The build-time test
+proxy secret was then rotated to an unrecorded value with a
+fresh deploy (dep-dbj7pq5g1s2s73f09vog) and re-verified (old
+value 401, no header 401, /health 200 open), per the DesignBase
+precedent, so the origin sits gated under that value until the
+Studio step sets the real secret.
+
+BUILD DEVIATION on record: the first two builds failed in under
+20 seconds. The build log (Render logs API) showed "Using
+Python version 3.14.8 (default)": the PYTHON_VERSION passed in
+the create-service body did not persist as an env var (checked
+against ActorBase: it has no PYTHON_VERSION env var either, so
+the earlier services built while the platform default still
+matched), and numpy 1.26.4 / Pillow 10.2.0 have no wheels for
+Python 3.14, so pip failed. Fixed by setting PYTHON_VERSION
+3.12.3 through the env-var API (the route that does persist;
+same write route as the proxy secret), after which the deploy
+(dep-dbj7lcjbc2fs73c264fg) went live. Any future create-service
+call in this lane should set PYTHON_VERSION via set-env
+immediately after creation.
 
 ## Parked, honestly
 

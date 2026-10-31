@@ -13,8 +13,9 @@ user's own Replicate token, never as live generation.
 ## Basics
 
 - API name: SwiftRender
-- Base URL: https://swiftrender.onrender.com (confirm the exact
-  subdomain in the reliability doc after deploy)
+- Base URL: https://swiftrender-yqqd.onrender.com (the bare
+  swiftrender subdomain was taken elsewhere, the SwiftTranslate
+  pattern; confirmed live 2026-10-31)
 - Category: Artificial Intelligence/Machine Learning (same as
   DriftCheck, FactBase, DesignBase, ActorBase).
 - Short description (neutral, no overclaim): "A video production

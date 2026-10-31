@@ -608,3 +608,81 @@ srv-dbhfdb6c6qcc73f9geh0. Deployed open battery 6/6 (health counts
 identical to the local build; gate 401s). The background build
 takes about 10 minutes on Render against 45-100 seconds locally;
 English serves throughout.
+
+## 17. swiftrender/ - SwiftRender (the user's own product; no incumbent)
+Endpoints: POST /jobs {title, audio (upload or audio_url),
+timing_map [{line_id, start, end}], clips [{line_id, prompt}]} ->
+a production job whose per-line generation duration is computed
+IN CODE from the timing map (needed span + 1.0 s handle, ceil,
+min 3, max 10), never the flat 10 s default; POST
+/jobs/{id}/clips/{line_id}/import (multipart video) -> the clip
+gated automatically on arrival (DriftCheck engine in-process:
+worst frame vs own first frame, 10 frames, plus ffmpeg
+freezedetect; frozen coverage >= 50% of runtime escalates to
+fail); a failed clip returns a corrected-prompt draft built in
+code from its failure class and re-queues, and is never
+installed; POST /jobs/{id}/clips/{line_id}/generate -> provider
+adapters (import live; replicate coded and parked, 503
+provider_not_configured without REPLICATE_API_TOKEN); POST
+/jobs/{id}/assemble -> refuses with the missing lines listed
+until every line passes, then cuts each clip's approved span,
+lays the pieces on the job timeline against the job's audio, and
+returns a measured assembly report (spans used, durations,
+loudness, frozen spans, decode); GET /jobs/{id}/output downloads
+the MP4; GET /jobs/{id} full status; GET /health open. The
+user's own direction (2026-10-31 voice call: "Is there a way to
+create an API that helps to make a video generate faster?" ->
+the honest split -> "Proceed"). The name is never oversold: the
+spec's first paragraph states it accelerates the production
+pipeline around generation, not any model's inference.
+DEPLOYED 2026-10-31: https://swiftrender-yqqd.onrender.com
+(srv-dbj7kocs728c7391u68g; GitHub commit a4b8b80f; final live
+deploy dep-dbj7pq5g1s2s73f09vog after the secret rotation; the
+bare subdomain was taken elsewhere, the SwiftTranslate pattern).
+Build "pip install -r swiftrender/requirements.txt", start
+"python swiftrender/app.py", port 8117.
+PROOF (the centerpiece, on the owner's real material;
+swiftrender/tests/proof-rosewood-report-2026-10-31.md): a
+complete job ran with the real Rosewood studio master (MD5
+verified), the real cut-sheet timing and the 16 installed clips
+for lines 1-16. Duration math: right-sized requests total 66 s
+vs the 160 s the manual flat-10 s workflow generated (94 s,
+58.8%, of generation time never spent). Auto-gate vs the manual
+verdicts in qa-log-batch1/2/3.md: 16/16 verdicts identical,
+worst-frame scores within 0.8 on every line, no disagreements.
+Assembly verified: output 63.566 s vs the timing map's 63.50 s
+(delta +0.066 s, tolerance +/-1.0 s); full decode clean; frozen
+spans only inside the two intentional black gap fills, none in
+any clip region; audio proven to be the master by decoded
+waveform comparison (correlation 0.9991 over 1.4M samples);
+loudness measured -15.94 LUFS. Local battery
+(swiftrender/tests/battery-2026-10-31.json) 20/20; deployed
+battery (battery-deployed-2026-10-31.json) 9/9 with a real job
+run end to end through the gate (this service needs no engine
+key). Two bugs found and fixed on record: DriftCheck's
+extract_frame/check_video error shapes normalized in the gate
+wrapper, and the frozen-coverage escalation (a fully frozen
+solid-frame clip gated only warn under the raw bands and would
+have installed). One deployment deviation on record: the first
+two builds failed because the create-call PYTHON_VERSION did
+not persist and Render defaulted to Python 3.14.8 (no wheels
+for the pinned numpy/Pillow); fixed by setting PYTHON_VERSION
+3.12.3 through the env-var API. GATE STATE: the build-time
+test secret was set for the deployed battery, then rotated to
+an unrecorded value and re-verified (old value 401, no header
+401, /health open), so the origin sits gated until the Studio
+step sets the real secret.
+PARKED (decision queue item 11): only the optional Replicate
+(Seedance) adapter, on the owner's REPLICATE_API_TOKEN through
+the Secure Vault; no account created, no credit bought, no
+paid generation run. The Studio listing steps are agent steps
+and wait on nothing. Pricing (planned, hard limits, per
+request): BASIC $0/100mo; PRO $5/1,000mo; ULTRA $20/10,000mo;
+MEGA $60/50,000mo. Keep-warm fleet now seventeen services,
+window re-budgeted to 09:00-10:15 ET (659h worst month vs the
+750h cap). Listing package ready:
+listings/swiftrender-openapi.json +
+listings/swiftrender-listing-notes.md (Spotlight draft 238
+characters, no model-speed claim); spec
+docs/spec-swiftrender.md; proof doc
+docs/swiftrender-reliability.md.

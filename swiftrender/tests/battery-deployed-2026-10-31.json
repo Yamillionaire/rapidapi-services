@@ -1,0 +1,52 @@
+{
+ "passed": 9,
+ "total": 9,
+ "checks": [
+  {
+   "name": "health_200",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "name": "adapters_state",
+   "pass": true,
+   "detail": "{'import': 'live', 'replicate': 'provider_not_configured'}"
+  },
+  {
+   "name": "gate_401_no_header",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "name": "gate_401_wrong_secret",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "name": "job_created",
+   "pass": true,
+   "detail": "201"
+  },
+  {
+   "name": "replicate_parked_503",
+   "pass": true,
+   "detail": "503"
+  },
+  {
+   "name": "import_gates_and_installs",
+   "pass": true,
+   "detail": "gated_pass"
+  },
+  {
+   "name": "assemble_ok",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "name": "output_download",
+   "pass": true,
+   "detail": "845860"
+  }
+ ],
+ "base": "https://swiftrender-yqqd.onrender.com"
+}

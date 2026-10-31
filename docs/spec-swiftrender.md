@@ -109,7 +109,9 @@ product, built from his own Rosewood production workflow.
 
 ## Deployment
 
-Render free web service "swiftrender" (see render.yaml): build
+Render free web service "swiftrender" (live at
+https://swiftrender-yqqd.onrender.com, srv-dbj7kocs728c7391u68g;
+see render.yaml): build
 `pip install -r swiftrender/requirements.txt` (Pillow + numpy, the
 DriftCheck engine's dependencies), start `python
 swiftrender/app.py`. All non-health endpoints sit behind the
