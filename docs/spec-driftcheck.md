@@ -5,8 +5,8 @@ we can create that does a quality check so that when there's drift on
 imagery or videos you're able to locate that and fix the error before
 actually spending too many credits? ... build a RapidAPI that does
 that." He confirmed "proceed" the same call. Built under his standing
-full-automation authorization for this lane (2026-10-29). Not a
-competitor clone: a new product in the lane's house style, born from
+full-automation authorization for this lane (2026-10-29). An original
+product, not a clone: new, in the lane's house style, born from
 his own production pipeline (the All Black Towns chapters and the
 Elements merch runs), where generated art drifts from its reference
 and every miss costs regeneration credits (a Seedance shot is 80
