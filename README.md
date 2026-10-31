@@ -290,6 +290,57 @@ listings/driftcheck-openapi.json + listings/driftcheck-listing-notes.md,
 proof doc docs/driftcheck-reliability.md). SwiftRead (#11) remains
 separately queued for its own listing; it is not part of this build.
 
+## 13. xbase/ - XBase (the user's own product; no incumbent)
+Endpoints: POST /search {query, max_results? (cap 100), hours_back?
+(cap 168)} -> normalized posts; POST /news-scan {preset} -> a
+curated preset's posts merged and de-duplicated; GET /health.
+The user's own direction (2026-10-31 voice call: "Definitely build
+an API" for X news access). Direct scraping violates X's Terms, so
+XBase wraps the OFFICIAL X API v2 recent-search endpoint with the
+operator's own Bearer token (pay-per-use upstream: $0.005 per post
+returned). Normalized post shape: id, text, author (username,
+name), created_at, public metrics (likes, reposts, replies,
+quotes), post URL, lang. Presets, built for his own two news
+properties and their twice-daily checks: "hiphop" (releases, tours,
+business, culture), "black-news-us", and "black-news-international"
+(the African diaspora: Africa, the Caribbean, the UK, Canada,
+Latin America). Engine states are honest by construction and
+reported in /health and per response: live (token set), mock
+(XBASE_MOCK=1; fixture payloads through the same normalization
+code, labeled "engine": "mock" with FIXTURE in the post texts), and
+awaiting_token (explicit 503 engine_not_configured).
+DEPLOYED 2026-10-31: https://xbase.onrender.com
+(srv-dbj4pjmtlv9c73c80aqg; GitHub commit 46be9c38). Stdlib only,
+build "true". Create-time env vars did not stick (the known lane
+race): XBASE_MOCK and RAPIDAPI_PROXY_SECRET were re-set at service
+level via the API and redeployed before verification.
+PROOF TESTS (local battery xbase/tests/battery-2026-10-31.json,
+13/13; deployed reproduction in mock mode with identical behavior):
+/health 200 in both modes; gate 401 without the header, 401 with a
+wrong value, 422 missing_parameter with it; /search 200 with
+correctly shaped normalized posts; all three /news-scan presets
+200, de-duplicated by id (9 fixture returns merge to 3 unique);
+unknown preset 422. After the proof, mock was switched off and the
+service redeployed into its honest awaiting state: /health reports
+awaiting_token, /search and /news-scan answer 503
+engine_not_configured through the gate. The build-time test secret
+was not retained; the origin sits gated under it until the Studio
+step sets the real secret.
+PARKED at the token step (decision queue item 11, the RapidAPI
+needs-you queue): no X credential exists in any approved store, and
+creating the X developer account, accepting its terms, and funding
+it are the owner's steps. Publish is parked behind the same step:
+the Hub gateway test calls /search, which cannot return live data
+until the token lands and one small live proof (about a dozen
+posts, about $0.06) passes. The twice-daily scan cron is NOT wired;
+it is scheduled only after the API is live and the user confirms.
+Pricing (planned, hard limits, per request): BASIC $0/100mo;
+PRO $5/1,000mo; ULTRA $20/10,000mo; MEGA $60/50,000mo. Keep-warm
+fleet now thirteen services, window re-budgeted to 09:00-10:40 ET
+(671h worst month vs the 750h cap). Listing package ready:
+listings/xbase-openapi.json + listings/xbase-listing-notes.md;
+spec docs/spec-xbase.md; proof doc docs/xbase-reliability.md.
+
 ## Sequence
 Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves
