@@ -40,3 +40,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: driftcheck
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r driftcheck/requirements.txt"
+    startCommand: "python driftcheck/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"

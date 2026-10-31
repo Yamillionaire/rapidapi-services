@@ -1,0 +1,750 @@
+{
+ "test1_break_emblem_vs_break_sheet": {
+  "drift_score": 68.9,
+  "verdict": "fail",
+  "score_composition": {
+   "similarity_drift": 56.2,
+   "proportion_penalty": 98.4,
+   "formula": "0.7 x similarity drift + 0.3 x proportion penalty (similarity alone when no share could be measured)"
+  },
+  "similarity": {
+   "full_frame": {
+    "parts": {
+     "dhash": 0.688,
+     "phash": 0.734,
+     "ssim_global": 0.041,
+     "color_histogram": 0.289
+    },
+    "composite": 0.438,
+    "drift_score": 56.2
+   },
+   "best_region": {
+    "region": "full",
+    "parts": {
+     "dhash": 0.688,
+     "phash": 0.734,
+     "ssim_global": 0.041,
+     "color_histogram": 0.289
+    },
+    "composite": 0.438,
+    "drift_score": 56.2
+   }
+  },
+  "proportion": {
+   "candidate": {
+    "width_pct": 50.0,
+    "height_pct": 62.9,
+    "area_pct": 31.4,
+    "bbox_px": [
+     128,
+     95,
+     383,
+     416
+    ]
+   },
+   "reference": {
+    "width_pct": 99.2,
+    "height_pct": 99.4,
+    "area_pct": 98.6,
+    "bbox_px": [
+     6,
+     4,
+     1201,
+     1802
+    ]
+   },
+   "divergence_points": {
+    "width": 49.2,
+    "height": 36.5
+   },
+   "flag": "subject scale diverges from the reference by more than 20 points (width 49.2, height 36.5)",
+   "penalty": 98.4
+  },
+  "text_check": {
+   "ocr": {
+    "status": "unavailable",
+    "detail": "No OCR engine on this host (tesseract not installed). Text in the candidate is NOT verified by this component; the emblem's geometry is covered by the proportion report."
+   }
+  },
+  "notes": [
+   "Headline drift_score = 0.7 x similarity drift + 0.3 x proportion penalty (penalty = min(100, 2 x the largest bounding-box share divergence in points)); both inputs are reported separately, and the verdict also escalates on a proportion flag or a missing expected text.",
+   "Similarity grades the subject art (bounding-box cropped) with classical metrics (dhash, phash, global SSIM, color histogram) - no learned embedding.",
+   "A model sheet is a collage of panels: the best-matching reference region is reported alongside the full-frame score, and the similarity grade uses the best region.",
+   "Identity limit, measured in calibration: against a multi-panel model sheet these metrics cannot confirm WHICH character is drawn (a wrong character graded about the same as the right one). For identity-grade gating, pass the approved same-class comp (the locked design or start still) as the reference; against a sheet, the discriminating evidence is the proportion report, the color_histogram part, and the text check.",
+   "Proportion compares bounding-box share of frame; it assumes candidate and reference are the same framing class (sticker vs sticker, scene vs scene). Against a model sheet, whose foreground saturates the frame, it reads as 'how much smaller is the candidate's art than the sheet's coverage' - which is exactly the oversized/undersized emblem signal it was built to catch.",
+   "OCR is unavailable on this deployment, so lettering inside the art is not machine-read here; run the native-resolution zoom audit before shipping anything the OCR component could not read."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 1468
+  }
+ },
+ "test2_djriot_design_vs_djriot_sheet": {
+  "drift_score": 42.2,
+  "verdict": "pass",
+  "score_composition": {
+   "similarity_drift": 58.6,
+   "proportion_penalty": 3.8,
+   "formula": "0.7 x similarity drift + 0.3 x proportion penalty (similarity alone when no share could be measured)"
+  },
+  "similarity": {
+   "full_frame": {
+    "parts": {
+     "dhash": 0.484,
+     "phash": 0.609,
+     "ssim_global": 0.007,
+     "color_histogram": 0.391
+    },
+    "composite": 0.373,
+    "drift_score": 62.7
+   },
+   "best_region": {
+    "region": "center",
+    "parts": {
+     "dhash": 0.562,
+     "phash": 0.703,
+     "ssim_global": 0.021,
+     "color_histogram": 0.37
+    },
+    "composite": 0.414,
+    "drift_score": 58.6
+   }
+  },
+  "proportion": {
+   "candidate": {
+    "width_pct": 99.7,
+    "height_pct": 98.1,
+    "area_pct": 97.9,
+    "bbox_px": [
+     1,
+     25,
+     1119,
+     1400
+    ]
+   },
+   "reference": {
+    "width_pct": 100.0,
+    "height_pct": 100.0,
+    "area_pct": 100.0,
+    "bbox_px": [
+     0,
+     0,
+     1205,
+     1808
+    ]
+   },
+   "divergence_points": {
+    "width": 0.3,
+    "height": 1.9
+   },
+   "flag": null,
+   "penalty": 3.8
+  },
+  "text_check": {
+   "ocr": {
+    "status": "unavailable",
+    "detail": "No OCR engine on this host (tesseract not installed). Text in the candidate is NOT verified by this component; the emblem's geometry is covered by the proportion report."
+   }
+  },
+  "notes": [
+   "Headline drift_score = 0.7 x similarity drift + 0.3 x proportion penalty (penalty = min(100, 2 x the largest bounding-box share divergence in points)); both inputs are reported separately, and the verdict also escalates on a proportion flag or a missing expected text.",
+   "Similarity grades the subject art (bounding-box cropped) with classical metrics (dhash, phash, global SSIM, color histogram) - no learned embedding.",
+   "A model sheet is a collage of panels: the best-matching reference region is reported alongside the full-frame score, and the similarity grade uses the best region.",
+   "Identity limit, measured in calibration: against a multi-panel model sheet these metrics cannot confirm WHICH character is drawn (a wrong character graded about the same as the right one). For identity-grade gating, pass the approved same-class comp (the locked design or start still) as the reference; against a sheet, the discriminating evidence is the proportion report, the color_histogram part, and the text check.",
+   "Proportion compares bounding-box share of frame; it assumes candidate and reference are the same framing class (sticker vs sticker, scene vs scene). Against a model sheet, whose foreground saturates the frame, it reads as 'how much smaller is the candidate's art than the sheet's coverage' - which is exactly the oversized/undersized emblem signal it was built to catch.",
+   "OCR is unavailable on this deployment, so lettering inside the art is not machine-read here; run the native-resolution zoom audit before shipping anything the OCR component could not read."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 3124
+  }
+ },
+ "identity_break_emblem_vs_itself": {
+  "drift_score": 0.0,
+  "verdict": "pass",
+  "score_composition": {
+   "similarity_drift": 0.0,
+   "proportion_penalty": 0.0,
+   "formula": "0.7 x similarity drift + 0.3 x proportion penalty (similarity alone when no share could be measured)"
+  },
+  "similarity": {
+   "full_frame": {
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 1.0,
+     "color_histogram": 1.0
+    },
+    "composite": 1.0,
+    "drift_score": 0.0
+   },
+   "best_region": {
+    "region": "full",
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 1.0,
+     "color_histogram": 1.0
+    },
+    "composite": 1.0,
+    "drift_score": 0.0
+   }
+  },
+  "proportion": {
+   "candidate": {
+    "width_pct": 50.0,
+    "height_pct": 62.9,
+    "area_pct": 31.4,
+    "bbox_px": [
+     128,
+     95,
+     383,
+     416
+    ]
+   },
+   "reference": {
+    "width_pct": 50.0,
+    "height_pct": 62.9,
+    "area_pct": 31.4,
+    "bbox_px": [
+     128,
+     95,
+     383,
+     416
+    ]
+   },
+   "divergence_points": {
+    "width": 0.0,
+    "height": 0.0
+   },
+   "flag": null,
+   "penalty": 0.0
+  },
+  "text_check": {
+   "ocr": {
+    "status": "unavailable",
+    "detail": "No OCR engine on this host (tesseract not installed). Text in the candidate is NOT verified by this component; the emblem's geometry is covered by the proportion report."
+   }
+  },
+  "notes": [
+   "Headline drift_score = 0.7 x similarity drift + 0.3 x proportion penalty (penalty = min(100, 2 x the largest bounding-box share divergence in points)); both inputs are reported separately, and the verdict also escalates on a proportion flag or a missing expected text.",
+   "Similarity grades the subject art (bounding-box cropped) with classical metrics (dhash, phash, global SSIM, color histogram) - no learned embedding.",
+   "A model sheet is a collage of panels: the best-matching reference region is reported alongside the full-frame score, and the similarity grade uses the best region.",
+   "Identity limit, measured in calibration: against a multi-panel model sheet these metrics cannot confirm WHICH character is drawn (a wrong character graded about the same as the right one). For identity-grade gating, pass the approved same-class comp (the locked design or start still) as the reference; against a sheet, the discriminating evidence is the proportion report, the color_histogram part, and the text check.",
+   "Proportion compares bounding-box share of frame; it assumes candidate and reference are the same framing class (sticker vs sticker, scene vs scene). Against a model sheet, whose foreground saturates the frame, it reads as 'how much smaller is the candidate's art than the sheet's coverage' - which is exactly the oversized/undersized emblem signal it was built to catch.",
+   "OCR is unavailable on this deployment, so lettering inside the art is not machine-read here; run the native-resolution zoom audit before shipping anything the OCR component could not read."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 388
+  }
+ },
+ "wrongpair_djriot_design_vs_break_sheet": {
+  "drift_score": 40.8,
+  "verdict": "pass",
+  "score_composition": {
+   "similarity_drift": 57.2,
+   "proportion_penalty": 2.6,
+   "formula": "0.7 x similarity drift + 0.3 x proportion penalty (similarity alone when no share could be measured)"
+  },
+  "similarity": {
+   "full_frame": {
+    "parts": {
+     "dhash": 0.375,
+     "phash": 0.547,
+     "ssim_global": 0.0,
+     "color_histogram": 0.35
+    },
+    "composite": 0.318,
+    "drift_score": 68.2
+   },
+   "best_region": {
+    "region": "right",
+    "parts": {
+     "dhash": 0.688,
+     "phash": 0.672,
+     "ssim_global": 0.024,
+     "color_histogram": 0.329
+    },
+    "composite": 0.428,
+    "drift_score": 57.2
+   }
+  },
+  "proportion": {
+   "candidate": {
+    "width_pct": 99.7,
+    "height_pct": 98.1,
+    "area_pct": 97.9,
+    "bbox_px": [
+     1,
+     25,
+     1119,
+     1400
+    ]
+   },
+   "reference": {
+    "width_pct": 99.2,
+    "height_pct": 99.4,
+    "area_pct": 98.6,
+    "bbox_px": [
+     6,
+     4,
+     1201,
+     1802
+    ]
+   },
+   "divergence_points": {
+    "width": 0.5,
+    "height": 1.3
+   },
+   "flag": null,
+   "penalty": 2.6
+  },
+  "text_check": {
+   "ocr": {
+    "status": "unavailable",
+    "detail": "No OCR engine on this host (tesseract not installed). Text in the candidate is NOT verified by this component; the emblem's geometry is covered by the proportion report."
+   }
+  },
+  "notes": [
+   "Headline drift_score = 0.7 x similarity drift + 0.3 x proportion penalty (penalty = min(100, 2 x the largest bounding-box share divergence in points)); both inputs are reported separately, and the verdict also escalates on a proportion flag or a missing expected text.",
+   "Similarity grades the subject art (bounding-box cropped) with classical metrics (dhash, phash, global SSIM, color histogram) - no learned embedding.",
+   "A model sheet is a collage of panels: the best-matching reference region is reported alongside the full-frame score, and the similarity grade uses the best region.",
+   "Identity limit, measured in calibration: against a multi-panel model sheet these metrics cannot confirm WHICH character is drawn (a wrong character graded about the same as the right one). For identity-grade gating, pass the approved same-class comp (the locked design or start still) as the reference; against a sheet, the discriminating evidence is the proportion report, the color_histogram part, and the text check.",
+   "Proportion compares bounding-box share of frame; it assumes candidate and reference are the same framing class (sticker vs sticker, scene vs scene). Against a model sheet, whose foreground saturates the frame, it reads as 'how much smaller is the candidate's art than the sheet's coverage' - which is exactly the oversized/undersized emblem signal it was built to catch.",
+   "OCR is unavailable on this deployment, so lettering inside the art is not machine-read here; run the native-resolution zoom audit before shipping anything the OCR component could not read."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 3901
+  }
+ },
+ "sameclass_djriot_two_approved_renditions": {
+  "drift_score": 42.2,
+  "verdict": "pass",
+  "score_composition": {
+   "similarity_drift": 54.5,
+   "proportion_penalty": 13.4,
+   "formula": "0.7 x similarity drift + 0.3 x proportion penalty (similarity alone when no share could be measured)"
+  },
+  "similarity": {
+   "full_frame": {
+    "parts": {
+     "dhash": 0.422,
+     "phash": 0.531,
+     "ssim_global": 0.0,
+     "color_histogram": 0.634
+    },
+    "composite": 0.397,
+    "drift_score": 60.3
+   },
+   "best_region": {
+    "region": "quadrant_2",
+    "parts": {
+     "dhash": 0.484,
+     "phash": 0.672,
+     "ssim_global": 0.0,
+     "color_histogram": 0.663
+    },
+    "composite": 0.455,
+    "drift_score": 54.5
+   }
+  },
+  "proportion": {
+   "candidate": {
+    "width_pct": 99.7,
+    "height_pct": 98.1,
+    "area_pct": 97.9,
+    "bbox_px": [
+     1,
+     25,
+     1119,
+     1400
+    ]
+   },
+   "reference": {
+    "width_pct": 96.7,
+    "height_pct": 91.4,
+    "area_pct": 88.4,
+    "bbox_px": [
+     16,
+     31,
+     1100,
+     1312
+    ]
+   },
+   "divergence_points": {
+    "width": 3.0,
+    "height": 6.7
+   },
+   "flag": null,
+   "penalty": 13.4
+  },
+  "text_check": {
+   "ocr": {
+    "status": "unavailable",
+    "detail": "No OCR engine on this host (tesseract not installed). Text in the candidate is NOT verified by this component; the emblem's geometry is covered by the proportion report."
+   }
+  },
+  "notes": [
+   "Headline drift_score = 0.7 x similarity drift + 0.3 x proportion penalty (penalty = min(100, 2 x the largest bounding-box share divergence in points)); both inputs are reported separately, and the verdict also escalates on a proportion flag or a missing expected text.",
+   "Similarity grades the subject art (bounding-box cropped) with classical metrics (dhash, phash, global SSIM, color histogram) - no learned embedding.",
+   "A model sheet is a collage of panels: the best-matching reference region is reported alongside the full-frame score, and the similarity grade uses the best region.",
+   "Identity limit, measured in calibration: against a multi-panel model sheet these metrics cannot confirm WHICH character is drawn (a wrong character graded about the same as the right one). For identity-grade gating, pass the approved same-class comp (the locked design or start still) as the reference; against a sheet, the discriminating evidence is the proportion report, the color_histogram part, and the text check.",
+   "Proportion compares bounding-box share of frame; it assumes candidate and reference are the same framing class (sticker vs sticker, scene vs scene). Against a model sheet, whose foreground saturates the frame, it reads as 'how much smaller is the candidate's art than the sheet's coverage' - which is exactly the oversized/undersized emblem signal it was built to catch.",
+   "OCR is unavailable on this deployment, so lettering inside the art is not machine-read here; run the native-resolution zoom audit before shipping anything the OCR component could not read."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 2952
+  }
+ },
+ "test3_video_real_clip": {
+  "duration_s": 10.0,
+  "frames_sampled": 10,
+  "drift_score": 39.4,
+  "mean_drift_score": 29.9,
+  "verdict": "pass",
+  "frames": [
+   {
+    "index": 0,
+    "at_s": 0.5,
+    "drift_score": 11.2,
+    "similarity": 0.888,
+    "parts": {
+     "dhash": 0.969,
+     "phash": 0.938,
+     "ssim_global": 0.779,
+     "color_histogram": 0.866
+    },
+    "near_identical_to_previous": null
+   },
+   {
+    "index": 1,
+    "at_s": 1.5,
+    "drift_score": 14.6,
+    "similarity": 0.854,
+    "parts": {
+     "dhash": 0.906,
+     "phash": 0.938,
+     "ssim_global": 0.715,
+     "color_histogram": 0.856
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 2,
+    "at_s": 2.5,
+    "drift_score": 28.1,
+    "similarity": 0.719,
+    "parts": {
+     "dhash": 0.625,
+     "phash": 0.766,
+     "ssim_global": 0.635,
+     "color_histogram": 0.848
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 3,
+    "at_s": 3.5,
+    "drift_score": 35.1,
+    "similarity": 0.649,
+    "parts": {
+     "dhash": 0.547,
+     "phash": 0.625,
+     "ssim_global": 0.579,
+     "color_histogram": 0.846
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 4,
+    "at_s": 4.5,
+    "drift_score": 37.4,
+    "similarity": 0.626,
+    "parts": {
+     "dhash": 0.453,
+     "phash": 0.641,
+     "ssim_global": 0.566,
+     "color_histogram": 0.846
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 5,
+    "at_s": 5.5,
+    "drift_score": 39.4,
+    "similarity": 0.606,
+    "parts": {
+     "dhash": 0.469,
+     "phash": 0.547,
+     "ssim_global": 0.566,
+     "color_histogram": 0.843
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 6,
+    "at_s": 6.5,
+    "drift_score": 36.0,
+    "similarity": 0.64,
+    "parts": {
+     "dhash": 0.562,
+     "phash": 0.578,
+     "ssim_global": 0.567,
+     "color_histogram": 0.853
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 7,
+    "at_s": 7.5,
+    "drift_score": 34.9,
+    "similarity": 0.651,
+    "parts": {
+     "dhash": 0.547,
+     "phash": 0.641,
+     "ssim_global": 0.559,
+     "color_histogram": 0.858
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 8,
+    "at_s": 8.5,
+    "drift_score": 33.7,
+    "similarity": 0.663,
+    "parts": {
+     "dhash": 0.531,
+     "phash": 0.703,
+     "ssim_global": 0.565,
+     "color_histogram": 0.85
+    },
+    "near_identical_to_previous": false
+   },
+   {
+    "index": 9,
+    "at_s": 9.5,
+    "drift_score": 28.6,
+    "similarity": 0.714,
+    "parts": {
+     "dhash": 0.625,
+     "phash": 0.797,
+     "ssim_global": 0.581,
+     "color_histogram": 0.851
+    },
+    "near_identical_to_previous": false
+   }
+  ],
+  "worst_frames": [
+   {
+    "index": 5,
+    "at_s": 5.5,
+    "drift_score": 39.4
+   },
+   {
+    "index": 4,
+    "at_s": 4.5,
+    "drift_score": 37.4
+   },
+   {
+    "index": 6,
+    "at_s": 6.5,
+    "drift_score": 36.0
+   }
+  ],
+  "frozen_spans": [],
+  "frozen_flag": null,
+  "notes": [
+   "Video drift_score is the worst sampled frame's similarity drift (no proportion term: frames and the reference still are the same framing class by construction).",
+   "Each sampled frame is graded against the reference with the same subject-crop metrics as /check-image; the verdict rides on the worst frame.",
+   "Frozen detection compares difference hashes of consecutive sampled frames (similarity >= 0.97); fine motion smaller than the sampling interval can be missed - sample more frames for short clips."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 15170
+  }
+ },
+ "video_frozen_synthetic": {
+  "duration_s": 4.0,
+  "frames_sampled": 10,
+  "drift_score": 0.4,
+  "mean_drift_score": 0.4,
+  "verdict": "warn",
+  "frames": [
+   {
+    "index": 0,
+    "at_s": 0.2,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.986
+    },
+    "near_identical_to_previous": null
+   },
+   {
+    "index": 1,
+    "at_s": 0.6,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.986
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 2,
+    "at_s": 1.0,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.986
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 3,
+    "at_s": 1.4,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.986
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 4,
+    "at_s": 1.8,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.986
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 5,
+    "at_s": 2.2,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.985
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 6,
+    "at_s": 2.6,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.985
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 7,
+    "at_s": 3.0,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.985
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 8,
+    "at_s": 3.4,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.985
+    },
+    "near_identical_to_previous": true
+   },
+   {
+    "index": 9,
+    "at_s": 3.8,
+    "drift_score": 0.4,
+    "similarity": 0.996,
+    "parts": {
+     "dhash": 1.0,
+     "phash": 1.0,
+     "ssim_global": 0.999,
+     "color_histogram": 0.985
+    },
+    "near_identical_to_previous": true
+   }
+  ],
+  "worst_frames": [
+   {
+    "index": 0,
+    "at_s": 0.2,
+    "drift_score": 0.4
+   },
+   {
+    "index": 1,
+    "at_s": 0.6,
+    "drift_score": 0.4
+   },
+   {
+    "index": 2,
+    "at_s": 1.0,
+    "drift_score": 0.4
+   }
+  ],
+  "frozen_spans": [
+   {
+    "from_s": 0.2,
+    "to_s": 3.8
+   }
+  ],
+  "frozen_flag": "near-identical consecutive sampled frames over 1 span(s): the clip holds a still instead of staying in motion",
+  "notes": [
+   "Video drift_score is the worst sampled frame's similarity drift (no proportion term: frames and the reference still are the same framing class by construction).",
+   "Each sampled frame is graded against the reference with the same subject-crop metrics as /check-image; the verdict rides on the worst frame.",
+   "Frozen detection compares difference hashes of consecutive sampled frames (similarity >= 0.97); fine motion smaller than the sampling interval can be missed - sample more frames for short clips."
+  ],
+  "_meta": {
+   "service": "driftcheck",
+   "version": "1.0.0",
+   "latency_ms": 6928
+  }
+ },
+ "gate_no_secret": "{\"error\": \"unauthorized\", \"detail\": \"Missing or invalid RapidAPI proxy secret.\"}",
+ "missing_reference": "{\"error\": \"missing_parameter\", \"detail\": \"Provide the reference as an upload, reference_url, or reference_base64.\"}"
+}
