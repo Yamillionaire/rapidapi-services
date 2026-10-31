@@ -40,9 +40,24 @@ def check(name, ok, detail=""):
     print(("PASS " if ok else "FAIL ") + name + ((" :: " + str(detail)[:160]) if detail and not ok else ""))
 
 
+def wait_ready(timeout=300):
+    """The multilingual index builds in a background thread at boot;
+    poll /health until it reports all languages (or time out)."""
+    import time
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        st, health = call("/health", secret="")
+        if st == 200 and health.get("language_count") == 26:
+            return health
+        time.sleep(5)
+    return health
+
+
 def main():
     # ---- open checks -------------------------------------------------------
-    st, health = call("/health", secret="")
+    st, health = wait_ready(), None
+    health = st
+    st = 200 if health.get("status") == "ok" else 0
     check("health_open_200", st == 200, st)
     check("health_english_legacy", health.get("lemmas") == 147478
           and health.get("pronunciations") == 126052

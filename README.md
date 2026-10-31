@@ -592,9 +592,10 @@ WordNet 3.0 load, own-language definitions/examples where the wordnet
 carries them) and FreeDict dictd dictionaries (German, Russian,
 Hungarian, Esperanto as new languages; Arabic and Greek lifted over
 the bar merged with OMW; real IPA for those six languages). 1,695,718
-non-English entries in a SQLite index built at first boot (cold boot
-about 100 seconds locally, build peak RSS 335MB, steady state
-191MB); English responses without a lang parameter are byte-for-byte
+non-English entries in a SQLite index built at first boot in a
+background thread (English binds and serves immediately; the index
+lands about 45-100 seconds later; build peak RSS 335MB, steady
+state 191MB); English responses without a lang parameter are byte-for-byte
 v1 (golden-tested). Local battery 54/54 (wordbase/tests/
 battery-local-2026-10-31.json). Honest ceiling from the surveyed
 sources: 33 languages (Kaikki.org counts verified for Korean,

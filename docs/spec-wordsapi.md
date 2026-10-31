@@ -221,10 +221,16 @@ Senses per language are reported by /health and /languages.
 - Storage: one SQLite index (stdlib) built at first boot from the
   downloaded OMW tabs, WordNet 3.0 data files and FreeDict dictd
   files; raw OMW/FreeDict files are deleted after a successful
-  build (they re-download if the index is absent). Build peak RSS
-  measured 335MB locally (free-tier ceiling 512MB); steady state
-  191MB; cold boot to listening about 100 seconds locally; the data
-  dir lands at about 465MB (413MB of it the SQLite index).
+  build (they re-download if the index is absent). The build runs
+  in a background thread: the server binds and serves English
+  immediately, /health reports multilingual_status "building", and
+  the language endpoints answer an honest 503 until the index
+  lands (about 45-100 seconds locally). This shape was adopted
+  after the first v2 deploy sat in update_in_progress without
+  binding: a synchronous multi-minute build at boot is the wrong
+  shape for the free tier. Build peak RSS measured 335MB (ceiling
+  512MB); steady state 191MB; data dir about 465MB (413MB of it
+  the SQLite index).
 - Response shape: same record shape as English, plus lang and
   language on the record, translations on OMW/FreeDict senses,
   definitionLanguage + englishDefinition where a local definition

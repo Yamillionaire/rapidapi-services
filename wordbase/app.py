@@ -430,7 +430,7 @@ import zipfile
 
 MULTI_DIR = os.path.join(DATA_DIR, "multi")
 MULTI_DB = os.path.join(MULTI_DIR, "multilingual.sqlite3")
-MULTI_BUILD_VERSION = "2026-10-31-v4"
+MULTI_BUILD_VERSION = "2026-10-31-v5"
 OMW_ZIP_URL = "https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/omw-1.4.zip"
 WN30_ZIP_URL = "https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip"
 
@@ -534,6 +534,7 @@ _alias("pl", "pol")
 
 MULTI_META = {}          # code -> meta dict, loaded after build
 MULTI_ERROR = None       # string when the multilingual build failed
+MULTI_BUILDING = False   # True while the background build thread runs
 WN30_FILES = {}          # pos letter -> open WordNet 3.0 data file handle
 WN30_KEYS = set()        # "00001740-n" style keys present in WordNet 3.0
 _WN30_LOCK = threading.Lock()
@@ -541,7 +542,7 @@ _SYN30_CACHE = {}
 
 
 def supported_lang_codes():
-    return ["en"] + sorted(MULTI_META.keys())
+    return ["en"] + sorted(MULTI_LANGS.keys())
 
 
 def resolve_lang(raw):
@@ -549,7 +550,7 @@ def resolve_lang(raw):
     if raw is None:
         return None, None
     code = LANG_ALIASES.get(str(raw).strip().lower())
-    if code is None or (code != "en" and code not in MULTI_META):
+    if code is None or (code != "en" and code not in MULTI_LANGS):
         return None, (400, {
             "error": "unsupported_language",
             "detail": f"Language '{raw}' is not supported by WordBase.",
@@ -768,7 +769,7 @@ def _build_multi_db():
     con.execute("PRAGMA synchronous=OFF")
     con.execute("PRAGMA temp_store=FILE")
     con.executescript("""
-        CREATE TABLE omw_lemmas(lang TEXT, norm TEXT, display TEXT, synset TEXT, pos TEXT, has_ex INTEGER, has_tr INTEGER);
+        CREATE TABLE omw_lemmas(lang TEXT, norm TEXT, display TEXT, synset TEXT, pos TEXT, has_ex INTEGER, has_tr INTEGER, has_syn INTEGER);
         CREATE TABLE defs(lang TEXT, synset TEXT, definition TEXT, examples TEXT);
         CREATE TABLE fd_entries(lang TEXT, norm TEXT, display TEXT, ipa TEXT, pos TEXT, translations TEXT);
         CREATE TABLE fd_alias(lang TEXT, norm TEXT, target TEXT);
@@ -785,6 +786,7 @@ def _build_multi_db():
             continue
         files = [omw_code] + OMW_EXTRA_FILES.get(omw_code, [])
         defs_rows = {}
+        syn_count = {}
         for fcode in files:
             path = os.path.join(omw_dir, "wn-data-%s.tab" % fcode)
             if not os.path.exists(path):
@@ -794,9 +796,14 @@ def _build_multi_db():
                     if line.startswith("#") or "\t" not in line:
                         continue
                     parts = line.rstrip("\n").split("\t")
-                    if len(parts) < 4:
+                    if len(parts) < 3:
                         continue
                     synset, kind = parts[0], parts[1]
+                    if kind == "lemma" or kind.endswith(":lemma"):
+                        syn_count[synset] = syn_count.get(synset, 0) + 1
+                        continue
+                    if len(parts) < 4:
+                        continue
                     if kind == fcode + ":def":
                         if synset not in defs_rows:
                             defs_rows[synset] = [parts[3], ""]
@@ -836,13 +843,14 @@ def _build_multi_db():
                     lemma_rows.append((code, _multi_norm(display), display, synset,
                                        synset[-1],
                                        1 if synset in ex_synsets else 0,
-                                       1 if in30 else 0))
+                                       1 if in30 else 0,
+                                       1 if syn_count.get(synset, 0) > 1 else 0))
                     senses += 1
                     if len(lemma_rows) >= 20000:
-                        con.executemany("INSERT INTO omw_lemmas VALUES (?,?,?,?,?,?,?)", lemma_rows)
+                        con.executemany("INSERT INTO omw_lemmas VALUES (?,?,?,?,?,?,?,?)", lemma_rows)
                         lemma_rows = []
             if lemma_rows:
-                con.executemany("INSERT INTO omw_lemmas VALUES (?,?,?,?,?,?,?)", lemma_rows)
+                con.executemany("INSERT INTO omw_lemmas VALUES (?,?,?,?,?,?,?,?)", lemma_rows)
                 lemma_rows = []
         omw_senses[code] = senses
 
@@ -903,20 +911,13 @@ def _build_multi_db():
     con.execute("CREATE INDEX idx_fd_lookup ON fd_entries(lang, norm)")
     con.execute("CREATE INDEX idx_fd_alias ON fd_alias(lang, norm)")
     con.execute("""
-        CREATE TEMP TABLE syn_words AS
-        SELECT DISTINCT l1.lang AS lang, l1.norm AS norm
-        FROM omw_lemmas l1 JOIN omw_lemmas l2
-          ON l1.lang = l2.lang AND l1.synset = l2.synset AND l1.norm <> l2.norm""")
-    con.execute("CREATE INDEX idx_syn_words ON syn_words(lang, norm)")
-    con.execute("""
         INSERT INTO words
         SELECT lang, norm, MIN(display), '',
-               MAX(CASE WHEN (lang, norm) IN (SELECT lang, norm FROM syn_words) THEN 1 ELSE 0 END),
-               MAX(has_ex), MAX(has_tr), MAX(has_pron)
+               MAX(has_syn), MAX(has_ex), MAX(has_tr), MAX(has_pron)
         FROM (
-            SELECT lang, norm, display, has_ex, has_tr, 0 AS has_pron FROM omw_lemmas
+            SELECT lang, norm, display, has_ex, has_tr, has_syn, 0 AS has_pron FROM omw_lemmas
             UNION ALL
-            SELECT lang, norm, display, 0, 1, CASE WHEN ipa <> '' THEN 1 ELSE 0 END FROM fd_entries
+            SELECT lang, norm, display, 0, 1, 0, CASE WHEN ipa <> '' THEN 1 ELSE 0 END FROM fd_entries
         )
         GROUP BY lang, norm""")
     con.execute("CREATE INDEX idx_words_lang ON words(lang, norm)")
@@ -982,8 +983,15 @@ def _load_multi_meta():
 
 
 def init_multi():
-    """Download, build and open the multilingual index. Never fatal."""
-    global MULTI_ERROR
+    """Download, build and open the multilingual index. Never fatal.
+
+    Runs in a background thread (see __main__): the server binds and
+    serves English immediately, /health reports
+    multilingual_status "building", and the language endpoints answer
+    an honest 503 until the index lands.
+    """
+    global MULTI_ERROR, MULTI_BUILDING
+    MULTI_BUILDING = True
     try:
         _ensure_multi_sources()
         _load_wn30_keys()
@@ -1016,6 +1024,8 @@ def init_multi():
         _load_multi_meta()
     except Exception as e:  # noqa: BLE001 - English must keep serving
         MULTI_ERROR = f"{type(e).__name__}: {e}"
+    finally:
+        MULTI_BUILDING = False
 
 
 def _synset_key(offset, pos_letter):
@@ -1089,10 +1099,15 @@ def _multi_results(con, code, norm):
     return results, ipas
 
 
+def _multi_unavailable():
+    detail = MULTI_ERROR or ("Multilingual index is building; try again shortly."
+                             if MULTI_BUILDING else "Multilingual index is not built.")
+    return 503, {"error": "multilingual_unavailable", "detail": detail}
+
+
 def multi_word(code, params):
     if not MULTI_META:
-        return 503, {"error": "multilingual_unavailable",
-                     "detail": MULTI_ERROR or "Multilingual index is not built."}
+        return _multi_unavailable()
     word = urllib.parse.unquote(params.get("word", ""))
     norm = _multi_norm(word)
     if not norm:
@@ -1134,8 +1149,7 @@ _MULTI_RELATIONS = ["definitions", "synonyms", "translations", "examples",
 
 def multi_relation(code, params):
     if not MULTI_META:
-        return 503, {"error": "multilingual_unavailable",
-                     "detail": MULTI_ERROR or "Multilingual index is not built."}
+        return _multi_unavailable()
     word = urllib.parse.unquote(params.get("word", ""))
     relation = params.get("relation", "")
     status, rec = multi_word(code, params)
@@ -1177,8 +1191,7 @@ def multi_relation(code, params):
 
 def multi_search(code, params):
     if not MULTI_META:
-        return 503, {"error": "multilingual_unavailable",
-                     "detail": MULTI_ERROR or "Multilingual index is not built."}
+        return _multi_unavailable()
     for bad in ("syllablesMin", "syllablesMax", "frequencyMin", "frequencyMax"):
         if params.get(bad) is not None:
             return 400, {"error": "unsupported_filter",
@@ -1437,11 +1450,13 @@ def handle_health(params):
                                 for code, m in sorted(MULTI_META.items())}
     elif MULTI_ERROR:
         payload["multilingual_error"] = MULTI_ERROR
+    elif MULTI_BUILDING:
+        payload["multilingual_status"] = "building"
     return 200, payload
 
 
 if __name__ == "__main__":
-    init_multi()
+    threading.Thread(target=init_multi, daemon=True).start()
     run({
         "/languages": handle_languages,
         "/words": handle_search,
