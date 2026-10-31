@@ -68,3 +68,21 @@ What was verified for v2, and how:
   the raw extracts run to gigabytes against the free tier's
   first-boot download pattern. 26 live today; 33 is the ceiling,
   stated as a ceiling.
+
+Deployed verification (2026-10-31): GitHub commits 1396efcb +
+3d0d3bc6, Render deploys dep-dbj7gcvlk1mc738fbtog +
+dep-dbj7l9ss728c7391vqfg on srv-dbhfdb6c6qcc73f9geh0.
+The first v2 deploy used a synchronous build at boot and took over
+15 minutes to bind on Render; the shipped shape builds the index
+in a background thread (English binds immediately, /health shows
+multilingual_status "building", language endpoints answer an
+honest 503 until it lands; the Render-side build took about 10
+minutes against 45-100 seconds locally). Deployed battery
+(wordbase/tests/battery-deployed-2026-10-31.json): 6/6 open checks
+- health reports all 26 languages with per-language entry counts
+identical to the local build, English legacy counts unchanged
+(147,478 / 126,052 / 50,000), proxy gate 401 without and with a
+wrong header. The authenticated half of the battery (54 checks,
+passed locally) runs against the deployed service through the
+RapidAPI gateway in the Studio pass that also updates the listing
+copy; the production proxy secret is not readable from this lane.

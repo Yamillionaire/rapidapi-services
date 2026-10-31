@@ -602,3 +602,9 @@ sources: 33 languages (Kaikki.org counts verified for Korean,
 Turkish, Vietnamese, Hindi, Czech, Ukrainian, Swedish; the raw
 Kaikki files need an offline compaction before they fit the boot
 pattern). Full survey in docs/spec-wordsapi.md.
+DEPLOYED v2 2026-10-31: commits 1396efcb + 3d0d3bc6; deploys
+dep-dbj7gcvlk1mc738fbtog + dep-dbj7l9ss728c7391vqfg live on
+srv-dbhfdb6c6qcc73f9geh0. Deployed open battery 6/6 (health counts
+identical to the local build; gate 401s). The background build
+takes about 10 minutes on Render against 45-100 seconds locally;
+English serves throughout.

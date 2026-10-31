@@ -1,0 +1,37 @@
+{
+ "base": "https://wordbase-dictionary.onrender.com",
+ "passed": 6,
+ "total": 6,
+ "results": [
+  {
+   "check": "health_open_200",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "health_english_legacy",
+   "pass": true,
+   "detail": "147478"
+  },
+  {
+   "check": "health_language_count_26",
+   "pass": true,
+   "detail": "26"
+  },
+  {
+   "check": "health_per_language_entries_match_survey_build",
+   "pass": true,
+   "detail": "{}"
+  },
+  {
+   "check": "gate_401_without_header",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "check": "gate_401_wrong_header",
+   "pass": true,
+   "detail": "401"
+  }
+ ]
+}
