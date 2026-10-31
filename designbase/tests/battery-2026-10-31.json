@@ -1,0 +1,512 @@
+{
+  "checks": [
+    {
+      "name": "awaiting /health 200, reasoning state awaiting_key, code engines live",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /palette without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /palette wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /palette -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /design-brief -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /critique -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /image-prompt -> 200 (code-assembled, as /health promises)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "live /health: reasoning live, models named",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "live /image-prompt era-locked -> era lock, negative constraints, product framing all present",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/image-prompt missing subject -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/palette empty body -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/palette merch-tee brief -> palettes with valid hex, background+primary roles, computed contrast; code ratio white/black = 21.0",
+      "pass": true,
+      "detail": "palettes=2, hex_ok=True, roles_ok=True, contrast_ok=True, white_on_black=21.0"
+    },
+    {
+      "name": "/design-brief poster -> full structure with do/don't lists",
+      "pass": true,
+      "detail": "dos=5, donts=5"
+    },
+    {
+      "name": "/design-brief missing vibe -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/critique real merch design -> four scored dimensions, fixes, header-read image info",
+      "pass": true,
+      "detail": "overall=7.8, fixes=4, image=1254x1254"
+    },
+    {
+      "name": "/critique non-image upload -> 422 unsupported_format",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "samples": {
+    "health_awaiting": {
+      "status": "ok",
+      "service": "designbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "awaiting_key",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "palette selection, design-brief writing, and critique judgments (/palette, /design-brief, /critique)"
+        },
+        "prompt_builder": {
+          "state": "live",
+          "engine": "code (deterministic prompt-grammar assembly)",
+          "role": "/image-prompt; needs no model and works while the reasoning engine awaits its key"
+        },
+        "color_math": {
+          "state": "live",
+          "engine": "code",
+          "role": "hex validation (invalid values dropped, never repaired) and WCAG 2.x contrast ratios for /palette"
+        }
+      },
+      "limits": {
+        "max_brief_chars": 2000,
+        "max_field_chars": 500,
+        "default_palette_count": 3,
+        "max_palette_count": 5,
+        "max_image_bytes": 8000000,
+        "image_formats": [
+          "png",
+          "jpeg",
+          "gif",
+          "webp"
+        ]
+      },
+      "endpoints": [
+        "POST /palette",
+        "POST /design-brief",
+        "POST /image-prompt",
+        "POST /critique",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "DesignBase returns design intelligence (palettes, briefs, image-generation prompts, critiques); it does not generate images. Critique scores are labeled model judgments; hex values and contrast ratios are computed in code."
+    },
+    "palette_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so this endpoint is not available. The service owner must add GEMINI_API_KEY to enable it. /image-prompt is code-assembled and remains available."
+    },
+    "image_prompt_awaiting": {
+      "prompt": "a lighthouse at dawn. photorealistic photograph, shot on a 35mm lens. subject placed on a rule-of-thirds intersection, environment in soft focus behind the subject. natural directional light, realistic shadows and skin texture",
+      "negative_prompt": "no text, no lettering, no words, no watermark, no signature, no distorted hands, no extra limbs, no blurry or duplicated subject",
+      "components": {
+        "subject": "a lighthouse at dawn",
+        "style": "photorealistic photograph",
+        "medium": "photorealistic photograph, shot on a 35mm lens",
+        "composition": "subject placed on a rule-of-thirds intersection, environment in soft focus behind the subject",
+        "lighting": "natural directional light, realistic shadows and skin texture"
+      },
+      "notes": [
+        "Assembled in code from the prompt grammar; no model call was made."
+      ],
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "code",
+        "latency_ms": 0
+      }
+    },
+    "health_live": {
+      "status": "ok",
+      "service": "designbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "live",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "palette selection, design-brief writing, and critique judgments (/palette, /design-brief, /critique)"
+        },
+        "prompt_builder": {
+          "state": "live",
+          "engine": "code (deterministic prompt-grammar assembly)",
+          "role": "/image-prompt; needs no model and works while the reasoning engine awaits its key"
+        },
+        "color_math": {
+          "state": "live",
+          "engine": "code",
+          "role": "hex validation (invalid values dropped, never repaired) and WCAG 2.x contrast ratios for /palette"
+        }
+      },
+      "limits": {
+        "max_brief_chars": 2000,
+        "max_field_chars": 500,
+        "default_palette_count": 3,
+        "max_palette_count": 5,
+        "max_image_bytes": 8000000,
+        "image_formats": [
+          "png",
+          "jpeg",
+          "gif",
+          "webp"
+        ]
+      },
+      "endpoints": [
+        "POST /palette",
+        "POST /design-brief",
+        "POST /image-prompt",
+        "POST /critique",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "DesignBase returns design intelligence (palettes, briefs, image-generation prompts, critiques); it does not generate images. Critique scores are labeled model judgments; hex values and contrast ratios are computed in code."
+    },
+    "image_prompt_era": {
+      "prompt": "a solo b-boy frozen mid-freeze on a rooftop. bold comic-book illustration, strong ink outlines, halftone shading. dynamic diagonal composition, subject large in frame, action reading left to right. dramatic high-contrast lighting with a clear key light. Era lock: the scene is set in the Bronx in 1983. All clothing, hairstyles, props, vehicles, signage and architecture must be period-accurate for the Bronx in 1983; nothing introduced after that period may appear. Intended for a merch tee: keep the subject centered with clear margins on every side, and keep colors strong enough to survive print reproduction",
+      "negative_prompt": "no text, no lettering, no words, no watermark, no signature, no distorted hands, no extra limbs, no blurry or duplicated subject, no modern objects, no anachronisms, no contemporary clothing or devices",
+      "components": {
+        "subject": "a solo b-boy frozen mid-freeze on a rooftop",
+        "style": "comic book cover illustration",
+        "medium": "bold comic-book illustration, strong ink outlines, halftone shading",
+        "composition": "dynamic diagonal composition, subject large in frame, action reading left to right",
+        "lighting": "dramatic high-contrast lighting with a clear key light",
+        "era_lock": "Era lock: the scene is set in the Bronx in 1983. All clothing, hairstyles, props, vehicles, signage and architecture must be period-accurate for the Bronx in 1983; nothing introduced after that period may appear.",
+        "product": "Intended for a merch tee: keep the subject centered with clear margins on every side, and keep colors strong enough to survive print reproduction."
+      },
+      "notes": [
+        "Assembled in code from the prompt grammar; no model call was made.",
+        "Product framing applied; verify print margins on the target product before production."
+      ],
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "code",
+        "latency_ms": 0
+      }
+    },
+    "palette_merch_tee": {
+      "brief": "Merch tee for a hip-hop DJ brand: bold, nightclub energy, must print well on black and white tees",
+      "palette_count": 2,
+      "palettes": [
+        {
+          "name": "Neon Underground",
+          "mood": "High-energy, electric, and aggressive nightclub aesthetic",
+          "colors": [
+            {
+              "hex": "#0A0A0A",
+              "name": "Void Black",
+              "role": "background"
+            },
+            {
+              "hex": "#FF0055",
+              "name": "Laser Pink",
+              "role": "primary"
+            },
+            {
+              "hex": "#00FFCC",
+              "name": "Acid Cyan",
+              "role": "secondary"
+            },
+            {
+              "hex": "#FFFFFF",
+              "name": "Strobe White",
+              "role": "text"
+            },
+            {
+              "hex": "#FFD700",
+              "name": "Gold Chain",
+              "role": "accent"
+            }
+          ],
+          "contrast": {
+            "basis": "WCAG 2.x contrast ratios computed in code against the palette's background color(s)",
+            "pairs": [
+              {
+                "hex": "#FF0055",
+                "role": "primary",
+                "ratios": [
+                  {
+                    "background": "#0A0A0A",
+                    "ratio": 5.08,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#00FFCC",
+                "role": "secondary",
+                "ratios": [
+                  {
+                    "background": "#0A0A0A",
+                    "ratio": 15.25,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#FFFFFF",
+                "role": "text",
+                "ratios": [
+                  {
+                    "background": "#0A0A0A",
+                    "ratio": 19.8,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#FFD700",
+                "role": "accent",
+                "ratios": [
+                  {
+                    "background": "#0A0A0A",
+                    "ratio": 14.12,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "Street Grit",
+          "mood": "Raw, urban, and high-contrast industrial hip-hop style",
+          "colors": [
+            {
+              "hex": "#F4F4F4",
+              "name": "Concrete White",
+              "role": "background"
+            },
+            {
+              "hex": "#1A1A1A",
+              "name": "Vinyl Matte",
+              "role": "primary"
+            },
+            {
+              "hex": "#FF4500",
+              "name": "Safety Orange",
+              "role": "accent"
+            },
+            {
+              "hex": "#4A4A4A",
+              "name": "Spray Grey",
+              "role": "secondary"
+            },
+            {
+              "hex": "#000000",
+              "name": "Ink Black",
+              "role": "text"
+            }
+          ],
+          "contrast": {
+            "basis": "WCAG 2.x contrast ratios computed in code against the palette's background color(s)",
+            "pairs": [
+              {
+                "hex": "#1A1A1A",
+                "role": "primary",
+                "ratios": [
+                  {
+                    "background": "#F4F4F4",
+                    "ratio": 15.82,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#FF4500",
+                "role": "accent",
+                "ratios": [
+                  {
+                    "background": "#F4F4F4",
+                    "ratio": 3.13,
+                    "aa_normal_text": false,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#4A4A4A",
+                "role": "secondary",
+                "ratios": [
+                  {
+                    "background": "#F4F4F4",
+                    "ratio": 8.06,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              },
+              {
+                "hex": "#000000",
+                "role": "text",
+                "ratios": [
+                  {
+                    "background": "#F4F4F4",
+                    "ratio": 19.09,
+                    "aa_normal_text": true,
+                    "aa_large_text": true
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "validation": {
+        "invalid_hex_dropped": 0,
+        "note": "Hex values are validated in code; invalid values are dropped, never repaired. Contrast ratios are computed in code (WCAG 2.x)."
+      },
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 11723
+      }
+    },
+    "design_brief_poster": {
+      "product": "a concert poster for a jazz quartet",
+      "audience": "record collectors aged 30-55",
+      "vibe": "1962 Blue Note sleeve energy, confident and spare",
+      "brief": {
+        "concept_direction": "Mid-century modern minimalism inspired by Reid Miles' Blue Note aesthetic, emphasizing high-contrast photography and structured negative space.",
+        "composition": "Asymmetrical layout using a strict grid system; place a high-contrast, grainy black-and-white photograph of the quartet occupying exactly 60% of the vertical space, aligned to the top-left, leaving the remaining 40% for bold, oversized typography.",
+        "typography": {
+          "direction": "Use a mix of heavy, condensed sans-serifs and elegant, thin-stroke serifs to create hierarchy.",
+          "headline": "Franklin Gothic Extra Condensed, set in all-caps, tracking tightened to -20, left-aligned.",
+          "body": "Baskerville or similar transitional serif, set at 10pt with generous leading, used only for essential concert details like venue, date, and time."
+        },
+        "color_direction": {
+          "direction": "Duotone palette with a single dominant accent color.",
+          "notes": "Base the palette on a deep charcoal black (#1A1A1A) and a warm off-white paper texture (#F4F1EA), with one vibrant accent color (e.g., a saturated mustard yellow or cobalt blue) applied only to the headline or a single graphic element."
+        },
+        "dos": [
+          "Use a grainy, high-ISO film texture overlay on the entire image.",
+          "Align all text elements to a single vertical axis on the left side.",
+          "Limit the color palette to exactly three colors: black, off-white, and one accent color.",
+          "Use generous amounts of negative space to isolate the typography.",
+          "Ensure the photography is cropped tightly to emphasize instrument shapes or facial expressions."
+        ],
+        "donts": [
+          "Do not use drop shadows, gradients, or outer glows on any text.",
+          "Do not use more than two different font families.",
+          "Do not center-align any text elements.",
+          "Do not use full-color photography; convert all imagery to high-contrast monochrome.",
+          "Do not clutter the design with decorative borders or excessive graphic flourishes."
+        ]
+      },
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 11328
+      }
+    },
+    "critique_hoodie_back": {
+      "summary": "The design is a high-energy, visually dense graphic suitable for character-based streetwear. While the illustration quality is strong, the composition suffers from 'visual noise' where the background elements compete with the character, and the logo placement feels slightly disconnected from the main action.",
+      "scores": {
+        "composition": {
+          "score": 7.0,
+          "note": "The layout is balanced, but the background 'equalizer' bars and floating vinyl records create significant clutter that distracts from the central character."
+        },
+        "color_harmony": {
+          "score": 9.0,
+          "note": "Excellent use of a high-contrast blue and white palette against black; the neon glow effects are consistent and vibrant."
+        },
+        "legibility": {
+          "score": 8.0,
+          "note": "The 'DJ RIOT' text is clear, though the logo icon above it is slightly redundant given the character is already wearing headphones."
+        },
+        "focal_point": {
+          "score": 7.0,
+          "note": "The eye is pulled between the character's face and the DJ deck hand; the competing visual weight makes it hard to settle on one point."
+        }
+      },
+      "overall_score": 7.8,
+      "strengths": [
+        "Vibrant, high-impact color palette",
+        "Strong character illustration style",
+        "Effective use of glow effects to create depth"
+      ],
+      "fixes": [
+        {
+          "issue": "Background clutter competing with the character",
+          "fix": "Reduce the opacity or blur the background equalizer bars and floating vinyl records to push them further into the background depth.",
+          "priority": "high"
+        },
+        {
+          "issue": "Redundant iconography",
+          "fix": "Remove the large headphone logo icon above the 'DJ RIOT' text to allow the text to sit higher and breathe, or replace it with a more unique brand emblem.",
+          "priority": "medium"
+        },
+        {
+          "issue": "Lack of separation between hand and deck",
+          "fix": "Add a subtle outer glow or rim light to the fingers touching the vinyl to ensure the hand doesn't blend into the dark record surface.",
+          "priority": "medium"
+        },
+        {
+          "issue": "Logo integration",
+          "fix": "Apply a slight warp or perspective shift to the 'DJ RIOT' text so it feels like it is sitting on the same plane as the DJ deck rather than floating in front of the garment.",
+          "priority": "low"
+        }
+      ],
+      "judgment_source": "Scores and fixes are model judgments (Gemini vision) grounded in the uploaded image; format and dimensions in this response are read from the file header in code.",
+      "image": {
+        "filename": "hoodie-back-dj-riot.png",
+        "format": "image/png",
+        "bytes": 2199263,
+        "width": 1254,
+        "height": 1254
+      },
+      "context": "back print of a character merch hoodie",
+      "_meta": {
+        "service": "designbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 24546
+      }
+    }
+  },
+  "environment": "Phase B Gemini calls routed through tests/connector_bridge.py via the custom.gemini connector (real engine, production request shapes). Contrast ratios and hex validation verified independently by this battery."
+}
