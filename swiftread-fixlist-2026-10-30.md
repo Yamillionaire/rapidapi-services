@@ -11,7 +11,7 @@ plain text fetcher gets only the page title back from them. Discussion and detai
 content below was therefore read from RapidAPI's own indexed pages (the rapidapi.com
 and v2.rapidapi.com discussion/detail pages, which search engines index with full
 text), from provider sites (voicerss.org), and from public forums and GitHub issues
-that name the API. Where a competitor's discussion section could not be enumerated at
+that name the API. Where a comparable listing's discussion section could not be enumerated at
 all, that is stated plainly per API instead of guessed.
 
 ## The competitive field on RapidAPI
@@ -29,7 +29,7 @@ all, that is stated plainly per API instead of guessed.
 | AI Voice Text to Speach (sknuraktar1999) | n/a | Sync | Not stated | 8 voices total (f1-f3, m1-m5); plans $0 / $5 / $10 / $20 |
 | Realistic Text to Speech (ptwebsolution) | 0.1/10 | Sync | Not stated | "Hyper-realistic" claims, near-zero traction |
 
-Key structural fact: **no meaningful RapidAPI competitor offers URL-in / article
+Key structural fact: **no meaningful comparable RapidAPI listing offers URL-in / article
 extraction at all.** Even Large Text to Speech, whose provider markets article
 listening, makes the caller extract and paste the article text themselves (their
 Medium how-to passes raw article text to the API). SwiftRead's /read-url with
@@ -180,7 +180,7 @@ the TTS half, which is where users are hurting.
   at the moment," its own documentation); HiVoicy (English, French, Persian only,
   its listing). The market signal runs the other way: the listings competing on
   breadth advertise 28+, 49, 65+, and 100+ languages.
-- Sources: the two listings' own detail/documentation pages; competitor detail
+- Sources: the two listings' own detail/documentation pages; comparable listings' detail
   pages for the breadth claims.
 - Fix: ship more than English at launch or fast-follow. The Edge neural set has
   quality voices in Spanish, French, German, Portuguese, Italian, Japanese, and
