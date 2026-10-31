@@ -1,9 +1,9 @@
 # SwiftRead: Studio listing notes (for the browser-lane listing session)
 
-Prepared 2026-10-30 with the competitor fix pass. The listing itself
+Prepared 2026-10-30 with the fix pass. The listing itself
 (Studio create/PRIVATE, plans, publish, gateway test, Spotlight) runs
 in the parent's browser lane; this file carries the fixlist's three
-listing actions so nothing from the competitor research gets lost.
+listing actions so nothing from the fix research gets lost.
 
 ## Plans: bill PER REQUEST, never per character (fixlist item 9)
 
