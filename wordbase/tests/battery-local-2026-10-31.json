@@ -1,0 +1,277 @@
+{
+ "base": "http://127.0.0.1:18108",
+ "passed": 54,
+ "total": 54,
+ "results": [
+  {
+   "check": "health_open_200",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "health_english_legacy",
+   "pass": true,
+   "detail": "147478"
+  },
+  {
+   "check": "health_language_count_26",
+   "pass": true,
+   "detail": "26"
+  },
+  {
+   "check": "health_per_language_entries_match_survey_build",
+   "pass": true,
+   "detail": "{}"
+  },
+  {
+   "check": "gate_401_without_header",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "check": "gate_401_wrong_header",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "check": "en_serendipity_record",
+   "pass": true,
+   "detail": "{\"definition\": \"good luck in making unexpected and fortunate discoveries\", \"partOfSpeech\": \"noun\", \"typeOf\": [\"good luck"
+  },
+  {
+   "check": "en_run_57_senses",
+   "pass": true,
+   "detail": "57"
+  },
+  {
+   "check": "en_geese_morphology",
+   "pass": true,
+   "detail": "{'input': 'geese', 'baseForm': 'goose', 'note': 'Inflected form resolved to its WordNet base form.'}"
+  },
+  {
+   "check": "en_unknown_word_404",
+   "pass": true,
+   "detail": "404"
+  },
+  {
+   "check": "unknown_language_400_lists_supported",
+   "pass": true,
+   "detail": "400"
+  },
+  {
+   "check": "languages_endpoint_26",
+   "pass": true,
+   "detail": "26"
+  },
+  {
+   "check": "es_entidad_translations_entity",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "ja_neko_local_definition",
+   "pass": true,
+   "detail": "{\"definition\": \"通常、厚く柔らかい毛皮を持ち、吠えることのできないネコ科の哺乳類：家ネコ\", \"partOfSpeech\": \"noun\", \"definitionLanguage\": \"ja\", \"englishDefin"
+  },
+  {
+   "check": "de_haus_house_and_ipa",
+   "pass": true,
+   "detail": "{\"all\": \"hˈaʊs\"}"
+  },
+  {
+   "check": "ru_sobaka_dog",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "hu_haz_house",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "eo_hundo_dog",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "ar_kitab_ipa",
+   "pass": true,
+   "detail": "{\"all\": \"kitˈaab\"}"
+  },
+  {
+   "check": "el_kosmodromio_cosmodrome",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "it_casa_house",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "fi_talo_house",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "smoke_ar",
+   "pass": true,
+   "detail": "0.000,000,000,000,000,001 -> 200"
+  },
+  {
+   "check": "smoke_ca",
+   "pass": true,
+   "detail": "$ -> 200"
+  },
+  {
+   "check": "smoke_de",
+   "pass": true,
+   "detail": "\"Die Zauberflöte\" -> 200"
+  },
+  {
+   "check": "smoke_el",
+   "pass": true,
+   "detail": "\"αδυναμία\" -> 200"
+  },
+  {
+   "check": "smoke_eo",
+   "pass": true,
+   "detail": "-a -> 200"
+  },
+  {
+   "check": "smoke_es",
+   "pass": true,
+   "detail": "& -> 200"
+  },
+  {
+   "check": "smoke_eu",
+   "pass": true,
+   "detail": "-arazi -> 200"
+  },
+  {
+   "check": "smoke_fi",
+   "pass": true,
+   "detail": "\" -> 200"
+  },
+  {
+   "check": "smoke_fr",
+   "pass": true,
+   "detail": "'Minnie' Mouse -> 200"
+  },
+  {
+   "check": "smoke_gl",
+   "pass": true,
+   "detail": "0 -> 200"
+  },
+  {
+   "check": "smoke_hr",
+   "pass": true,
+   "detail": "\"Elana\" -> 200"
+  },
+  {
+   "check": "smoke_hu",
+   "pass": true,
+   "detail": "-a -> 200"
+  },
+  {
+   "check": "smoke_id",
+   "pass": true,
+   "detail": "1 Korintus -> 200"
+  },
+  {
+   "check": "smoke_it",
+   "pass": true,
+   "detail": "1 -> 200"
+  },
+  {
+   "check": "smoke_ja",
+   "pass": true,
+   "detail": "$ -> 200"
+  },
+  {
+   "check": "smoke_ms",
+   "pass": true,
+   "detail": "1 Makabe -> 200"
+  },
+  {
+   "check": "smoke_nl",
+   "pass": true,
+   "detail": "'s Gravenhage -> 200"
+  },
+  {
+   "check": "smoke_pl",
+   "pass": true,
+   "detail": "$ -> 200"
+  },
+  {
+   "check": "smoke_pt",
+   "pass": true,
+   "detail": "& -> 200"
+  },
+  {
+   "check": "smoke_ro",
+   "pass": true,
+   "detail": "'neața -> 200"
+  },
+  {
+   "check": "smoke_ru",
+   "pass": true,
+   "detail": "FPV-дрон -> 200"
+  },
+  {
+   "check": "smoke_sk",
+   "pass": true,
+   "detail": "(ležiaci presne) uprostred -> 200"
+  },
+  {
+   "check": "smoke_sl",
+   "pass": true,
+   "detail": "!?anus -> 200"
+  },
+  {
+   "check": "smoke_th",
+   "pass": true,
+   "detail": ".22 -> 200"
+  },
+  {
+   "check": "smoke_zh",
+   "pass": true,
+   "detail": "100万 -> 200"
+  },
+  {
+   "check": "de_relation_translations",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "es_relation_definitions",
+   "pass": true,
+   "detail": "200"
+  },
+  {
+   "check": "fr_pronunciation_honest_404",
+   "pass": true,
+   "detail": "404"
+  },
+  {
+   "check": "fr_frequency_filter_400",
+   "pass": true,
+   "detail": "400"
+  },
+  {
+   "check": "es_search_cas",
+   "pass": true,
+   "detail": "66"
+  },
+  {
+   "check": "de_search_has_pronunciation",
+   "pass": true,
+   "detail": "380894"
+  },
+  {
+   "check": "es_unknown_word_404",
+   "pass": true,
+   "detail": "404"
+  }
+ ]
+}

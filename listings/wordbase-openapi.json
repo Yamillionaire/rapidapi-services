@@ -1,0 +1,126 @@
+{
+ "openapi": "3.0.0",
+ "info": {
+  "title": "WordBase Dictionary",
+  "version": "2.0.0",
+  "description": "Multilingual dictionary API: 26 languages, 1.8M+ entries. Definitions, synonyms, translations to English, examples and word relations; English adds IPA pronunciation, syllables, rhymes and Zipf frequency. Optional lang parameter (ISO 639-1/639-3 or English name) on every endpoint; English without lang is unchanged from v1.",
+  "contact": {
+   "name": "WordBase Support"
+  }
+ },
+ "servers": [
+  {
+   "url": "https://wordbase-dictionary.onrender.com"
+  }
+ ],
+ "paths": {
+  "/languages": {
+   "get": {
+    "summary": "List all 26 languages with entry counts, sources and licenses",
+    "responses": {
+     "200": {
+      "description": "Language list"
+     }
+    }
+   }
+  },
+  "/words": {
+   "get": {
+    "summary": "Search words (letterPattern, lettersMin/Max, partOfSpeech, hasDetails, limit/page; syllables and frequency filters are English-only). Add lang to search another language.",
+    "parameters": [
+     {
+      "name": "lang",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      },
+      "description": "Language code or name; default en"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Matching words"
+     }
+    }
+   }
+  },
+  "/words/{word}": {
+   "get": {
+    "summary": "Full word record. Add ?lang=es (etc.) for another language.",
+    "parameters": [
+     {
+      "name": "word",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "lang",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Word record"
+     },
+     "404": {
+      "description": "Documented word_not_found error"
+     }
+    }
+   }
+  },
+  "/words/{word}/{relation}": {
+   "get": {
+    "summary": "One relation per call: definitions, synonyms, antonyms (en), examples, translations, typeOf, hasTypes, partOf, hasParts, memberOf, hasMembers, substanceOf, hasSubstances, similarTo, also, derivation (en), pertainsTo (en), entails, cause, pronunciation, syllables (en), frequency (en), rhymes (en).",
+    "parameters": [
+     {
+      "name": "word",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "relation",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "lang",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Relation values"
+     },
+     "404": {
+      "description": "Documented error"
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "summary": "Open health: English dataset counts plus per-language entries and senses",
+    "responses": {
+     "200": {
+      "description": "Service health"
+     }
+    }
+   }
+  }
+ }
+}

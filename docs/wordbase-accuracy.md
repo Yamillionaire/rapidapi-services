@@ -28,3 +28,43 @@ Measured on the launch build (local test set, warm):
 Pricing answers too: Pro is free against their $10, Ultra $39 against
 $49, Mega $79 against $89, and the free Pro tier carries 10,000
 requests a month.
+
+## v2: 26 languages (2026-10-31)
+
+WordBase is now a multilingual dictionary. Add ?lang=<code> to any
+endpoint (ISO 639-1, ISO 639-3, or the English language name) or call
+GET /languages for the full list with entry counts, sources and
+licenses. Without a lang parameter, English behaves exactly as v1.
+
+What was verified for v2, and how:
+- Every language shipped clears a stated bar: at least 20,000
+  structured entries with definitions, or definitions plus English
+  translations, counted from the downloaded source files (Open
+  Multilingual Wordnet 1.4; FreeDict dictd dictionaries), never from
+  project pages. The full survey table lives in docs/spec-wordsapi.md.
+- Local battery 54/54 (wordbase/tests/run_tests.py): the English
+  golden set is byte-for-byte identical to the pre-upgrade build
+  (serendipity record, run's 57 senses, geese -> goose, search,
+  documented 404s); the proxy gate still returns 401 without and
+  with a wrong header; an unknown language returns 400 with the
+  supported list; one source-verified lookup per shipped language
+  (Spanish "entidad" -> translations ["entity"]; Japanese "cat"
+  served with a Japanese definition plus its English gloss; German
+  "Haus" -> "house" with IPA hˈaʊs; Russian "dog"; Greek
+  "cosmodrome"; Arabic with IPA kitˈaab).
+- Pronunciation exists only where a real source provides it
+  (German, Russian, Hungarian, Esperanto, Arabic, Greek, via
+  FreeDict IPA). For every other language the field is omitted and
+  the pronunciation relation returns a documented 404 instead of a
+  synthesized guess.
+- FreeDict senses are translations and are labeled as such in every
+  record (definitionSource). English-only filters (syllables,
+  frequency) return an explicit 400 for other languages rather than
+  being silently ignored.
+- The honest ceiling: the surveyed sources support 33 languages at
+  the same bar. Korean, Turkish, Vietnamese, Hindi, Czech, Ukrainian
+  and Swedish are verified in Kaikki.org's Wiktionary extracts by
+  full-file counts and wait on an offline compaction step, because
+  the raw extracts run to gigabytes against the free tier's
+  first-boot download pattern. 26 live today; 33 is the ceiling,
+  stated as a ceiling.

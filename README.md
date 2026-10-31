@@ -582,3 +582,22 @@ with gate verification, publish, Hub gateway test, and Spotlight post
 from docs/wordbase-accuracy.md remain, run via the parent's browser
 tasks. Mark PUBLISHED LIVE in the registry once the gateway test
 returns 200.
+MULTILINGUAL v2 (2026-10-31): WordBase now serves 26 languages - the
+v1 English engine plus 25 languages selected with ?lang=<code> on the
+same endpoints (ISO 639-1/639-3 and English names accepted; unknown
+codes return 400 with the supported list), and a /languages endpoint.
+Sources: Open Multilingual Wordnet 1.4 (19 languages over the 20,000
+entry quality bar, English glosses and translations via an auxiliary
+WordNet 3.0 load, own-language definitions/examples where the wordnet
+carries them) and FreeDict dictd dictionaries (German, Russian,
+Hungarian, Esperanto as new languages; Arabic and Greek lifted over
+the bar merged with OMW; real IPA for those six languages). 1,695,718
+non-English entries in a SQLite index built at first boot (cold boot
+about 100 seconds locally, build peak RSS 335MB, steady state
+191MB); English responses without a lang parameter are byte-for-byte
+v1 (golden-tested). Local battery 54/54 (wordbase/tests/
+battery-local-2026-10-31.json). Honest ceiling from the surveyed
+sources: 33 languages (Kaikki.org counts verified for Korean,
+Turkish, Vietnamese, Hindi, Czech, Ukrainian, Swedish; the raw
+Kaikki files need an offline compaction before they fit the boot
+pattern). Full survey in docs/spec-wordsapi.md.
