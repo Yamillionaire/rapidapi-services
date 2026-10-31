@@ -1,10 +1,10 @@
-# Spec: WhoisBase (competitor to Whois Lookup by Zozor54, wave 4, queue #10)
+# Spec: WhoisBase (wave 4, queue #10)
 
 Approved under the user's full-run queue authorization of 2026-10-29
 (automate the queue; the Studio listing, publish, and Spotlight steps
 run via the parent's browser lane). Score 63.
 
-## The incumbent
+## The comparable listing
 
 Whois Lookup by Zozor54: 3,811 subscribers, rated 3/5 (16 votes),
 service level 99%, listed latency 1,371ms, pricing Pro $10, Ultra $30,
