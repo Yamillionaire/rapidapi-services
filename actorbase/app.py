@@ -356,6 +356,23 @@ def plan_performance(text, emotion, intensity, emphasis_words=None):
         else:
             for beat in split_beats(piece):
                 beats.append((beat, False))
+    # A beat with no word characters (the classic case: an
+    # emphasis span ending exactly at a sentence end leaves a
+    # lone "." piece) is unspeakable on its own - the engine
+    # returns no audio for it. Merge it into the beat before it
+    # (or after it, at the start), so the spoken text is
+    # unchanged and every segment can be performed.
+    if beats and not re.search(r"\w", beats[0][0]) and len(beats) > 1:
+        first = beats.pop(0)
+        beats[0] = (first[0] + beats[0][0], beats[0][1])
+    merged = []
+    for text, emph in beats:
+        if merged and not re.search(r"\w", text):
+            prev_text, prev_emph = merged[-1]
+            merged[-1] = (prev_text + text, prev_emph)
+        else:
+            merged.append((text, emph))
+    beats = merged
     segments = []
     for i, (beat, emph) in enumerate(beats):
         params = dict(base)
@@ -714,6 +731,9 @@ def do_perform(body):
         return None, _err(422, "text_too_long",
                           f"Text is {len(text)} characters; the "
                           f"per-performance maximum is {MAX_PERFORM_CHARS}.")
+    if not re.search(r"\w", text):
+        return None, _err(422, "invalid_parameter",
+                          "The text contains no speakable words.")
     casting, err = resolve_casting(body)
     if err:
         return None, err
@@ -794,6 +814,10 @@ def do_table_read(body):
         if not line:
             return None, _err(422, "missing_parameter",
                               f"lines[{i}].line is empty.")
+        if not re.search(r"\w", line):
+            return None, _err(422, "invalid_parameter",
+                              f"lines[{i}].line contains no "
+                              f"speakable words.")
         if len(line) > MAX_LINE_CHARS:
             return None, _err(422, "text_too_long",
                               f"lines[{i}] is {len(line)} characters; "
