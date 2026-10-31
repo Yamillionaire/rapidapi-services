@@ -1,0 +1,391 @@
+{
+ "proof": "SwiftRender pipeline proof segment: Rosewood music video lines 1-16. NOT the Gate 5 master (lines 17-46 and the wordless beats are not in this segment; gaps are black fill).",
+ "job_id": "job-1e976ac3a1",
+ "master_md5_verified": "f8a26ca20f409265ae3f3585f978090f",
+ "duration_math": {
+  "needed_span_s_total": 41.9,
+  "right_sized_request_s_total": 66,
+  "manual_flat_10s_total": 160,
+  "generation_seconds_saved": 94,
+  "generation_seconds_saved_pct": 58.8,
+  "rule": "ceil(span + 1.0s handle), min 3, max 10, computed in code per line from the real timing map"
+ },
+ "gate_comparison": {
+  "lines": [
+   {
+    "line": 1,
+    "manual_verdict": "pass",
+    "manual_worst_drift": 49.6,
+    "auto_verdict": "pass",
+    "auto_worst_drift": 49.4,
+    "auto_mean_drift": 39.1,
+    "agree": true,
+    "line_status": "gated_pass"
+   },
+   {
+    "line": 2,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 60.6,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 60.5,
+    "auto_mean_drift": 49.8,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 3,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 54.4,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 54.4,
+    "auto_mean_drift": 47.0,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 4,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 57.8,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 57.8,
+    "auto_mean_drift": 51.1,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 5,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 64.3,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 64.0,
+    "auto_mean_drift": 51.7,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 6,
+    "manual_verdict": "pass",
+    "manual_worst_drift": 46.4,
+    "auto_verdict": "pass",
+    "auto_worst_drift": 46.7,
+    "auto_mean_drift": 35.2,
+    "agree": true,
+    "line_status": "gated_pass"
+   },
+   {
+    "line": 7,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 57.2,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 57.1,
+    "auto_mean_drift": 40.0,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 8,
+    "manual_verdict": "pass",
+    "manual_worst_drift": 38.0,
+    "auto_verdict": "pass",
+    "auto_worst_drift": 37.7,
+    "auto_mean_drift": 29.4,
+    "agree": true,
+    "line_status": "gated_pass"
+   },
+   {
+    "line": 9,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 59.4,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 58.7,
+    "auto_mean_drift": 48.3,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 10,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 59.0,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 59.1,
+    "auto_mean_drift": 48.7,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 11,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 53.3,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 53.3,
+    "auto_mean_drift": 44.5,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 12,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 26.0,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 26.3,
+    "auto_mean_drift": 16.9,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 13,
+    "manual_verdict": "pass",
+    "manual_worst_drift": 49.8,
+    "auto_verdict": "pass",
+    "auto_worst_drift": 49.7,
+    "auto_mean_drift": 38.5,
+    "agree": true,
+    "line_status": "gated_pass"
+   },
+   {
+    "line": 14,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 54.8,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 55.6,
+    "auto_mean_drift": 37.5,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 15,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 59.2,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 59.4,
+    "auto_mean_drift": 47.9,
+    "agree": true,
+    "line_status": "gated_warn"
+   },
+   {
+    "line": 16,
+    "manual_verdict": "warn",
+    "manual_worst_drift": 56.9,
+    "auto_verdict": "warn",
+    "auto_worst_drift": 57.2,
+    "auto_mean_drift": 35.4,
+    "agree": true,
+    "line_status": "gated_warn"
+   }
+  ],
+  "agreement": "16/16 verdicts identical",
+  "disagreements": []
+ },
+ "assembly": {
+  "assembled_at": "2026-10-31T23:28:37Z",
+  "output_file": "output.mp4",
+  "encoder": "libx264",
+  "lines_used": [
+   {
+    "line_id": "1",
+    "timeline_start_s": 10.58,
+    "timeline_end_s": 13.68,
+    "source_in_s": 0.0,
+    "span_s": 3.1,
+    "verdict": "pass",
+    "gate_drift_score": 49.4
+   },
+   {
+    "line_id": "2",
+    "timeline_start_s": 13.68,
+    "timeline_end_s": 16.26,
+    "source_in_s": 0.0,
+    "span_s": 2.58,
+    "verdict": "warn",
+    "gate_drift_score": 60.5
+   },
+   {
+    "line_id": "3",
+    "timeline_start_s": 16.26,
+    "timeline_end_s": 18.86,
+    "source_in_s": 0.0,
+    "span_s": 2.6,
+    "verdict": "warn",
+    "gate_drift_score": 54.4
+   },
+   {
+    "line_id": "4",
+    "timeline_start_s": 18.86,
+    "timeline_end_s": 21.58,
+    "source_in_s": 0.0,
+    "span_s": 2.72,
+    "verdict": "warn",
+    "gate_drift_score": 57.8
+   },
+   {
+    "line_id": "5",
+    "timeline_start_s": 21.58,
+    "timeline_end_s": 24.04,
+    "source_in_s": 0.0,
+    "span_s": 2.46,
+    "verdict": "warn",
+    "gate_drift_score": 64.0
+   },
+   {
+    "line_id": "6",
+    "timeline_start_s": 24.04,
+    "timeline_end_s": 26.66,
+    "source_in_s": 0.0,
+    "span_s": 2.62,
+    "verdict": "pass",
+    "gate_drift_score": 46.7
+   },
+   {
+    "line_id": "7",
+    "timeline_start_s": 26.66,
+    "timeline_end_s": 29.26,
+    "source_in_s": 0.0,
+    "span_s": 2.6,
+    "verdict": "warn",
+    "gate_drift_score": 57.1
+   },
+   {
+    "line_id": "8",
+    "timeline_start_s": 29.26,
+    "timeline_end_s": 32.32,
+    "source_in_s": 0.0,
+    "span_s": 3.06,
+    "verdict": "pass",
+    "gate_drift_score": 37.7
+   },
+   {
+    "line_id": "9",
+    "timeline_start_s": 42.62,
+    "timeline_end_s": 45.08,
+    "source_in_s": 0.0,
+    "span_s": 2.46,
+    "verdict": "warn",
+    "gate_drift_score": 58.7
+   },
+   {
+    "line_id": "10",
+    "timeline_start_s": 45.08,
+    "timeline_end_s": 47.7,
+    "source_in_s": 0.0,
+    "span_s": 2.62,
+    "verdict": "warn",
+    "gate_drift_score": 59.1
+   },
+   {
+    "line_id": "11",
+    "timeline_start_s": 47.7,
+    "timeline_end_s": 50.06,
+    "source_in_s": 0.0,
+    "span_s": 2.36,
+    "verdict": "warn",
+    "gate_drift_score": 53.3
+   },
+   {
+    "line_id": "12",
+    "timeline_start_s": 50.78,
+    "timeline_end_s": 53.02,
+    "source_in_s": 5.0,
+    "span_s": 2.24,
+    "verdict": "warn",
+    "gate_drift_score": 26.3
+   },
+   {
+    "line_id": "13",
+    "timeline_start_s": 53.02,
+    "timeline_end_s": 55.44,
+    "source_in_s": 0.0,
+    "span_s": 2.42,
+    "verdict": "pass",
+    "gate_drift_score": 49.7
+   },
+   {
+    "line_id": "14",
+    "timeline_start_s": 55.44,
+    "timeline_end_s": 58.24,
+    "source_in_s": 0.0,
+    "span_s": 2.8,
+    "verdict": "warn",
+    "gate_drift_score": 55.6
+   },
+   {
+    "line_id": "15",
+    "timeline_start_s": 58.24,
+    "timeline_end_s": 60.7,
+    "source_in_s": 0.0,
+    "span_s": 2.46,
+    "verdict": "warn",
+    "gate_drift_score": 59.4
+   },
+   {
+    "line_id": "16",
+    "timeline_start_s": 60.7,
+    "timeline_end_s": 63.5,
+    "source_in_s": 0.0,
+    "span_s": 2.8,
+    "verdict": "warn",
+    "gate_drift_score": 57.2
+   }
+  ],
+  "warn_lines": [
+   "2",
+   "3",
+   "4",
+   "5",
+   "7",
+   "9",
+   "10",
+   "11",
+   "12",
+   "14",
+   "15",
+   "16"
+  ],
+  "timeline_total_s": 63.5,
+  "output_duration_s": 63.56569,
+  "duration_delta_s": 0.066,
+  "audio_duration_s": 170.04,
+  "audio_sha256": "89f47db74cf52df727d609a65dd462dcb4faae08ed1ec60f8a6ca42784a6a861",
+  "loudness_lufs_integrated": -15.94,
+  "frozen_spans": [
+   {
+    "start": 0.0,
+    "end": 10.57,
+    "duration_s": 10.57
+   },
+   {
+    "start": 32.33,
+    "end": 42.63,
+    "duration_s": 10.3
+   }
+  ],
+  "decode_clean": true
+ },
+ "verification": {
+  "timeline_total_s": 63.5,
+  "output_duration_s": 63.56569,
+  "duration_delta_s": 0.066,
+  "duration_within_tolerance_1s": true,
+  "decode_clean": true,
+  "frozen_spans_in_clip_regions": [],
+  "frozen_spans_in_gap_fill": [
+   {
+    "start": 0.0,
+    "end": 10.57,
+    "duration_s": 10.57
+   },
+   {
+    "start": 32.33,
+    "end": 42.63,
+    "duration_s": 10.3
+   }
+  ],
+  "loudness_lufs_integrated": -15.94,
+  "audio_fingerprint": {
+   "samples_compared": 1400175,
+   "correlation": 0.9991,
+   "rms_assembled": 3950.8,
+   "rms_master": 3971.4,
+   "is_master_audio": true
+  }
+ }
+}

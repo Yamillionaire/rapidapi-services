@@ -85,3 +85,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: swiftrender
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r swiftrender/requirements.txt"
+    startCommand: "python swiftrender/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"

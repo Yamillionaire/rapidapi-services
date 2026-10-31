@@ -1,0 +1,106 @@
+{
+ "passed": 20,
+ "total": 20,
+ "checks": [
+  {
+   "name": "server_boots",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "health_open",
+   "pass": true,
+   "detail": "{'drift_gate': 'live', 'drift_engine_path': '/home/hatch/workspace/rapidapi-competitors/driftcheck/app.py', 'ffmpeg': 'ffmpeg version 8.1.2 Copyright (c) 2000-2026 the FFmpeg developers', 'assembly': 'live', 'adapters': {'import': 'live', 'replicate': 'provider_not_configured'}}"
+  },
+  {
+   "name": "health_replicate_parked",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "gate_401_no_header",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "name": "gate_401_wrong_secret",
+   "pass": true,
+   "detail": "401"
+  },
+  {
+   "name": "job_created",
+   "pass": true,
+   "detail": "201"
+  },
+  {
+   "name": "duration_math_line1",
+   "pass": true,
+   "detail": "{'needed_span_s': 2.5, 'handle_s': 1.0, 'requested_duration_s': 4, 'rule': 'ceil(span + handle), min 3, max 10', 'manual_flat_default_s': 10}"
+  },
+  {
+   "name": "duration_totals",
+   "pass": true,
+   "detail": "{'lines': 2, 'needed_span_s_total': 5.0, 'requested_duration_s_total': 8, 'manual_flat_default_s_total': 20, 'generation_seconds_saved': 12, 'generation_seconds_saved_pct': 60.0}"
+  },
+  {
+   "name": "audio_recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "replicate_parked_503",
+   "pass": true,
+   "detail": "503"
+  },
+  {
+   "name": "import_moving_installs",
+   "pass": true,
+   "detail": "gated_pass"
+  },
+  {
+   "name": "import_frozen_not_installed",
+   "pass": true,
+   "detail": "gate_failed"
+  },
+  {
+   "name": "frozen_corrected_prompt",
+   "pass": true,
+   "detail": "frozen"
+  },
+  {
+   "name": "text_artifact_retry_path",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "assemble_refuses_missing",
+   "pass": true,
+   "detail": "{'error': 'missing_passing_clips', 'missing_lines': ['2']}"
+  },
+  {
+   "name": "assemble_ok",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "assembly_duration",
+   "pass": true,
+   "detail": "0.0"
+  },
+  {
+   "name": "assembly_decode_loudness",
+   "pass": true,
+   "detail": "-22.25"
+  },
+  {
+   "name": "output_download",
+   "pass": true,
+   "detail": "1653294"
+  },
+  {
+   "name": "job_status_shape",
+   "pass": true,
+   "detail": "job-a61711f48b"
+  }
+ ]
+}
