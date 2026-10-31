@@ -465,6 +465,85 @@ cap). Listing package ready: listings/designbase-openapi.json +
 listings/designbase-listing-notes.md; spec
 docs/spec-designbase.md; proof doc docs/designbase-reliability.md.
 
+## 16. actorbase/ - ActorBase (the user's own product; no incumbent)
+Endpoints: POST /perform {text, emotion?, intensity? (1-5),
+voice?, persona?} -> the line performed as acted speech (MP3
+base64) with the delivery used, the segment-by-segment plan
+and an SSML-style score; POST /table-read {lines[], cast{}} ->
+a whole scene performed with one distinct voice per speaker,
+stitched into one MP3 with a measured per-line timing map;
+POST /character {description, name?, play_context?} -> the
+actor's build (objective, super-objective, obstacles, tactics
+as action verbs, backstory beats, given circumstances, voice
+and physicality notes); POST /three-reads {line, context?} ->
+three genuinely different performed reads (different tactic
+and subtext each); POST /scene-notes {scene_text} -> beats,
+turns, subtext, power shifts, per character; GET /health.
+The user's own direction (2026-10-31 voice call: an actor API,
+good for drama writing and able to do all forms of acting).
+Delivery is computed in code from a fixed emotion x intensity
+table (ten emotions, per-point steps, shipped in the spec);
+segmentation and emphasis (*marked* spans) are planned in
+code; durations are measured by an in-code MP3 frame parser,
+never estimated. Personas are generic craft archetypes
+(ingenue, villain, matriarch, trickster...) mapped to stock
+voices - no real actor is imitated. Engines: performance on
+the SwiftRead synthesis path (Edge neural voices via edge-tts,
+322-voice catalog, zero marginal cost, NO key - /perform and
+/table-read work in the awaiting state); reasoning on the
+owner's Gemini API (gemini-3.6-flash primary,
+gemini-3.1-flash-lite fallback) for character builds, scene
+analysis, three-reads tactics and direction interpretation,
+every response shape-validated in code.
+DEPLOYED 2026-10-31: https://actorbase.onrender.com
+(srv-dbj7440ae00c73dd3es0; GitHub commits d389ebbb +
+7d7a2623; live deploy dep-dbj7atou01pc73elkulg). Build
+"pip install -r actorbase/requirements.txt", start
+"python actorbase/app.py".
+PROOF TESTS: local battery (actorbase/tests/
+battery-2026-10-31.json, 13/18 - every non-synthesis check
+passed, including the reasoning endpoints against the real
+Gemini engine through the test bridge: a full Rosa Delgado
+character build with verb tactics, scene notes with 4 beats
+and 3 power shifts; the 5 failures are the synthesis checks,
+all 502 synthesis_failed because the build sandbox's egress
+stalls the speech websocket, the SwiftRead/DriftCheck split);
+deployed battery (battery-deployed-2026-10-31.json, 10/10):
+gate 401s, the honest 503s, and REAL performed audio - the
+grief line at 8.18s with its table row and emphasis realized,
+a 3-line table read in 2 persona voices at 10.70s with an
+ordered timing map, durations cross-checked with ffprobe and
+non-silence with volumedetect; reasoning supplement
+(proof-reasoning-halves-2026-10-31.json, 2/2): three reads of
+"I never loved you." with distinct tactics (to repel /
+to protect / to convince) and a directed line interpreted to
+anger. One bug found by the first deployed run and fixed:
+a word-less beat (lone sentence punctuation after an
+emphasis span) is unspeakable and failed the performance;
+the planner now merges word-less beats into the adjacent
+beat (commit 7d7a2623).
+PARKED at the key step (decision queue item 11): the owner
+adds GEMINI_API_KEY to the Render service himself (the
+connector credential cannot be extracted into hosting).
+Publish is parked behind it by the lane's rule: the gateway
+test must pass with real responses on the reasoning
+endpoints. GATE STATE: the build-time test secret was set
+for the deployed battery, then rotated to an unrecorded
+value and re-verified (401 without, 401 with the old value,
+/health open), so the origin sits gated until the Studio
+step sets the real secret. On his word the finish runs
+unattended: redeploy, deployed proof battery with real
+scenes, Studio listing, proxy-secret wiring, publish,
+gateway test, Spotlight. Pricing (planned, hard limits, per
+request): BASIC $0/100mo; PRO $5/1,000mo; ULTRA $20/10,000mo;
+MEGA $60/50,000mo. Keep-warm fleet now sixteen services,
+window re-budgeted to 09:00-10:20 ET (661h worst month vs
+the 750h cap). Listing package ready:
+listings/actorbase-openapi.json +
+listings/actorbase-listing-notes.md; spec
+docs/spec-actorbase.md; proof doc
+docs/actorbase-reliability.md.
+
 ## Sequence
 Currency deploy-ready first (done at prototype level), Email second, Financials
 third once the quote feed is chosen. Nothing is published until the user approves

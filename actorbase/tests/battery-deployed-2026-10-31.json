@@ -1,0 +1,263 @@
+{
+  "checks": [
+    {
+      "name": "deployed /health 200, reasoning awaiting_key, performance installed, catalog counted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed gate: /perform without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed gate: /perform wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /character through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /scene-notes through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /three-reads through gate -> 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "deployed /perform grief -> real audio, duration measured two ways, non-silent",
+      "pass": true,
+      "detail": "bytes=49200, service_duration=8.184s, ffprobe=8.20s, mean_volume=-23.0 dB"
+    },
+    {
+      "name": "deployed /perform plan: grief/4 table row (rate -15) + emphasis segment realized",
+      "pass": true,
+      "detail": "delivery={'rate': -15, 'pitch': -8, 'volume': -5, 'beat_pause_ms': 450}"
+    },
+    {
+      "name": "deployed /table-read: 3 lines, 2 distinct voices, timing map ordered and spanning the audio",
+      "pass": true,
+      "detail": "bytes=64368, service_duration=10.704s, ffprobe=10.73s, mean_volume=-20.5 dB, voices=['en-US-EricNeural', 'en-US-MichelleNeural'], ordered=True, spans=True"
+    },
+    {
+      "name": "deployed /perform persona villain -> Christopher voice, contempt lean",
+      "pass": true,
+      "detail": "voice=en-US-ChristopherNeural, emotion=contempt"
+    }
+  ],
+  "samples": {
+    "health": {
+      "status": "ok",
+      "service": "actorbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "awaiting_key",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "character builds, scene analysis, three-reads tactics and subtext, direction interpretation"
+        },
+        "performance": {
+          "state": "installed",
+          "engine": "edge-tts (Microsoft Edge neural voices), the SwiftRead synthesis path",
+          "voices": 322,
+          "locales": 142,
+          "languages": 75,
+          "role": "acted speech for /perform, /table-read, /three-reads; zero marginal cost, no key"
+        }
+      },
+      "delivery_table": {
+        "emotions": [
+          "anger",
+          "awe",
+          "contempt",
+          "fear",
+          "grief",
+          "guilt",
+          "joy",
+          "neutral",
+          "resolve",
+          "tenderness"
+        ],
+        "intensity_range": [
+          1,
+          5
+        ],
+        "note": "Fixed in code and shipped verbatim in the spec: signature prosody at intensity 3 plus a per-point step, clamped to the engine's range. Emphasis spans lift pitch +4 Hz, volume +6%, rate -4%, with a beat before them."
+      },
+      "personas": {
+        "ingenue": {
+          "voice": "en-US-AriaNeural",
+          "lean": "tenderness"
+        },
+        "leading-lady": {
+          "voice": "en-GB-SoniaNeural",
+          "lean": "resolve"
+        },
+        "leading-man": {
+          "voice": "en-US-GuyNeural",
+          "lean": "resolve"
+        },
+        "young-hero": {
+          "voice": "en-US-EricNeural",
+          "lean": "joy"
+        },
+        "matriarch": {
+          "voice": "en-US-MichelleNeural",
+          "lean": "resolve"
+        },
+        "patriarch": {
+          "voice": "en-GB-ThomasNeural",
+          "lean": "contempt"
+        },
+        "villain": {
+          "voice": "en-US-ChristopherNeural",
+          "lean": "contempt"
+        },
+        "trickster": {
+          "voice": "en-US-JennyNeural",
+          "lean": "joy"
+        },
+        "confidante": {
+          "voice": "en-GB-LibbyNeural",
+          "lean": "tenderness"
+        },
+        "narrator": {
+          "voice": "en-GB-RyanNeural",
+          "lean": "neutral"
+        }
+      },
+      "limits": {
+        "max_perform_chars": 2000,
+        "max_line_chars": 600,
+        "max_lines_per_read": 40,
+        "max_cast": 12,
+        "max_read_total_chars": 8000,
+        "max_scene_chars": 12000
+      },
+      "endpoints": [
+        "POST /perform",
+        "POST /table-read",
+        "POST /character",
+        "POST /three-reads",
+        "POST /scene-notes",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Performances are synthesized speech under generic craft archetypes, not human actors and not imitations of any real performer. Delivery is bounded by the fixed delivery table; emotional range beyond it is not claimed."
+    },
+    "character_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so the reasoning engine is not available. The service owner must add GEMINI_API_KEY to enable it. The performance endpoints (/perform, /table-read) do not need it and keep working."
+    },
+    "scene-notes_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so the reasoning engine is not available. The service owner must add GEMINI_API_KEY to enable it. The performance endpoints (/perform, /table-read) do not need it and keep working."
+    },
+    "three-reads_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so the reasoning engine is not available. The service owner must add GEMINI_API_KEY to enable it. The performance endpoints (/perform, /table-read) do not need it and keep working."
+    },
+    "perform_grief": {
+      "voice": "en-US-AriaNeural",
+      "persona": "ingenue",
+      "emotion": "grief",
+      "intensity": 4,
+      "delivery": {
+        "rate": -15,
+        "pitch": -8,
+        "volume": -5,
+        "beat_pause_ms": 450
+      },
+      "delivery_plan": [
+        {
+          "text": "You told me this house would still be",
+          "emphasis": false,
+          "rate": -15,
+          "pitch": -8,
+          "volume": -5,
+          "pause_before_ms": 0,
+          "duration_s": 3.336
+        },
+        {
+          "text": "ours.",
+          "emphasis": true,
+          "rate": -19,
+          "pitch": -4,
+          "volume": 1,
+          "pause_before_ms": 225,
+          "duration_s": 1.992
+        },
+        {
+          "text": "You promised.",
+          "emphasis": false,
+          "rate": -15,
+          "pitch": -8,
+          "volume": -5,
+          "pause_before_ms": 450,
+          "duration_s": 2.184
+        }
+      ],
+      "duration_s": 8.184
+    },
+    "table_read": {
+      "duration_s": 10.704,
+      "timing_map": [
+        {
+          "index": 0,
+          "speaker": "MOTHER",
+          "line": "You will sit down and you will listen.",
+          "voice": "en-US-MichelleNeural",
+          "persona": "matriarch",
+          "emotion": "resolve",
+          "intensity": 3,
+          "direction": null,
+          "direction_interpreted": false,
+          "start_s": 0.0,
+          "end_s": 2.784,
+          "duration_s": 2.784,
+          "pause_after_ms": 350
+        },
+        {
+          "index": 1,
+          "speaker": "SON",
+          "line": "I have been listening my whole life!",
+          "voice": "en-US-EricNeural",
+          "persona": "young-hero",
+          "emotion": "joy",
+          "intensity": 3,
+          "direction": null,
+          "direction_interpreted": false,
+          "start_s": 3.144,
+          "end_s": 5.832,
+          "duration_s": 2.688,
+          "pause_after_ms": 350
+        },
+        {
+          "index": 2,
+          "speaker": "MOTHER",
+          "line": "Then hear this. The house is sold.",
+          "voice": "en-US-MichelleNeural",
+          "persona": "matriarch",
+          "emotion": "resolve",
+          "intensity": 3,
+          "direction": null,
+          "direction_interpreted": false,
+          "start_s": 6.192,
+          "end_s": 10.704,
+          "duration_s": 4.512,
+          "pause_after_ms": 350
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "base": "https://actorbase.onrender.com"
+}

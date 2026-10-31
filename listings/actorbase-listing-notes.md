@@ -48,8 +48,7 @@ FactBase's and DesignBase's packages were prepared.
 ## Key gate (must clear before proxy-secret wiring and publish)
 
 1. The owner adds GEMINI_API_KEY to the ActorBase Render
-   service (Render service id recorded in
-   docs/actorbase-reliability.md once created) - the same key
+   service (Render srv-dbj7440ae00c73dd3es0) - the same key
    he added for SwiftRewrite/SwiftTranslate; or provides it
    through the Secure Vault. The Gemini connector credential
    cannot be extracted into hosting, so this is his step alone
@@ -72,9 +71,9 @@ FactBase's and DesignBase's packages were prepared.
 ## Spotlight draft (post after publish; under 280 characters)
 
 Title: "ActorBase reliability proof"
-Description (draft, count on save): "ActorBase performs
-lines and scenes for drama writers: a fixed delivery table,
-measured timing maps, three reads that audibly differ. Local
-battery and deployed proof: see the reliability doc."
+Description (192 chars): "ActorBase performs lines and
+scenes for drama writers: a fixed delivery table, measured
+timing maps, three reads that audibly differ. Local battery
+and deployed proof: see the reliability doc."
 URL tab: the GitHub blob URL for docs/actorbase-reliability.md
 in Yamillionaire/rapidapi-services (main branch).

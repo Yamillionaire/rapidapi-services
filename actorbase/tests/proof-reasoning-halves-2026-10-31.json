@@ -1,0 +1,93 @@
+{
+  "checks": [
+    {
+      "name": "/three-reads reasoning: 3 reads, distinct tactics, differing delivery params, notes present",
+      "pass": true,
+      "detail": "tactics=['to repel', 'to protect', 'to convince'], params=[('contempt', 4), ('grief', 5), ('resolve', 3)]"
+    },
+    {
+      "name": "/table-read direction: interpreted into the delivery vocabulary (anger) for the directed line",
+      "pass": true,
+      "detail": "map=[('anger', True), ('joy', False)]"
+    }
+  ],
+  "samples": {
+    "three_reads": {
+      "line": "I never loved you.",
+      "reads": [
+        {
+          "read": 1,
+          "tactic": "To repel",
+          "subtext": "I am poisoning the memory of us so you will find it easy to walk away.",
+          "emotion": "contempt",
+          "intensity": 4,
+          "emphasis": [
+            "never",
+            "loved"
+          ],
+          "delivery_note": "The delivery is sharp and biting, designed to make him recoil from her as if she were toxic."
+        },
+        {
+          "read": 2,
+          "tactic": "To protect",
+          "subtext": "I am sacrificing my own heart and our history to ensure your survival.",
+          "emotion": "grief",
+          "intensity": 5,
+          "emphasis": [
+            "I",
+            "you"
+          ],
+          "delivery_note": "She speaks with a hollow, trembling voice, trying to sound cold but failing to hide the agony of the lie."
+        },
+        {
+          "read": 3,
+          "tactic": "To convince",
+          "subtext": "If I can make you believe this, you will stop fighting for me and finally save yourself.",
+          "emotion": "resolve",
+          "intensity": 3,
+          "emphasis": [
+            "never",
+            "loved"
+          ],
+          "delivery_note": "The tone is flat and clinical, stripped of all warmth to mimic the finality of a closing door."
+        }
+      ]
+    },
+    "table_read_directed": {
+      "timing_map": [
+        {
+          "index": 0,
+          "speaker": "KING",
+          "line": "Speak plainly, fool.",
+          "voice": "en-GB-ThomasNeural",
+          "persona": "patriarch",
+          "emotion": "anger",
+          "intensity": 5,
+          "direction": "barely contained fury, each word weighed like a stone",
+          "direction_interpreted": true,
+          "start_s": 0.0,
+          "end_s": 1.008,
+          "duration_s": 1.008,
+          "pause_after_ms": 350
+        },
+        {
+          "index": 1,
+          "speaker": "FOOL",
+          "line": "Plainly, then: the crown is heavy because the head is empty.",
+          "voice": "en-US-JennyNeural",
+          "persona": "trickster",
+          "emotion": "joy",
+          "intensity": 3,
+          "direction": null,
+          "direction_interpreted": false,
+          "start_s": 1.368,
+          "end_s": 2.376,
+          "duration_s": 1.008,
+          "pause_after_ms": 350
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "environment": "Real Gemini via tests/connector_bridge.py; synthesis replaced in this test process only, by measured silence, because the sandbox egress stalls the speech websocket (deployed battery proves real audio on the same code paths)."
+}
