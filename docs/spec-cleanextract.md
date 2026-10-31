@@ -1,8 +1,8 @@
-# Spec E: CleanExtract (competitor to Article Extractor and Summarizer)
+# Spec E: CleanExtract
 
 Approved by the user 2026-10-28 ("Proceed with the next one"). Score 82.
 
-## The incumbent
+## The comparable listing
 
 Article Extractor and Summarizer by restyler: 11,784 subscribers,
 rated 3/5 (17 votes), service level 74%, latency 1,421ms. Pricing:
