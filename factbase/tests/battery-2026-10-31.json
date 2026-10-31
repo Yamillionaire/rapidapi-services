@@ -1,0 +1,752 @@
+{
+  "checks": [
+    {
+      "name": "awaiting /health 200, reasoning state awaiting_key",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /check-text without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /check-text wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /check-text -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /check-audio -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "live /health: reasoning + transcription live, engine named",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "live /check-claim empty -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "TRUE claim (Eiffel Tower completed 1889) -> supported, sourced",
+      "pass": true,
+      "detail": "verdict=supported, evidence=4"
+    },
+    {
+      "name": "FALSE claim (Great Wall visible from the Moon) -> refuted, sourced",
+      "pass": true,
+      "detail": "verdict=refuted, evidence=7"
+    },
+    {
+      "name": "MISLEADING claim (Amazon 20% of oxygen) -> mixed or refuted, sourced",
+      "pass": true,
+      "detail": "verdict=refuted, evidence=7"
+    },
+    {
+      "name": "OBSCURE claim (1974 parking permits) -> honestly unverified",
+      "pass": true,
+      "detail": "verdict=unverified, evidence=5"
+    },
+    {
+      "name": "/check-text two claims -> one supported + one refuted",
+      "pass": true,
+      "detail": "verdicts=['supported', 'supported', 'refuted']"
+    },
+    {
+      "name": "/check-text opinion only -> claims_found 0 with note",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/check-audio claim clip -> transcript + supported verdict",
+      "pass": true,
+      "detail": "transcript='The Eiffel Tower was completed in 1889. It stands 330 meters tall and is located', verdicts=['supported', 'supported', 'supported']"
+    },
+    {
+      "name": "/check-audio JFK clip -> accurate transcript",
+      "pass": true,
+      "detail": "transcript='And so, my fellow Americans, ask not what your country can do for you, ask what you can do for your '"
+    }
+  ],
+  "samples": {
+    "health_awaiting": {
+      "status": "ok",
+      "service": "factbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "awaiting_key",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "claim extraction and verdict synthesis"
+        },
+        "transcription": {
+          "state": "awaiting_key",
+          "engine": "gemini-audio",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "speech-to-text for /check-audio",
+          "fallback_evaluated": "faster-whisper (open source): viable only at tiny/base size on the free tier and not needed while the Gemini key is configured"
+        },
+        "evidence": {
+          "factcheck_api": "not configured",
+          "factcheck_api_source": "Google Fact Check Tools API (ClaimReview database of published fact-checks)",
+          "web_search": "DuckDuckGo HTML (keyless, paced, with lite and Bing fallbacks), one general and one fact-check-targeted query per claim",
+          "encyclopedia": "Wikipedia search API (keyless)"
+        }
+      },
+      "limits": {
+        "max_claims_cap": 10,
+        "default_max_claims": 5,
+        "max_text_chars": 8000,
+        "max_audio_bytes": 12000000,
+        "audio_formats": [
+          ".aac",
+          ".aif",
+          ".aiff",
+          ".flac",
+          ".mp3",
+          ".ogg",
+          ".wav"
+        ]
+      },
+      "endpoints": [
+        "POST /check-text",
+        "POST /check-claim",
+        "POST /check-audio",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Verdicts summarize retrieved evidence; they do not settle truth. A claim with no retrievable evidence is reported unverified, never guessed. Coverage depends on what fact-checkers and sources have published."
+    },
+    "check_text_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No Gemini API key is configured on this deployment yet, so checking is not available. The service owner must add GEMINI_API_KEY to enable it."
+    },
+    "health_live": {
+      "status": "ok",
+      "service": "factbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engines": {
+        "reasoning": {
+          "state": "live",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "claim extraction and verdict synthesis"
+        },
+        "transcription": {
+          "state": "live",
+          "engine": "gemini-audio",
+          "model": "gemini-3.6-flash",
+          "fallback_model": "gemini-3.1-flash-lite",
+          "role": "speech-to-text for /check-audio",
+          "fallback_evaluated": "faster-whisper (open source): viable only at tiny/base size on the free tier and not needed while the Gemini key is configured"
+        },
+        "evidence": {
+          "factcheck_api": "configured",
+          "factcheck_api_source": "Google Fact Check Tools API (ClaimReview database of published fact-checks)",
+          "web_search": "DuckDuckGo HTML (keyless, paced, with lite and Bing fallbacks), one general and one fact-check-targeted query per claim",
+          "encyclopedia": "Wikipedia search API (keyless)"
+        }
+      },
+      "limits": {
+        "max_claims_cap": 10,
+        "default_max_claims": 5,
+        "max_text_chars": 8000,
+        "max_audio_bytes": 12000000,
+        "audio_formats": [
+          ".aac",
+          ".aif",
+          ".aiff",
+          ".flac",
+          ".mp3",
+          ".ogg",
+          ".wav"
+        ]
+      },
+      "endpoints": [
+        "POST /check-text",
+        "POST /check-claim",
+        "POST /check-audio",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Verdicts summarize retrieved evidence; they do not settle truth. A claim with no retrievable evidence is reported unverified, never guessed. Coverage depends on what fact-checkers and sources have published."
+    },
+    "claim_true": {
+      "claim": "The Eiffel Tower was completed in 1889.",
+      "verdict": "supported",
+      "confidence": {
+        "level": "moderate",
+        "note": "Rests on 4 sources across 3 domains; no published fact-check of this exact claim was retrieved."
+      },
+      "explanation": "The evidence confirms that construction of the Eiffel Tower began in 1887 and was completed on March 31, 1889.",
+      "evidence": [
+        {
+          "source": "Eiffel Tower - Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+          "snippet": "The Eiffel Tower (/ \u02c8a\u026af\u0259l / \u24d8 EYE-f\u0259l; French: Tour Eiffel [tu\u0281 \u025bf\u025bl] \u24d8) is a lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889.",
+          "kind": "web"
+        },
+        {
+          "source": "Eiffel Tower | History, Height, & Facts | Britannica",
+          "url": "https://www.britannica.com/topic/Eiffel-Tower-Paris-France",
+          "snippet": "Eiffel Tower, wrought-iron structure in Paris that is one of the most famous landmarks in the world. It is also a technological masterpiece in building-construction history. It was designed and built (1887-89) by Gustave Eiffel and named in his honor.",
+          "kind": "web"
+        },
+        {
+          "source": "Eiffel Tower history, architecture, design & construction",
+          "url": "https://www.toureiffel.paris/en/the-monument/history",
+          "snippet": "It was for the Paris World's Fair in 1889, the date that marked the 100th anniversary of the French Revolution, that a great competition was announced in the official government journal. Construction began on January 26, 1887. On March 31, 1889, the Tower was completed in record time - 2 years, 2 months and 5 days - and stood as a a remarkable engineering achievement.",
+          "kind": "web"
+        },
+        {
+          "source": "Wikipedia: Exposition Universelle (1889)",
+          "url": "https://en.wikipedia.org/wiki/Exposition_Universelle_%281889%29",
+          "snippet": "visitors. The most famous structure created for the exposition, and still remaining, is the Eiffel Tower. The exposition was held to celebrate the 100th anniversary",
+          "kind": "encyclopedia"
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 28161
+      }
+    },
+    "claim_false": {
+      "claim": "The Great Wall of China is visible from the Moon with the naked eye.",
+      "verdict": "refuted",
+      "confidence": {
+        "level": "moderate",
+        "note": "Rests on 7 sources across 4 domains; no published fact-check of this exact claim was retrieved."
+      },
+      "explanation": "Multiple sources, including NASA, explicitly state that the claim that the Great Wall of China is visible from the Moon with the naked eye is a myth and is incorrect.",
+      "evidence": [
+        {
+          "source": "No, the Great Wall of China is not visible from space",
+          "url": "https://www.bing.com/ck/a?!&&p=6bac132deb9f1f9f265d88baf8863ead4cd28f1e0c61b9e7d77344d79c1fd4e4JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=151ec070-e179-6485-2fdc-d873e01f65a0&u=a1aHR0cHM6Ly93d3cuaGFsbGV5c3BhY2UuY29tL2dyZWF0LXdhbGwtb2YtY2hpbmEtdmlzaWJsZS1mcm9tLXNwYWNlLW15dGgv&ntb=1",
+          "snippet": "Aug 14, 2026\u00a0\u00b7 The gist. The claim that the Great Wall of China is visible from space, or even from the Moon, with the naked eye is \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "Is the Great Wall of China visible from space with the naked eye?",
+          "url": "https://www.bing.com/ck/a?!&&p=973ea2be1eab481c128feb7319ff9b9213c8d28ea601d0511a7895b794fe536cJmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=151ec070-e179-6485-2fdc-d873e01f65a0&u=a1aHR0cHM6Ly9mYWN0Z3VhcmQub3JnL2ZhY3QtY2hlY2svZ3JlYXQtd2FsbC1vZi1jaGluYS12aXNpYmxlLWZyb20tc3BhY2Uv&ntb=1",
+          "snippet": "Jun 7, 2026\u00a0\u00b7 What the evidence shows The Great Wall is generally not visible to the unaided human eye from low Earth orbit, and \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "Great Wall - NASA",
+          "url": "https://www.bing.com/ck/a?!&&p=723d34b8eafaa794dcaba13996a1b3ea6f4dd7527817fc37ffc0c3d63cf58570JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=151ec070-e179-6485-2fdc-d873e01f65a0&u=a1aHR0cHM6Ly93d3cubmFzYS5nb3YvaW1hZ2UtYXJ0aWNsZS9ncmVhdC13YWxsLw&ntb=1",
+          "snippet": "Apr 2, 2009\u00a0\u00b7 The Great Wall of China and Inner Mongolia are featured in this image photographed by Expedition 10 Commander \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "Is the Great Wall of China Visible from the Moon? - Snopes.com",
+          "url": "https://www.snopes.com/fact-check/great-wall-from-moon/",
+          "snippet": "The claim that China's Great Wall is the only man-made object that can be seen from the moon with the naked eye is one of our more tenaciously incorrect \"facts,\" a bit of erroneous speculation ...",
+          "kind": "web"
+        },
+        {
+          "source": "Great Wall - NASA",
+          "url": "https://www.nasa.gov/image-article/great-wall/",
+          "snippet": "The Great Wall of China and Inner Mongolia are featured in this image photographed by Expedition 10 Commander Leroy Chiao on the International Space Station. Despite myths to the contrary, the wall isn't visible from the moon, and is difficult or impossible to see from Earth orbit without the high-powered lenses used for this photo.",
+          "kind": "web"
+        },
+        {
+          "source": "Wikipedia: Great Wall of China",
+          "url": "https://en.wikipedia.org/wiki/Great_Wall_of_China",
+          "snippet": "The Great Wall of China is a series of fortifications in China. They were built across the historical northern borders of ancient Chinese states and Imperial",
+          "kind": "encyclopedia"
+        },
+        {
+          "source": "Wikipedia: Artificial structures visible from space",
+          "url": "https://en.wikipedia.org/wiki/Artificial_structures_visible_from_space",
+          "snippet": "mine is the largest human-made excavation in the world. The claim that the Great Wall of China is the only man-made object visible from the Moon or outer",
+          "kind": "encyclopedia"
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 17029
+      }
+    },
+    "claim_misleading": {
+      "claim": "The Amazon rainforest produces 20 percent of the world's oxygen.",
+      "verdict": "refuted",
+      "confidence": {
+        "level": "moderate",
+        "note": "Rests on 7 sources across 5 domains; no published fact-check of this exact claim was retrieved."
+      },
+      "explanation": "Multiple scientific sources and fact-checking organizations confirm that the claim that the Amazon produces 20 percent of the world's oxygen is false, with estimates placing the actual contribution closer to 6 to 9 percent.",
+      "evidence": [
+        {
+          "source": "Why the Amazon doesn't really produce 20% of the world's oxygen",
+          "url": "https://www.nationalgeographic.com/environment/article/why-amazon-doesnt-produce-20-percent-worlds-oxygen",
+          "snippet": "The Amazon rainforest is often called the \"lungs of the Earth\" and credited with producing some 20 percent of the world's oxygen. But that's often a repeated, yet misleading claim.",
+          "kind": "web"
+        },
+        {
+          "source": "Amazon Doesn't Produce 20% of Earth's Oxygen - FactCheck.org",
+          "url": "https://www.factcheck.org/2019/09/amazon-doesnt-produce-20-of-earths-oxygen/",
+          "snippet": "Q: Does the Amazon produce 20% of the world's oxygen? A: No. Scientists estimate the percentage is closer to 6 to 9%, and the Amazon ultimately consumes nearly all of that oxygen itself. FULL ...",
+          "kind": "web"
+        },
+        {
+          "source": "Take a breath: the Amazon does not produce 20% of the world's oxygen",
+          "url": "https://apnews.com/article/archive-fact-checking-7106380249",
+          "snippet": "CLAIM: The Amazon rainforest _ \"the lungs of the Earth\" _ produces 20% of the planet's oxygen. AP'S ASSESSMENT: False. Scientists say while the Amazon is important to the world's ecosystem, it does not produce 20% of the world's oxygen. In fact, the region absorbs about the same amount of oxygen it produces. THE FACTS: The 20% figure circulated widely this month as concerns grew ...",
+          "kind": "web"
+        },
+        {
+          "source": "Amazon Doesn\u2019t Produce 20% of Earth\u2019s Oxygen - FactCheck.org",
+          "url": "https://www.bing.com/ck/a?!&&p=f1330ad33864641b6bcb082c70464f21342807439a51cb85200d3cacecdb16f4JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=04585652-95b0-62c8-03c6-4e51942a6307&u=a1aHR0cHM6Ly93d3cuZmFjdGNoZWNrLm9yZy8yMDE5LzA5L2FtYXpvbi1kb2VzbnQtcHJvZHVjZS0yMC1vZi1lYXJ0aHMtb3h5Z2VuLw&ntb=1",
+          "snippet": "Sep 3, 2019\u00a0\u00b7 Q: Does the Amazon produce 20% of the world\u2019s oxygen? A: No. Scientists estimate the percentage is closer to 6 to \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "Why the Amazon doesn\u2019t really produce 20% of the world\u2019s oxygen",
+          "url": "https://www.bing.com/ck/a?!&&p=16c52060d2f1bf8d637168c918af01c3786c2b3fe3dff5e61ddfc2124de5ce7cJmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=04585652-95b0-62c8-03c6-4e51942a6307&u=a1aHR0cHM6Ly93d3cubmF0aW9uYWxnZW9ncmFwaGljLmNvbS9lbnZpcm9ubWVudC9hcnRpY2xlL3doeS1hbWF6b24tZG9lc250LXByb2R1Y2UtMjAtcGVyY2VudC13b3JsZHMtb3h5Z2Vu&ntb=1",
+          "snippet": "Aug 19, 2025\u00a0\u00b7 The Amazon rainforest is often called the \u201clungs of the Earth\u201d and credited with producing some 20 percent of the \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "Wikipedia: Amazon rainforest",
+          "url": "https://en.wikipedia.org/wiki/Amazon_rainforest",
+          "snippet": "The Amazon rainforest, also called the Amazon jungle, Amazonia, or simply the Amazon, is a moist broadleaf tropical rainforest in the Amazon biome that",
+          "kind": "encyclopedia"
+        },
+        {
+          "source": "Wikipedia: 2019 Amazon rainforest wildfires",
+          "url": "https://en.wikipedia.org/wiki/2019_Amazon_rainforest_wildfires",
+          "snippet": "Brazil. Macron called the Amazon wildfires an \"international crisis\", while claiming the rainforest produces \"20% of the world's oxygen\"\u2014a statement disputed",
+          "kind": "encyclopedia"
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 18854
+      }
+    },
+    "claim_obscure": {
+      "claim": "The Millersville town council approved exactly fourteen parking permits in March 1974.",
+      "verdict": "unverified",
+      "confidence": {
+        "level": "low",
+        "note": "Rests on thin evidence (5 source(s)); treat as provisional."
+      },
+      "explanation": "The provided evidence consists of general links to newspaper archives and a city website document, none of which contain information regarding parking permits in Millersville in March 1974.",
+      "evidence": [
+        {
+          "source": "The past: read all about it.",
+          "url": "https://www.newspapers.com/",
+          "snippet": "The largest online newspaper archive. Used by millions every month for historical research, family history, true crime, journalism, and more.",
+          "kind": "web"
+        },
+        {
+          "source": "NewspaperArchive 1700s - 2026 | NewspaperArchive",
+          "url": "https://newspaperarchive.com/",
+          "snippet": "Search through 16,843 historic newspaper archives to do genealogy and family history. Find obituaries, marriage and birth announcements, and other local and national news for over 8.6 billion people!",
+          "kind": "web"
+        },
+        {
+          "source": "PDF www.cityofmillersville.com",
+          "url": "https://www.cityofmillersville.com/egov/documents/1763156955_11981.pdf",
+          "snippet": "Created Date 11/14/2025 3:15:45 PM",
+          "kind": "web"
+        },
+        {
+          "source": "The past: read all about it.",
+          "url": "https://www.bing.com/ck/a?!&&p=62008b6ca0c89c06a89442b18be5c83fbc74dc5918943d1e509f57157af9f2a7JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=0be9b390-c7ba-63b2-37c5-ab93c6de6204&u=a1aHR0cHM6Ly93d3cubmV3c3BhcGVycy5jb20vP21zb2NraWQ9MGJlOWIzOTBjN2JhNjNiMjM3YzVhYjkzYzZkZTYyMDQ&ntb=1",
+          "snippet": "The largest online newspaper archive. Used by millions every month for historical research, family history, true crime, journalism, and \u2026",
+          "kind": "web"
+        },
+        {
+          "source": "FactCheck.org - A Project of The Annenberg Public Policy Center",
+          "url": "https://www.bing.com/ck/a?!&&p=269177e0462d7022cd45db0848183090682c0ec77d5dc95ffead79bc9d4c5844JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=0be9b390-c7ba-63b2-37c5-ab93c6de6204&u=a1aHR0cHM6Ly93d3cuZmFjdGNoZWNrLm9yZy8&ntb=1",
+          "snippet": "An ad from the campaign of Republican Sen. Dan Sullivan in Alaska features a mother whose 22-year-old son died from fentanyl and \u2026",
+          "kind": "web"
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 34835
+      }
+    },
+    "text_two_claims": {
+      "claims_found": 3,
+      "claims": [
+        {
+          "claim": "Barack Obama was born in Hawaii.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 6 sources across 4 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple provided sources explicitly state that Barack Obama was born on August 4, 1961, in Honolulu, Hawaii.",
+          "evidence": [
+            {
+              "source": "Barack Obama - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Barack_Obama",
+              "snippet": "Obama (right) with grandfather Stanley Armour Dunham, mother Ann Dunham, and half-sister Maya Soetoro, mid-1970s in Honolulu Barack Hussein Obama II was born on August 4, 1961, [2][3][4][5] at Kapiolani Medical Center for Women and Children in Honolulu, Hawaii. [6][7][8][9] He is the only president born outside the contiguous United States. [10] He was born to an 18-year-old American mother ...",
+              "kind": "web"
+            },
+            {
+              "source": "Early life and career of Barack Obama - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Early_life_and_career_of_Barack_Obama",
+              "snippet": "Early life and career of Barack Obama Barack Obama, the 44th president of the United States, was born on August 4, 1961, in Honolulu, Hawaii, [1] to Barack Obama, Sr. (1936-1982; born in Oriang' Kogelo of Rachuonyo North District, [2] Kenya) and Stanley Ann Dunham, known as Ann (1942-1995; born in Wichita, Kansas, United States). [3] Obama spent most of his childhood years in Honolulu ...",
+              "kind": "web"
+            },
+            {
+              "source": "Barack Obama Birthplace - Honolulu, Hawaii - presidentsusa.net",
+              "url": "https://www.presidentsusa.net/obamabirthplace.html",
+              "snippet": "Barack Obama was born on August 4, 1961 in Honolulu, Hawaii at Kapi\u02bbolani Maternity & Gynecological Hospital. The building remains an active medical facility now known as Kapi\u02bbolani Medical Center for Women & Children.",
+              "kind": "web"
+            },
+            {
+              "source": "Was Barack Obama really born in the United States and ...",
+              "url": "https://factually.co/fact-checks/politics/was-barack-obama-born-in-the-us-what-happened-to-his-birth-certificate-eecfb8",
+              "snippet": "Executive summary Barack Obama was born in Honolulu, Hawaii, on August 4, 1961, and multiple official records and contemporaneous newspaper birth announcements support that fact [1] [2] [3].",
+              "kind": "web"
+            },
+            {
+              "source": "Fact check: Obama was born in Hawaii, not Kenya - USA TODAY",
+              "url": "https://www.usatoday.com/story/news/factcheck/2021/10/13/fact-check-obama-born-hawaii-not-kenya/5898722001/",
+              "snippet": "Another fake image of Barack Obama's birth certificate is circulating online. Obama was born in Hawaii, not Kenya. Claims to the contrary are false.",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Barack Obama Sr.",
+              "url": "https://en.wikipedia.org/wiki/Barack_Obama_Sr.",
+              "snippet": "Barack Hussein Obama (/\u02c8b\u00e6r\u0259k hu\u02d0\u02c8se\u026an o\u028a\u02c8b\u0251\u02d0m\u0259/; born Baraka Hussein Obama, 18 June 1934\u00a0\u2013 24 November 1982) was a Kenyan senior governmental economist",
+              "kind": "encyclopedia"
+            }
+          ]
+        },
+        {
+          "claim": "Barack Obama was the 44th President of the United States.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 6 sources across 3 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources, including the official White House archives and Britannica, confirm that Barack Obama served as the 44th President of the United States.",
+          "evidence": [
+            {
+              "source": "Barack Obama | whitehouse.gov",
+              "url": "https://obamawhitehouse.archives.gov/1600/presidents/barackobama",
+              "snippet": "Barack Obama Barack Obama is the 44th President of the United States. His story is the American story -- values from the heartland, a middle-class upbringing in a strong family, hard work and education as the means of getting ahead, and the conviction that a life so blessed should be lived in service to others.",
+              "kind": "web"
+            },
+            {
+              "source": "Barack Obama - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Barack_Obama",
+              "snippet": "Barack Hussein Obama II[a] (born August 4, 1961) is an American retired politician who served as the 44th president of the United States from 2009 to 2017. A member of the Democratic Party, he was the first African American to serve as president.",
+              "kind": "web"
+            },
+            {
+              "source": "Presidency of Barack Obama - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Presidency_of_Barack_Obama",
+              "snippet": "Barack Obama 's tenure as the 44th president of the United States began with his first inauguration on January 20, 2009, and ended on January 20, 2017. Obama, a Democrat from Illinois, took office after defeating the Republican nominee John McCain in the 2008 presidential election. Four years later, he won re-election in the 2012 presidential election, after defeating the Republican nominee ...",
+              "kind": "web"
+            },
+            {
+              "source": "Barack Obama - Wikipedia",
+              "url": "https://www.bing.com/ck/a?!&&p=93cc3f5245fc422f48ba04dd4ea9e3faeb4e2c083f08ef2dc3390d87467f230bJmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=113ab848-66e3-63cf-32d7-a04b67d362ec&u=a1aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvQmFyYWNrX09iYW1h&ntb=1",
+              "snippet": "Barack Hussein Obama II[a] (born August 4, 1961) is an American retired politician who served as the 44th president of the United \u2026",
+              "kind": "web"
+            },
+            {
+              "source": "Barack Obama Facts | Britannica",
+              "url": "https://www.bing.com/ck/a?!&&p=2937dbe6bedf9e0136a37a1dbeaf5c354fb6735d6497dfdb86ea66a55c6d237cJmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=113ab848-66e3-63cf-32d7-a04b67d362ec&u=a1aHR0cHM6Ly93d3cuYnJpdGFubmljYS5jb20vZmFjdHMvQmFyYWNrLU9iYW1h&ntb=1",
+              "snippet": "1 day ago\u00a0\u00b7 Barack Obama served as the 44th president of the United States (2009\u201317) and was the first African American to hold \u2026",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: President Barack Obama (painting)",
+              "url": "https://en.wikipedia.org/wiki/President_Barack_Obama_%28painting%29",
+              "snippet": "President Barack Obama is an oil-on-canvas portrait of Barack Obama, the 44th president of the United States, completed by the artist Kehinde Wiley in",
+              "kind": "encyclopedia"
+            }
+          ]
+        },
+        {
+          "claim": "Barack Obama was born in Kenya.",
+          "verdict": "refuted",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 6 sources across 5 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources, including fact-checking organizations, explicitly state that Barack Obama was born in Hawaii and that claims of his birth in Kenya are baseless.",
+          "evidence": [
+            {
+              "source": "No, this still isn't proof former President Barack Obama was born in Kenya",
+              "url": "https://www.politifact.com/factchecks/2025/jan/13/threads-posts/no-this-isnt-proof-former-president-barack-obama-w/",
+              "snippet": "Former President Barack Obama was born in Hawaii. But nearly eight years since he left office, some social media users continue to baselessly claim he was born in Kenya.",
+              "kind": "web"
+            },
+            {
+              "source": "Fact Check: Did Barack Obama's Half-Brother Claim Barack was B...",
+              "url": "https://www.ibtimes.sg/fact-check-did-barack-obamas-half-brother-claim-barack-was-born-kenya-making-him-illegitimate-69848",
+              "snippet": "The news that did the rounds was that Obama's half-brother Malik Obama posted 3 pictures of a passport on Twitter that showed that Barack Obama was born in Nairobi, Kenya.",
+              "kind": "web"
+            },
+            {
+              "source": "'Born in Kenya': Obama's Literary Agent Misidentified His Birthplace in ...",
+              "url": "https://abcnews.com/Politics/OTUS/born-kenya-obamas-literary-agent-misidentified-birthplace-1991/story?id=16372566",
+              "snippet": "Barack Obama, the first African-American president of the Harvard Law Review, was born in Kenya and raised in Indonesia and Hawaii. The son of an American anthropologist and a Kenyan finance minister, he attended Columbia University and worked as a financial journalist and editor for Business International Corporation.",
+              "kind": "web"
+            },
+            {
+              "source": "Video altered to suggest Obama admitted he was born in Africa",
+              "url": "https://apnews.com/article/fact-check-obama-trump-birther-kenya-091716039186",
+              "snippet": "Video altered to suggest Obama admitted he was born in Africa FILE - Former U.S. President Barack Obama gesture as he attends the \"values-based leadership\" during a plenary session of the Gathering of Rising Leaders in the Asia Pacific, organized by the Obama Foundation in Kuala Lumpur, Malaysia, on Dec. 13, 2019.",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Auma Obama",
+              "url": "https://en.wikipedia.org/wiki/Auma_Obama",
+              "snippet": "poverty in Kenya. Auma Obama is the daughter of Barack Obama Sr. and his first wife, Kezia Obama (n\u00e9e Aoko). She is the older half-sister of Barack Obama. After",
+              "kind": "encyclopedia"
+            },
+            {
+              "source": "Wikipedia: Malik Obama",
+              "url": "https://en.wikipedia.org/wiki/Malik_Obama",
+              "snippet": "United States, Barack Obama, and the eldest son of economist Barack Obama Sr. Abon'go Malik \"Roy\" Obama was born and raised in Nairobi, Kenya. His parents",
+              "kind": "encyclopedia"
+            }
+          ]
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 30936
+      }
+    },
+    "text_opinion": {
+      "claims_found": 0,
+      "claims": [],
+      "note": "No checkable factual claims were found in the input.",
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "latency_ms": 11240
+      }
+    },
+    "audio_claim_clip": {
+      "transcript": "The Eiffel Tower was completed in 1889. It stands 330 meters tall and is located in Paris, France.",
+      "claims_found": 3,
+      "claims": [
+        {
+          "claim": "The Eiffel Tower was completed in 1889.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 6 sources across 4 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources confirm that the construction of the Eiffel Tower was completed in 1889, with one source specifying the completion date as March 31, 1889.",
+          "evidence": [
+            {
+              "source": "Eiffel Tower - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+              "snippet": "The Eiffel Tower (/ \u02c8a\u026af\u0259l / \u24d8 EYE-f\u0259l; French: Tour Eiffel [tu\u0281 \u025bf\u025bl] \u24d8) is a lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower | History, Height, & Facts | Britannica",
+              "url": "https://www.britannica.com/topic/Eiffel-Tower-Paris-France",
+              "snippet": "Eiffel Tower, wrought-iron structure in Paris that is one of the most famous landmarks in the world. It is also a technological masterpiece in building-construction history. It was designed and built (1887-89) by Gustave Eiffel and named in his honor.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower history, architecture, design & construction",
+              "url": "https://www.toureiffel.paris/en/the-monument/history",
+              "snippet": "It was for the Paris World's Fair in 1889, the date that marked the 100th anniversary of the French Revolution, that a great competition was announced in the official government journal. Construction began on January 26, 1887. On March 31, 1889, the Tower was completed in record time - 2 years, 2 months and 5 days - and stood as a a remarkable engineering achievement.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower - Wikipedia",
+              "url": "https://www.bing.com/ck/a?!&&p=a43fed722fc4333be59af6cf58fc115678d734c2caaa2e8639643427d65183c9JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=107a39a0-2770-6849-2a1a-21a326ea69b5&u=a1aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRWlmZmVsX1Rvd2Vy&ntb=1",
+              "snippet": "The Eiffel Tower (/ \u02c8a\u026af\u0259l / \u24d8 EYE-f\u0259l; French: Tour Eiffel [tu\u0281 \u025bf\u025bl] \u24d8) is a lattice tower on the Champ de Mars in Paris, France. It is \u2026",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower history, architecture, design & construction",
+              "url": "https://www.bing.com/ck/a?!&&p=49a09b3ecaa0614f480bdef9dfd536113b0a1941ce404108773d4675aeb34322JmltdHM9MTc5MzQwNDgwMA&ptn=3&ver=2&hsh=4&fclid=107a39a0-2770-6849-2a1a-21a326ea69b5&u=a1aHR0cHM6Ly93d3cudG91cmVpZmZlbC5wYXJpcy9lbi90aGUtbW9udW1lbnQvaGlzdG9yeQ&ntb=1",
+              "snippet": "It was for the Paris World's Fair in 1889, the date that marked the 100th anniversary of the French Revolution, that a great \u2026",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Exposition Universelle (1889)",
+              "url": "https://en.wikipedia.org/wiki/Exposition_Universelle_%281889%29",
+              "snippet": "visitors. The most famous structure created for the exposition, and still remaining, is the Eiffel Tower. The exposition was held to celebrate the 100th anniversary",
+              "kind": "encyclopedia"
+            }
+          ]
+        },
+        {
+          "claim": "The Eiffel Tower stands 330 meters tall.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 5 sources across 3 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources confirm that the Eiffel Tower stands 330 meters tall, including its antenna.",
+          "evidence": [
+            {
+              "source": "Eiffel Tower - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+              "snippet": "The tower is 330 metres (1,083 ft) tall, [9] about the same height as an 81- storey building, and the tallest structure in Paris. Its base is square, measuring 125 metres (410 ft) on each side.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower Height: 330 Meters Tall | History, Dimensions & Guide ...",
+              "url": "https://geographyworlds.com/blog/eiffel-tower-paris-landmark-guide/",
+              "snippet": "The Eiffel Tower height is 330 meters (1,083 feet) including its antenna. Discover its dimensions, weight, engineering, and why Paris's iconic tower attracts.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower Height: 330m (1,083 ft) - Dimensions, Weight & Fun Facts",
+              "url": "https://eiffeltowertravel.com/height-and-facts",
+              "snippet": "The Numbers How Tall Is the Eiffel Tower? The Eiffel Tower stands 330 metres (1,083 feet) tall including its broadcast antenna, making it the tallest structure in Paris and one of the most recognizable landmarks on Earth.",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Tokyo Tower",
+              "url": "https://en.wikipedia.org/wiki/Tokyo_Tower",
+              "snippet": "in the world, taking the title from the Eiffel Tower by 9\u00a0m (30\u00a0ft).[failed verification] Though physically taller than the Eiffel Tower, Tokyo Tower weighs",
+              "kind": "encyclopedia"
+            },
+            {
+              "source": "Wikipedia: History of the world's tallest buildings",
+              "url": "https://en.wikipedia.org/wiki/History_of_the_world%27s_tallest_buildings",
+              "snippet": "habitable. Similarly, the Eiffel Tower was the world's tallest structure from 1889, when it was built, but not the tallest building. The skyscraper was invented",
+              "kind": "encyclopedia"
+            }
+          ]
+        },
+        {
+          "claim": "The Eiffel Tower is located in Paris, France.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 5 sources across 3 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources, including Wikipedia and official tourism information, confirm that the Eiffel Tower is located in Paris, France.",
+          "evidence": [
+            {
+              "source": "Paris: Eiffel Tower Tours - Eiffel Tower Tours & Tickets",
+              "url": "https://duckduckgo.com/y.js?ad_domain=tripadvisor.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=ZVV5zJtJ_c6bcl8BtPy9OwHGLbn85Te4rxfiGzPQt0cZ4rOIidmGyYh8OPqe_t7HjbVCSlR3tIBAgXXkDqHRGlyHCWe0L%2DS32VdFHSsUffviO_ihdTryHTa%2DGLmQkEI9HrlsWGmltpFGd06k4Ps2EqmM8ky4H3a9rp9PVM_L%2D8A.1H5ikkCADb4gbGVocpfPGw&rut=3a46946fbacff9f4c2ad79a7d884c39d198c46431407a3e4c87105858446303a&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8KXkWJWLKkAVQclkzr9z_jzVUCUxvnGPSUAnvxvyeLz68bgAUx7NvUFof30aAls4cYkJ_5cDe2ZOahNhHyTia%2DON8QWMEuFJRGWB59AZMBvl0nz43ToDD0Nc6RArj7kPQ04EPmBEiNBCSYtb6iHHnNZn62WHzhiHqD1Urg71pyTThmiBp6Rbk55JKubYPPjDa_pRlnDjLOW6f95DbOv9ordSA_0w%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cudHJpcGFkdmlzb3IuY29tJTJmQXR0cmFjdGlvbl9Qcm9kdWN0cy1nMTg3MTQ3LWQxODgxNTEtRWlmZmVsX1Rvd2VyLVBhcmlzX0lsZV9kZV9GcmFuY2UuaHRtbCUzZm0lM2Q3MDIzNCUyNnN1cGFjJTNkMTQxOTU0NzgwJTI2c3VwYWclM2QxMzM1OTA5MjE3MDgxNDc3JTI2c3VwY20lM2Q2MDcxMDM2MzYlMjZzdXBjYSUzZDYwNzEwMzYzNiUyNnN1cGFpJTNkODM0OTQ2MTc5NzEwNTAlMjZzdXBkdiUzZGMlMjZzdXBudCUzZG50JTNhcyUyNnN1cGxwJTNkODc1NDUlMjZzdXBsaSUzZDIwMDYxJTI2c3VwdGklM2Rrd2QtODM0OTU1NjcxNTA2NzglM2Fsb2MtMTkwJTI2c3Vwa3clM2RUaGUlMjUyMEVpZmZlbCUyNTIwVG93ZXIlMjUyMGlzJTI1MjBsb2NhdGVkJTI1MjBpbiUyNTIwUGFyaXMlMmMlMjUyMEZyYW5jZS4lMjZzdXBtdCUzZGUlMjZ0c2VtJTNkdHJ1ZSUyNnN1cGNpJTNka3dkLTgzNDk1NTY3MTUwNjc4JTNhbG9jLTE5MCUyNnN1cGFwMSUzZCUyNnN1cGFwMiUzZCUyNmNvbnRlbnRJZCUzZDEzMzU5MDkyMTcwODE0NzclMmI2MDcxMDM2MzYlMjZtc2Nsa2lkJTNkMjJiZDBhYzM4NGE5MWIxNzgzYjc2MDI1ZDE5YWQ1NGI%26rlid%3D22bd0ac384a91b1783b76025d19ad54b&vqd=4-82508483534989904053139731896737403887&iurl=%7B1%7DIG%3D6C614E74AD5244FA9D9BD4672658E6CC%26CID%3D0B2B5716D64E6E5B18EA4F15D7026F96%26ID%3DDevEx%2C5037.1",
+              "snippet": "Unmatched views of Paris! Get your Eiffel Tower tickets online and save. Book Now! Best Things to Do in 2026 in Paris. Free Cancellation & Full Refund Available.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower Paris - Eiffel Tower Entry - Le Tour De Eiffel",
+              "url": "https://duckduckgo.com/y.js?ad_domain=paristickets.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=02mhKvriItJKK6ESMI8CUbMga2JWWPMj5UftfSp1eQ8aCS6u_xht7ZgJSWjhyUNvmiXOI2ygIcr31neHHlU2bU9ebC_wsTTbuZm2H7X93qrMozZiPNfUaKiY0vhTgMItJSBtL9_vcZdQZArfwfiZQ5ABXg7l2TFLNhBJr1wXCLA.LU%2Dx0ZtMBQCLYyDnryBs4A&rut=813b24756e42b87ef939c1c1f1122c1253e0a22c81b4dcdca9c42a67e5e631cb&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8H51k1Y0vtBZ_y5DGJmhlTTVUCUyDNQf1r_XEUsMDy%2DNKHRUAZAF200jWozAw8Nt9usIUjGeoo5e0FrZ0vgf1ZTUb1VWDsde_9OcjuOtFADO_0nKCB2kN%2DBX5IYgNBiq7oJcHIsztCYSFPz2MOn%2D0f5gTUjdiICcw824sTIp9nQzQZ9MOY1OpSjNpLFl_CosxfLRBBmWEANrKFviqVXWf58NOEDo%26u%3DaHR0cHMlM2ElMmYlMmZlaWZmZWwtdG93ZXIucGFyaXN0aWNrZXRzLmNvbSUyZiUzZmNpJTNkMiUyNmNtJTNkNTU1NzIxNzkwXzEzMDQwMjIwNzk3MTk3NjhfY19zX2xlJTI1MjB0b3VyJTI1MjBkZSUyNTIwZWlmZmVsX2VfJTdiZXh0ZW5zaW9uaWQlN2QlMjZtc2Nsa2lkJTNkODNjMzNkOTUxNWRlMTEyMTFlM2Q1NzczNDBlZDI3YzclMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RQYXJpcyUyNTIwLSUyNTIwRWlmZmVsJTI1MjBUb3dlciUyNTIwLSUyNTIwT3RoZXIlMjUyMExhbmd1YWdlcyUyNTIwLSUyNTIwQWxsJTI1MjAtJTI1MjBTZWFyY2glMjUyMC0lMjUyMEFsbCUyNTIwLSUyNTIwQWxsJTI1MjAtJTI1MjBjaWQyNDMlMjZ1dG1fdGVybSUzZGxlJTI1MjB0b3VyJTI1MjBkZSUyNTIwZWlmZmVsJTI2dXRtX2NvbnRlbnQlM2RHZW5lcmljJTI1MjAtJTI1MjBFeGFjdCUyNTIwLSUyNTIwRW5nbGlzaCUyNTIwLSUyNTIwQWxs%26rlid%3D83c33d9515de11211e3d577340ed27c7&vqd=4-130678823983342202957032079294871914062&iurl=%7B1%7DIG%3D6C614E74AD5244FA9D9BD4672658E6CC%26CID%3D0B2B5716D64E6E5B18EA4F15D7026F96%26ID%3DDevEx%2C5041.1",
+              "snippet": "Eiffel Tower Tickets & Guided Tours With Expert Travel Assistance. Get Yours Now. Read real traveler reviews and book with confidence. Loved by 57 million guests worldwide.",
+              "kind": "web"
+            },
+            {
+              "source": "Eiffel Tower - Wikipedia",
+              "url": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+              "snippet": "The Eiffel Tower (/ \u02c8a\u026af\u0259l / \u24d8 EYE-f\u0259l; French: Tour Eiffel [tu\u0281 \u025bf\u025bl] \u24d8) is a lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. Locally nicknamed \" La dame de fer \" (French for \"Iron Lady\") for its use of wrought iron, it was constructed as the centrepiece of the 1889 ...",
+              "kind": "web"
+            },
+            {
+              "source": "Fact-check: True \u2014 \"The Eiffel Tower is in Paris.\" | SpinkillerAI",
+              "url": "https://spinkillerai.com/fact-check/the-eiffel-tower-is-in-paris",
+              "snippet": "Fact-check: \"The Eiffel Tower is in Paris.\" Verdict: True (100% confidence) Every authoritative source confirms this. The Eiffel Tower's own official website states it is located in Paris's 7th arrondissement at 5 avenue Anatole France, 75007 Paris, France. UNESCO, official French tourism sources, and encyclopedic references all place it in ...",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Eiffel Tower (Paris, Texas)",
+              "url": "https://en.wikipedia.org/wiki/Eiffel_Tower_%28Paris%2C_Texas%29",
+              "snippet": "Texas's Eiffel Tower is a landmark in the city of Paris, Texas. The tower was constructed in 1993. It is a rough scale model of the Eiffel Tower in Paris, France;",
+              "kind": "encyclopedia"
+            }
+          ]
+        }
+      ],
+      "_meta": {
+        "service": "factbase",
+        "version": "1.0.0",
+        "engine": "live",
+        "transcription_engine": "gemini-audio",
+        "latency_ms": 49762
+      }
+    },
+    "audio_jfk": {
+      "transcript": "And so, my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+      "claims_found": 1,
+      "claims": [
+        {
+          "claim": "John F. Kennedy delivered the speech containing the phrase 'ask not what your country can do for you, ask what you can do for your country'.",
+          "verdict": "supported",
+          "confidence": {
+            "level": "moderate",
+            "note": "Rests on 6 sources across 5 domains; no published fact-check of this exact claim was retrieved."
+          },
+          "explanation": "Multiple sources confirm that John F. Kennedy delivered the phrase 'ask not what your country can do for you, ask what you can do for your country' during his 1961 inaugural address.",
+          "evidence": [
+            {
+              "source": "Ask not what your country can do for you (Kennedy's inuagural address)",
+              "url": "https://www.ushistory.org/documents/ask-not.htm",
+              "snippet": "John F. Kennedy's Inaugural Address, January 20, 1961 We observe today not a victory of party, but a celebration of freedom \u2014 symbolizing an end, as well as a beginning \u2014 signifying renewal, as well as change. For I have sworn before you and Almighty God the same solemn oath our forebears prescribed nearly a century and three quarters ago. The world is very different now. For man holds in ...",
+              "kind": "web"
+            },
+            {
+              "source": "President John F. Kennedy's Inaugural Address (1961)",
+              "url": "https://www.archives.gov/milestone-documents/president-john-f-kennedys-inaugural-address",
+              "snippet": "The climax of the speech and its most memorable phrase - \"Ask not what your country can do for you - ask what you can do for your country\" - was honed down from a thought about sacrifice that Kennedy had long held in his mind and had expressed in various ways in campaign speeches.",
+              "kind": "web"
+            },
+            {
+              "source": "Inaugural Address, January 20, 1961 - JFK Library",
+              "url": "https://www.jfklibrary.org/archives/other-resources/john-f-kennedy-speeches/inaugural-address-19610120",
+              "snippet": "Listen to the speech. Inaugural Address of President John F. Kennedy Washington, D.C. January 20, 1961 Vice President Johnson, Mr. Speaker, Mr. Chief Justice, President Eisenhower, Vice President Nixon, President Truman, Reverend Clergy, fellow citizens: We observe today not a victory of party but a celebration of freedom--symbolizing an end as well as a beginning--signifying renewal as well ...",
+              "kind": "web"
+            },
+            {
+              "source": "JFK's 'Ask Not What Your Country Can Do' Speech Truth",
+              "url": "https://quotechronicles.com/jfk-ask-not-inaugural/",
+              "snippet": "Archival investigation into John F. Kennedy's 1961 Inaugural Address: 'Ask not what your country can do for you', Ted Sorensen's role, and Cold War origins.",
+              "kind": "web"
+            },
+            {
+              "source": "Wikipedia: Joseph P. Kennedy Sr.",
+              "url": "https://en.wikipedia.org/wiki/Joseph_P._Kennedy_Sr.",
+              "snippet": "Congressman John F. Kennedy, running for the Senate seat, would not give any anti-McCarthy speeches that his liberal supporters wanted to hear. At Kennedy's urging",
+              "kind": "encyclopedia"
+            },
+            {
+              "source": "Wikipedia: Inauguration of John F. Kennedy",
+              "url": "https://en.wikipedia.org/wiki/Inauguration_of_John_F._Kennedy",
+              "snippet": "inaugural address that John F. Kennedy spoke his famous words, \"ask not what your country can do for you, ask what you can do for your country.\" This use of antimetabole",
+              "kind": "encyclopedia"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "environment": "Phase B Gemini calls routed through tests/connector_bridge.py via the custom.gemini connector (real engine, production request shapes); evidence retrieval ran live (DuckDuckGo HTML + Wikipedia, keyless). Fact Check Tools API layer inactive locally (no key for that host on this machine)."
+}

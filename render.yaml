@@ -58,3 +58,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: factbase
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: "python factbase/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
