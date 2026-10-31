@@ -49,3 +49,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: xbase
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: "python xbase/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"

@@ -1,0 +1,190 @@
+{
+  "checks": [
+    {
+      "name": "mock /health 200, engine mock",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /search without secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate: /search wrong secret -> 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gate passed, empty body -> 422 missing_parameter",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/search mock 200",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/search shape: normalized posts",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/search meta labels engine mock",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/news-scan hiphop: 200, deduped, shaped",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/news-scan black-news-us: 200, deduped, shaped",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/news-scan black-news-international: 200, deduped, shaped",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "/news-scan unknown preset -> 422",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /health reports awaiting_token",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "awaiting /search -> explicit 503 engine_not_configured",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "samples": {
+    "health_mock": {
+      "status": "ok",
+      "service": "xbase",
+      "version": "1.0.0",
+      "build": "2026-10-31-v1",
+      "engine": {
+        "state": "mock",
+        "source": "built-in fixtures (XBASE_MOCK=1): responses are labeled mock and are NOT live X data",
+        "pricing_note": "X charges the token owner per post returned ($0.005 per post on the pay-per-use plan at build time)"
+      },
+      "presets": {
+        "hiphop": "Hip-hop: releases, tours, business, culture",
+        "black-news-us": "Black news: United States",
+        "black-news-international": "Black news: the African diaspora worldwide (Africa, the Caribbean, the UK, Canada, Latin America)"
+      },
+      "limits": {
+        "max_results_cap": 100,
+        "max_hours_back": 168,
+        "x_rate_limit": "450 requests per 15 minutes per app"
+      },
+      "endpoints": [
+        "POST /search",
+        "POST /news-scan",
+        "GET /health"
+      ],
+      "recent_requests": [],
+      "note": "Official-API wrapper only: no scraping. Posts are normalized to id, text, author, timestamp, public metrics, URL, and language."
+    },
+    "search_mock": {
+      "query": "(hip hop) new album",
+      "count": 3,
+      "posts": [
+        {
+          "id": "1999000000000000001",
+          "text": "FIXTURE post 1 for query [(hip hop) new album]: synthetic sample text used to prove the response shape. Not a real post.",
+          "author": {
+            "username": "fixture_beats",
+            "name": "Fixture Beats"
+          },
+          "created_at": "2026-10-31T19:57:11.000Z",
+          "metrics": {
+            "likes": 40,
+            "reposts": 12,
+            "replies": 5,
+            "quotes": 2
+          },
+          "url": "https://x.com/fixture_beats/status/1999000000000000001",
+          "lang": "en"
+        },
+        {
+          "id": "1999000000000000002",
+          "text": "FIXTURE post 2 for query [(hip hop) new album]: synthetic sample text used to prove the response shape. Not a real post.",
+          "author": {
+            "username": "fixture_wire",
+            "name": "Fixture Wire"
+          },
+          "created_at": "2026-10-31T19:40:11.000Z",
+          "metrics": {
+            "likes": 31,
+            "reposts": 9,
+            "replies": 4,
+            "quotes": 2
+          },
+          "url": "https://x.com/fixture_wire/status/1999000000000000002",
+          "lang": "en"
+        },
+        {
+          "id": "1999000000000000003",
+          "text": "FIXTURE post 3 for query [(hip hop) new album]: synthetic sample text used to prove the response shape. Not a real post.",
+          "author": {
+            "username": "fixture_archive",
+            "name": "Fixture Archive"
+          },
+          "created_at": "2026-10-31T19:23:11.000Z",
+          "metrics": {
+            "likes": 22,
+            "reposts": 6,
+            "replies": 3,
+            "quotes": 2
+          },
+          "url": "https://x.com/fixture_archive/status/1999000000000000003",
+          "lang": "en"
+        }
+      ],
+      "_meta": {
+        "service": "xbase",
+        "version": "1.0.0",
+        "engine": "mock",
+        "latency_ms": 0
+      }
+    },
+    "scan_hiphop": {
+      "count": 3,
+      "posts_per_query": {
+        "(hip hop OR hiphop) (new album OR new single OR album release) -is:retweet lang:en": 3,
+        "(rapper OR hip hop) (tour OR concert OR festival) announces -is:retweet lang:en": 3,
+        "(record label OR streaming) (hip hop OR rapper) deal -is:retweet lang:en": 3
+      }
+    },
+    "scan_black-news-us": {
+      "count": 3,
+      "posts_per_query": {
+        "(Black Americans OR African American) (city council OR mayor OR policy OR community) -is:retweet lang:en": 3,
+        "(HBCU OR Black entrepreneurs OR Black-owned) -is:retweet lang:en": 3,
+        "(Black history OR Black heritage) (museum OR archive OR landmark) -is:retweet lang:en": 3
+      }
+    },
+    "scan_black-news-international": {
+      "count": 3,
+      "posts_per_query": {
+        "(African diaspora OR Afro-Caribbean OR Black British) -is:retweet lang:en": 3,
+        "(Nigeria OR Ghana OR Kenya OR Jamaica OR Barbados) (culture OR festival OR heritage) -is:retweet": 3,
+        "(Afro-Latino OR Black Canadian) (community OR arts OR history) -is:retweet": 3
+      }
+    },
+    "search_awaiting": {
+      "error": "engine_not_configured",
+      "detail": "No X Bearer token is configured on this deployment yet, so live search is not available. The service owner must add X_BEARER_TOKEN to enable it."
+    }
+  }
+}
