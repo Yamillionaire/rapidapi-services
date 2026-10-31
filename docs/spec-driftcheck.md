@@ -84,6 +84,64 @@ BASIC $0/100mo; PRO $5/1,000mo; ULTRA $20/10,000mo; MEGA $60/50,000mo
 (the SwiftRead own-product grid: one check, any size up to the caps,
 is one request).
 
+## Internal pipeline use (standing production gate, user-directed 2026-10-31)
+
+DriftCheck is also the house gate: every generated image or video,
+from every lane (built-in media tools, regular ChatGPT, ChatGPT
+Codex, Higgsfield, any future generator), passes a drift check
+against its reference (model sheet, approved still, or start frame)
+BEFORE it is installed, shipped, or built on with further credit
+spend. Internal calls go direct to the Render service
+(https://driftcheck.onrender.com) with the X-RapidAPI-Proxy-Secret
+header once the listing secret is wired; the shapes are:
+
+Image gate (one generation candidate vs its reference):
+
+    POST /check-image   (multipart/form-data)
+      candidate=@<generated file>
+      reference=@<model sheet | approved design | approved still>
+      expected_text=<codename or emblem lettering, optional>
+
+    JSON equivalent: {"candidate_url": "...", "reference_url": "...",
+                      "expected_text": "..."}
+    (candidate_base64 / reference_base64 also accepted)
+
+Video gate (one motion clip vs its start frame):
+
+    POST /check-video   (multipart/form-data)
+      video=@<clip file>
+      reference=@<start-frame still>
+      frames=10            (optional, 3-24)
+
+Default verdict thresholds for production:
+
+- drift_score <= 50: PASS - the item may be installed; the
+  native-resolution zoom audit and anatomy QA still run before a
+  final ship verdict (DriftCheck is triage, not a replacement).
+- 50 < drift_score <= 65: WARN - human review before install; read
+  the flagged component (proportion flag, worst frames) and
+  regenerate with a corrected prompt if it names a real defect.
+- drift_score > 65: FAIL - do not install; regenerate with the
+  prompt corrected from the report's specifics, never blindly
+  re-rolled and never installed as-is.
+- Hard flags escalate to at least WARN regardless of score: a
+  proportion flag (subject/emblem scale divergence), any
+  frozen_spans on a motion clip (the motion-integrity rule: a motion
+  clip stays in motion for its full duration), or expected_text not
+  found when OCR is available.
+
+Worked example (the Break emblem, proof test 1, real response):
+candidate sticker-emblem-break.png vs reference
+break-model-sheet.jpg returned drift_score 68.9, verdict FAIL -
+similarity drift 56.2, but the proportion report carried the catch:
+candidate art fills 50.0% of frame width against the reference's
+99.2% coverage, divergence 49.2 width / 36.5 height points, flag
+raised, proportion penalty 98.4 (the four peer emblem stickers
+measure 17.4-18.6% of frame width). Production action: the sticker
+was not listed or installed; the pack was routed to a Codex redo
+with the proportion correction, per the user's direction the same
+day.
+
 ## Deploy
 
 Render free plan, same repo: build `pip install -r
