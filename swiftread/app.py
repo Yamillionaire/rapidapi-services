@@ -41,7 +41,7 @@ from html.parser import HTMLParser
 from urllib.parse import parse_qs, urlparse
 
 SERVICE = "swiftread"
-BUILD = "2026-10-31-full-catalog"   # reported by /health to prove which code serves
+BUILD = "2026-11-01-readurl-fix"   # reported by /health to prove which code serves
 RECENT = []                          # last service-side POST outcomes (see /health)
 MAX_CHARS = 15_000          # extracted or supplied text cap per request
 CHUNK_CHARS = 1_200         # per-synthesis chunk, packed at sentence boundaries
@@ -501,7 +501,7 @@ def read_url(body):
     result = synthesize(article["content"], voice, rate)
     if result[1] is not None:
         return result
-    audio, meta = result
+    audio, meta = result[0]
     meta.update({"title": article["title"], "url": url, "final_url": final_url,
                  "source_word_count": article["word_count"]})
     return (audio, meta), None
