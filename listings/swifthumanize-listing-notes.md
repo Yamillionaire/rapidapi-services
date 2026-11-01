@@ -54,7 +54,7 @@ ULTRA $9.99 / 25,000, MEGA $24.99 / 50,000. One call up to the
 
 ## Spotlight (after publish)
 
-Description must stay UNDER 280 characters. Draft (209 chars):
+Description must stay UNDER 280 characters. Draft (186 chars):
 "SwiftHumanize rewrites AI-sounding text so it reads like a person
 wrote it: facts and names verified, stock phrases stripped, rhythm
 restored, plus a heuristic /score. Live proof inside."
