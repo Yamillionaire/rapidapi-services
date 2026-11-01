@@ -1,0 +1,1093 @@
+{
+ "base_url": "http://127.0.0.1:8218",
+ "status_summary": {
+  "health": 200,
+  "tones": 200,
+  "delivery_spec": 200,
+  "ad_package_30s": 200,
+  "ad_package_15s": 200,
+  "script_only": 200,
+  "shots_only": 200,
+  "check_spec_pass": 200,
+  "check_spec_fail": 200,
+  "check_spec_partial": 200,
+  "error_missing_brand": 422,
+  "error_bad_duration": 422,
+  "error_bad_tone": 422,
+  "not_found": 404
+ },
+ "results": {
+  "health": {
+   "status": 200,
+   "body": {
+    "status": "ok",
+    "service": "spotbase",
+    "build": "2026-11-01-v1",
+    "creative_engine": "awaiting key (built-in engine active)",
+    "proxy_gate": "off until the listing step sets RAPIDAPI_PROXY_SECRET",
+    "endpoints": [
+     "POST /ad-package",
+     "POST /script",
+     "POST /shots",
+     "POST /check-spec",
+     "GET /delivery-spec",
+     "GET /tones",
+     "GET /health"
+    ],
+    "scope": "Brief-to-ad-package only. No video rendering, no voice synthesis, no ad placement."
+   }
+  },
+  "tones": {
+   "status": 200,
+   "body": {
+    "tones": {
+     "warm": {
+      "voice": "en-US-AriaNeural",
+      "voice_name": "Aria",
+      "voice_style": "Warm, natural newsreader",
+      "music_direction": "Warm acoustic bed, gentle piano and soft strings, 90-110 BPM, hopeful and human, low under voiceover.",
+      "visual_mood": "warm natural light, golden tones, real homes and real faces, gentle camera movement"
+     },
+     "bold": {
+      "voice": "en-US-GuyNeural",
+      "voice_name": "Guy",
+      "voice_style": "Steady, broadcast",
+      "music_direction": "Confident modern beat, punchy drums and bass, 110-125 BPM, energetic but clean, low under voiceover.",
+      "visual_mood": "high contrast light, strong color, dynamic camera moves, confident subjects"
+     },
+     "playful": {
+      "voice": "en-US-JennyNeural",
+      "voice_name": "Jenny",
+      "voice_style": "Friendly, conversational",
+      "music_direction": "Light playful pop bed, ukulele or marimba touches, 100-120 BPM, smiling energy, low under voiceover.",
+      "visual_mood": "bright daylight, saturated friendly color, quick playful cuts, people laughing naturally"
+     },
+     "premium": {
+      "voice": "en-US-MichelleNeural",
+      "voice_name": "Michelle",
+      "voice_style": "Clear, professional",
+      "music_direction": "Minimal premium score, sparse piano and ambient pads, 80-95 BPM, quiet confidence, low under voiceover.",
+      "visual_mood": "soft cinematic light, muted elegant palette, slow deliberate camera moves, uncluttered frames"
+     },
+     "urgent": {
+      "voice": "en-US-EricNeural",
+      "voice_name": "Eric",
+      "voice_style": "Measured, articulate",
+      "music_direction": "Driving pulse bed, ticking percussion feel, 120-130 BPM, momentum without panic, low under voiceover.",
+      "visual_mood": "crisp light, fast purposeful movement, close-ups on hands and product in action"
+     },
+     "trustworthy": {
+      "voice": "en-US-ChristopherNeural",
+      "voice_name": "Christopher",
+      "voice_style": "Calm, documentary",
+      "music_direction": "Calm documentary bed, soft guitar and piano, 85-100 BPM, steady and sincere, low under voiceover.",
+      "visual_mood": "honest natural light, documentary realism, steady camera, real locations"
+     }
+    }
+   }
+  },
+  "delivery_spec": {
+   "status": 200,
+   "body": {
+    "delivery_spec": {
+     "summary": "Streaming TV (CTV) delivery spec: Vibe.co's published upload requirements plus the industry common denominator (Simulmedia 2026 CTV specs, Google DV360 creative guidelines). A file that passes every item is accepted by Vibe and matches what major publishers ask for.",
+     "video": {
+      "aspect_ratio": "16:9",
+      "resolution_recommended": "1920x1080",
+      "resolution_minimum": "1280x720",
+      "format": "mp4 (H.264); mov accepted by many publishers, Vibe requires mp4",
+      "duration_seconds": "15 or 30 standard; Vibe accepts 5 to 90 and rejects anything over 90",
+      "frame_rate": "constant; one of 23.976, 24, 25, 29.97, 30",
+      "bitrate_kbps_minimum_vibe": 2500,
+      "bitrate_mbps_recommended_source": "15-30",
+      "file_size_mb_maximum_vibe": 100
+     },
+     "audio": {
+      "channels": "stereo (2.0)",
+      "codec": "AAC or PCM",
+      "sample_rate_hz": 48000,
+      "bitrate_kbps_minimum": 192,
+      "loudness_lkfs": "-24 integrated, plus or minus 2 (CALM Act / ATSC A/85)",
+      "true_peak_dbtp_maximum": -2.0,
+      "duration_match": "audio and video durations match within about 500 ms"
+     },
+     "frame_and_content": [
+      "No slates, countdowns, color bars or black leader at head or tail",
+      "No decorative letterboxing or pillarboxing",
+      "All burned-in text added in edit, never baked into generated footage",
+      "Headline, logo and call to action inside title-safe margins (center 90 percent of frame)",
+      "QR code, if used, large, high contrast, held at least 5 seconds, clear of platform UI zones",
+      "Nothing essential in the outer 5 percent of the frame"
+     ],
+     "captions": "Some publishers require closed captions with the creative; prepare a caption file for the voiceover text either way.",
+     "delivery_note": "Direct upload to Vibe takes the mp4 itself. Programmatic delivery through other DSPs runs on VAST tags; VPAID is not supported on CTV devices."
+    },
+    "compliance_checklist": [
+     {
+      "step": "Duration",
+      "check": "Spot is exactly the booked length (15 or 30 s) and under Vibe's 90 s ceiling."
+     },
+     {
+      "step": "Picture",
+      "check": "1920x1080 (or at least 1280x720), 16:9, constant frame rate, progressive, no letterbox decoration."
+     },
+     {
+      "step": "File",
+      "check": "mp4 container, H.264 video, at or under 100 MB for Vibe, bitrate at or above 2,500 kbps."
+     },
+     {
+      "step": "Loudness",
+      "check": "Integrated loudness measured at -24 LKFS plus or minus 2 with a real loudness meter (not RMS); true peak at or below -2 dBTP."
+     },
+     {
+      "step": "Audio",
+      "check": "Stereo, 48 kHz, 192 kbps or better, voiceover clear over the music bed, audio and video durations matching."
+     },
+     {
+      "step": "Text and safe zones",
+      "check": "Every word on screen was added in edit; headline, logo and CTA sit inside the center 90 percent; nothing essential touches the edges."
+     },
+     {
+      "step": "Claims",
+      "check": "Every claim in the script and on the end card is true of the product and substantiated; prices and offers match the landing page; required disclosures are legible for their full hold."
+     },
+     {
+      "step": "Music and rights",
+      "check": "Music is licensed for commercial TV use or original and cleared; no uncleared samples; talent and likeness releases on file for anyone recognizable."
+     },
+     {
+      "step": "Captions",
+      "check": "Caption file prepared from the final voiceover text, timed to the finished cut."
+     },
+     {
+      "step": "End card",
+      "check": "Brand, call to action and destination held for the final 4-5 seconds; QR code (if any) scans from a TV distance in a real test."
+     },
+     {
+      "step": "Placement boundary",
+      "check": "A passing file is placement-ready, not placed. Going live still needs the advertiser's own funded account on Vibe or another DSP, its compliance review, targeting and budget. SpotBase does not place ads."
+     }
+    ]
+   }
+  },
+  "ad_package_30s": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "engine": "builtin",
+    "engine_note": "AI engine key not configured on this deployment yet; answered with the built-in engine.",
+    "brief": {
+     "brand_name": "Peak Roast Coffee",
+     "product": "Peak Roast cold brew coffee, ready to drink",
+     "audience": "commuters who need real energy without the coffee shop line",
+     "offer": "your first case ships free this month",
+     "call_to_action": "Order yours today",
+     "website": "peakroast.example.com",
+     "tone": "bold",
+     "duration_seconds": 30
+    },
+    "script": {
+     "duration_seconds": 30,
+     "segments": [
+      {
+       "role": "hook",
+       "start_s": 0.0,
+       "end_s": 5.0,
+       "voiceover": "Commuters who need real energy without the coffee shop line: this one is for you.",
+       "words": 15,
+       "word_target": 12
+      },
+      {
+       "role": "problem",
+       "start_s": 5.0,
+       "end_s": 11.0,
+       "voiceover": "The old way takes too long, costs too much, and still leaves the job half done.",
+       "words": 16,
+       "word_target": 15
+      },
+      {
+       "role": "product",
+       "start_s": 11.0,
+       "end_s": 19.0,
+       "voiceover": "Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line.",
+       "words": 25,
+       "word_target": 20
+      },
+      {
+       "role": "offer",
+       "start_s": 19.0,
+       "end_s": 25.0,
+       "voiceover": "Right now, your first case ships free this month.",
+       "words": 9,
+       "word_target": 14
+      },
+      {
+       "role": "end_card",
+       "start_s": 25.0,
+       "end_s": 30.0,
+       "voiceover": "Peak Roast Coffee. Order yours today. peakroast.example.com",
+       "words": 7,
+       "word_target": 10
+      }
+     ],
+     "total_words": 72,
+     "word_budget": 72,
+     "planning_pace": "150 words per minute (2.5 words per second)",
+     "estimated_read_seconds": 28.8,
+     "flags": [
+      "trimmed_product_clauses"
+     ]
+    },
+    "shots": [
+     {
+      "shot": 1,
+      "role": "hook",
+      "start_s": 0.0,
+      "end_s": 5.0,
+      "duration_s": 5.0,
+      "visual": "Opening beat: a relatable commuters who need real energy without the coffee shop line moment, mid-action, the need visible on their face before any product appears.",
+      "camera": "slow push-in from medium shot to close-up",
+      "voiceover": "Commuters who need real energy without the coffee shop line: this one is for you.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, high contrast light, strong color, dynamic camera moves, confident subjects. Opening beat: a relatable commuters who need real energy without the coffee shop line moment, mid-action, the need visible on their face before any product appears. Camera: slow push-in from medium shot to close-up. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 2,
+      "role": "problem",
+      "start_s": 5.0,
+      "end_s": 11.0,
+      "duration_s": 6.0,
+      "visual": "The friction: the old, slow way of doing the job, close on the frustration, then a breath before the turn.",
+      "camera": "handheld-feel close-ups, slight movement, then a held beat",
+      "voiceover": "The old way takes too long, costs too much, and still leaves the job half done.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, high contrast light, strong color, dynamic camera moves, confident subjects. The friction: the old, slow way of doing the job, close on the frustration, then a breath before the turn. Camera: handheld-feel close-ups, slight movement, then a held beat. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 3,
+      "role": "product",
+      "start_s": 11.0,
+      "end_s": 19.0,
+      "duration_s": 8.0,
+      "visual": "The product in real use: Peak Roast cold brew coffee, ready to drink in the hands of commuters who need real energy without the coffee shop line, the job visibly getting done, one clear hero angle.",
+      "camera": "smooth tracking shot following the action, ending on a hero angle",
+      "voiceover": "Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, high contrast light, strong color, dynamic camera moves, confident subjects. The product in real use: Peak Roast cold brew coffee, ready to drink in the hands of commuters who need real energy without the coffee shop line, the job visibly getting done, one clear hero angle. Camera: smooth tracking shot following the action, ending on a hero angle. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 4,
+      "role": "offer",
+      "start_s": 19.0,
+      "end_s": 25.0,
+      "duration_s": 6.0,
+      "visual": "The payoff: the finished result and the relief on the customer's face, offer energy without any text in frame.",
+      "camera": "gentle crane-up reveal of the finished result",
+      "voiceover": "Right now, your first case ships free this month.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, high contrast light, strong color, dynamic camera moves, confident subjects. The payoff: the finished result and the relief on the customer's face, offer energy without any text in frame. Camera: gentle crane-up reveal of the finished result. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 5,
+      "role": "end_card",
+      "start_s": 25.0,
+      "end_s": 30.0,
+      "duration_s": 5.0,
+      "visual": "Clean end-card background plate: the product setting at rest, calm frame with open space in the center for text added in edit.",
+      "camera": "locked-off static frame, no camera movement",
+      "voiceover": "Peak Roast Coffee. Order yours today. peakroast.example.com",
+      "higgsfield_prompt": "Clean end-card background plate for a television commercial, 16:9, high contrast light, strong color, dynamic camera moves, confident subjects, the product setting at rest, calm uncluttered center of frame left open for text added in edit, photorealistic, broadcast quality",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 (still plate or slow 5 s hold)",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     }
+    ],
+    "voiceover": {
+     "text": "Commuters who need real energy without the coffee shop line: this one is for you. The old way takes too long, costs too much, and still leaves the job half done. Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line. Right now, your first case ships free this month. Peak Roast Coffee. Order yours today. peakroast.example.com",
+     "suggested_voice": "en-US-GuyNeural",
+     "voice_name": "Guy",
+     "voice_style": "Steady, broadcast",
+     "swiftread_payload": {
+      "endpoint": "POST /speak (SwiftRead API)",
+      "body": {
+       "text": "Commuters who need real energy without the coffee shop line: this one is for you. The old way takes too long, costs too much, and still leaves the job half done. Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line. Right now, your first case ships free this month. Peak Roast Coffee. Order yours today. peakroast.example.com",
+       "voice": "en-US-GuyNeural"
+      },
+      "note": "Synthesize at natural pace, then mix to -24 LKFS integrated with the music bed under the voice; the read must land inside the spot length, so re-time against the assembled picture."
+     },
+     "music_direction": "Confident modern beat, punchy drums and bass, 110-125 BPM, energetic but clean, low under voiceover. Licensed library or original cleared music only."
+    },
+    "end_card": {
+     "headline": "Peak Roast cold brew coffee, ready to drink",
+     "subline": "your first case ships free this month.",
+     "call_to_action": "Order yours today",
+     "website": "peakroast.example.com",
+     "logo": "Brand logo, supplied by the advertiser, placed upper center or center, supplied as a file; never generated.",
+     "qr_code": "Optional: a QR code resolving to the call to action destination, large and high contrast, held for the full end card, test-scanned from TV distance.",
+     "background": "Shot 5 plate (the end-card shot in this package); all card text is typeset in edit over the plate.",
+     "hold_s": 5.0,
+     "layout": "All text and logo inside title-safe margins (center 90 percent of frame)."
+    },
+    "delivery_spec": {
+     "summary": "Streaming TV (CTV) delivery spec: Vibe.co's published upload requirements plus the industry common denominator (Simulmedia 2026 CTV specs, Google DV360 creative guidelines). A file that passes every item is accepted by Vibe and matches what major publishers ask for.",
+     "video": {
+      "aspect_ratio": "16:9",
+      "resolution_recommended": "1920x1080",
+      "resolution_minimum": "1280x720",
+      "format": "mp4 (H.264); mov accepted by many publishers, Vibe requires mp4",
+      "duration_seconds": "15 or 30 standard; Vibe accepts 5 to 90 and rejects anything over 90",
+      "frame_rate": "constant; one of 23.976, 24, 25, 29.97, 30",
+      "bitrate_kbps_minimum_vibe": 2500,
+      "bitrate_mbps_recommended_source": "15-30",
+      "file_size_mb_maximum_vibe": 100
+     },
+     "audio": {
+      "channels": "stereo (2.0)",
+      "codec": "AAC or PCM",
+      "sample_rate_hz": 48000,
+      "bitrate_kbps_minimum": 192,
+      "loudness_lkfs": "-24 integrated, plus or minus 2 (CALM Act / ATSC A/85)",
+      "true_peak_dbtp_maximum": -2.0,
+      "duration_match": "audio and video durations match within about 500 ms"
+     },
+     "frame_and_content": [
+      "No slates, countdowns, color bars or black leader at head or tail",
+      "No decorative letterboxing or pillarboxing",
+      "All burned-in text added in edit, never baked into generated footage",
+      "Headline, logo and call to action inside title-safe margins (center 90 percent of frame)",
+      "QR code, if used, large, high contrast, held at least 5 seconds, clear of platform UI zones",
+      "Nothing essential in the outer 5 percent of the frame"
+     ],
+     "captions": "Some publishers require closed captions with the creative; prepare a caption file for the voiceover text either way.",
+     "delivery_note": "Direct upload to Vibe takes the mp4 itself. Programmatic delivery through other DSPs runs on VAST tags; VPAID is not supported on CTV devices."
+    },
+    "compliance_checklist": [
+     {
+      "step": "Duration",
+      "check": "Spot is exactly the booked length (15 or 30 s) and under Vibe's 90 s ceiling."
+     },
+     {
+      "step": "Picture",
+      "check": "1920x1080 (or at least 1280x720), 16:9, constant frame rate, progressive, no letterbox decoration."
+     },
+     {
+      "step": "File",
+      "check": "mp4 container, H.264 video, at or under 100 MB for Vibe, bitrate at or above 2,500 kbps."
+     },
+     {
+      "step": "Loudness",
+      "check": "Integrated loudness measured at -24 LKFS plus or minus 2 with a real loudness meter (not RMS); true peak at or below -2 dBTP."
+     },
+     {
+      "step": "Audio",
+      "check": "Stereo, 48 kHz, 192 kbps or better, voiceover clear over the music bed, audio and video durations matching."
+     },
+     {
+      "step": "Text and safe zones",
+      "check": "Every word on screen was added in edit; headline, logo and CTA sit inside the center 90 percent; nothing essential touches the edges."
+     },
+     {
+      "step": "Claims",
+      "check": "Every claim in the script and on the end card is true of the product and substantiated; prices and offers match the landing page; required disclosures are legible for their full hold."
+     },
+     {
+      "step": "Music and rights",
+      "check": "Music is licensed for commercial TV use or original and cleared; no uncleared samples; talent and likeness releases on file for anyone recognizable."
+     },
+     {
+      "step": "Captions",
+      "check": "Caption file prepared from the final voiceover text, timed to the finished cut."
+     },
+     {
+      "step": "End card",
+      "check": "Brand, call to action and destination held for the final 4-5 seconds; QR code (if any) scans from a TV distance in a real test."
+     },
+     {
+      "step": "Placement boundary",
+      "check": "A passing file is placement-ready, not placed. Going live still needs the advertiser's own funded account on Vibe or another DSP, its compliance review, targeting and budget. SpotBase does not place ads."
+     }
+    ],
+    "production_steps": [
+     "1. Generate one clip per shot in Higgsfield using each shot's higgsfield_prompt (16:9, 1920x1080).",
+     "2. Synthesize the voiceover from voiceover.swiftread_payload on SwiftRead.",
+     "3. Assemble picture, voiceover and the music bed in an editor (or a pipeline such as SwiftRender), end-card text typeset over the final plate.",
+     "4. Mix and master to the delivery spec: -24 LKFS plus or minus 2, true peak at or below -2 dBTP.",
+     "5. Run the finished file through POST /check-spec with its measured values before paying for any placement.",
+     "6. Place it through your own advertiser account (Vibe or another DSP): SpotBase does not place ads."
+    ],
+    "honesty": "SpotBase writes the production package; it does not render video, synthesize the voiceover, or place ads on TV. Placement requires the advertiser's own funded platform account and its compliance review.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "ad_package_15s": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "engine": "builtin",
+    "engine_note": "AI engine key not configured on this deployment yet; answered with the built-in engine.",
+    "brief": {
+     "brand_name": "Brightpath Tutoring",
+     "product": "Brightpath one-on-one online math tutoring for grades 6 to 12",
+     "audience": "parents who want their kids confident in math",
+     "offer": "the first session is free",
+     "call_to_action": "Book the free session",
+     "website": "brightpath.example.com",
+     "tone": "trustworthy",
+     "duration_seconds": 15
+    },
+    "script": {
+     "duration_seconds": 15,
+     "segments": [
+      {
+       "role": "hook",
+       "start_s": 0.0,
+       "end_s": 4.0,
+       "voiceover": "For parents who want their kids confident in math.",
+       "words": 9,
+       "word_target": 10
+      },
+      {
+       "role": "pitch",
+       "start_s": 4.0,
+       "end_s": 11.0,
+       "voiceover": "Meet Brightpath one-on-one online math tutoring for grades 6 to 12 from Brightpath Tutoring.",
+       "words": 14,
+       "word_target": 16
+      },
+      {
+       "role": "end_card",
+       "start_s": 11.0,
+       "end_s": 15.0,
+       "voiceover": "Brightpath Tutoring. Book the free session. brightpath.example.com",
+       "words": 7,
+       "word_target": 9
+      }
+     ],
+     "total_words": 30,
+     "word_budget": 36,
+     "planning_pace": "150 words per minute (2.5 words per second)",
+     "estimated_read_seconds": 12.0,
+     "flags": [
+      "trimmed_pitch_to_first_sentence",
+      "trimmed_pitch_clauses",
+      "trimmed_hook_clauses"
+     ]
+    },
+    "shots": [
+     {
+      "shot": 1,
+      "role": "hook",
+      "start_s": 0.0,
+      "end_s": 4.0,
+      "duration_s": 4.0,
+      "visual": "Opening beat: a relatable parents who want their kids confident in math moment, mid-action, the need visible on their face before any product appears.",
+      "camera": "slow push-in from medium shot to close-up",
+      "voiceover": "For parents who want their kids confident in math.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, honest natural light, documentary realism, steady camera, real locations. Opening beat: a relatable parents who want their kids confident in math moment, mid-action, the need visible on their face before any product appears. Camera: slow push-in from medium shot to close-up. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 2,
+      "role": "pitch",
+      "start_s": 4.0,
+      "end_s": 11.0,
+      "duration_s": 7.0,
+      "visual": "The product in real use: Brightpath one-on-one online math tutoring for grades 6 to 12 in the hands of parents who want their kids confident in math, the job visibly getting done, energy building toward the close.",
+      "camera": "smooth tracking shot following the action, ending on a hero angle",
+      "voiceover": "Meet Brightpath one-on-one online math tutoring for grades 6 to 12 from Brightpath Tutoring.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, honest natural light, documentary realism, steady camera, real locations. The product in real use: Brightpath one-on-one online math tutoring for grades 6 to 12 in the hands of parents who want their kids confident in math, the job visibly getting done, energy building toward the close. Camera: smooth tracking shot following the action, ending on a hero angle. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 3,
+      "role": "end_card",
+      "start_s": 11.0,
+      "end_s": 15.0,
+      "duration_s": 4.0,
+      "visual": "Clean end-card background plate: the product setting at rest, calm frame with open space in the center for text added in edit.",
+      "camera": "locked-off static frame, no camera movement",
+      "voiceover": "Brightpath Tutoring. Book the free session. brightpath.example.com",
+      "higgsfield_prompt": "Clean end-card background plate for a television commercial, 16:9, honest natural light, documentary realism, steady camera, real locations, the product setting at rest, calm uncluttered center of frame left open for text added in edit, photorealistic, broadcast quality",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 (still plate or slow 5 s hold)",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     }
+    ],
+    "voiceover": {
+     "text": "For parents who want their kids confident in math. Meet Brightpath one-on-one online math tutoring for grades 6 to 12 from Brightpath Tutoring. Brightpath Tutoring. Book the free session. brightpath.example.com",
+     "suggested_voice": "en-US-ChristopherNeural",
+     "voice_name": "Christopher",
+     "voice_style": "Calm, documentary",
+     "swiftread_payload": {
+      "endpoint": "POST /speak (SwiftRead API)",
+      "body": {
+       "text": "For parents who want their kids confident in math. Meet Brightpath one-on-one online math tutoring for grades 6 to 12 from Brightpath Tutoring. Brightpath Tutoring. Book the free session. brightpath.example.com",
+       "voice": "en-US-ChristopherNeural"
+      },
+      "note": "Synthesize at natural pace, then mix to -24 LKFS integrated with the music bed under the voice; the read must land inside the spot length, so re-time against the assembled picture."
+     },
+     "music_direction": "Calm documentary bed, soft guitar and piano, 85-100 BPM, steady and sincere, low under voiceover. Licensed library or original cleared music only."
+    },
+    "end_card": {
+     "headline": "Brightpath one-on-one online math tutoring for grades 6 to 12",
+     "subline": "the first session is free.",
+     "call_to_action": "Book the free session",
+     "website": "brightpath.example.com",
+     "logo": "Brand logo, supplied by the advertiser, placed upper center or center, supplied as a file; never generated.",
+     "qr_code": "Optional: a QR code resolving to the call to action destination, large and high contrast, held for the full end card, test-scanned from TV distance.",
+     "background": "Shot 3 plate (the end-card shot in this package); all card text is typeset in edit over the plate.",
+     "hold_s": 4.0,
+     "layout": "All text and logo inside title-safe margins (center 90 percent of frame)."
+    },
+    "delivery_spec": {
+     "summary": "Streaming TV (CTV) delivery spec: Vibe.co's published upload requirements plus the industry common denominator (Simulmedia 2026 CTV specs, Google DV360 creative guidelines). A file that passes every item is accepted by Vibe and matches what major publishers ask for.",
+     "video": {
+      "aspect_ratio": "16:9",
+      "resolution_recommended": "1920x1080",
+      "resolution_minimum": "1280x720",
+      "format": "mp4 (H.264); mov accepted by many publishers, Vibe requires mp4",
+      "duration_seconds": "15 or 30 standard; Vibe accepts 5 to 90 and rejects anything over 90",
+      "frame_rate": "constant; one of 23.976, 24, 25, 29.97, 30",
+      "bitrate_kbps_minimum_vibe": 2500,
+      "bitrate_mbps_recommended_source": "15-30",
+      "file_size_mb_maximum_vibe": 100
+     },
+     "audio": {
+      "channels": "stereo (2.0)",
+      "codec": "AAC or PCM",
+      "sample_rate_hz": 48000,
+      "bitrate_kbps_minimum": 192,
+      "loudness_lkfs": "-24 integrated, plus or minus 2 (CALM Act / ATSC A/85)",
+      "true_peak_dbtp_maximum": -2.0,
+      "duration_match": "audio and video durations match within about 500 ms"
+     },
+     "frame_and_content": [
+      "No slates, countdowns, color bars or black leader at head or tail",
+      "No decorative letterboxing or pillarboxing",
+      "All burned-in text added in edit, never baked into generated footage",
+      "Headline, logo and call to action inside title-safe margins (center 90 percent of frame)",
+      "QR code, if used, large, high contrast, held at least 5 seconds, clear of platform UI zones",
+      "Nothing essential in the outer 5 percent of the frame"
+     ],
+     "captions": "Some publishers require closed captions with the creative; prepare a caption file for the voiceover text either way.",
+     "delivery_note": "Direct upload to Vibe takes the mp4 itself. Programmatic delivery through other DSPs runs on VAST tags; VPAID is not supported on CTV devices."
+    },
+    "compliance_checklist": [
+     {
+      "step": "Duration",
+      "check": "Spot is exactly the booked length (15 or 30 s) and under Vibe's 90 s ceiling."
+     },
+     {
+      "step": "Picture",
+      "check": "1920x1080 (or at least 1280x720), 16:9, constant frame rate, progressive, no letterbox decoration."
+     },
+     {
+      "step": "File",
+      "check": "mp4 container, H.264 video, at or under 100 MB for Vibe, bitrate at or above 2,500 kbps."
+     },
+     {
+      "step": "Loudness",
+      "check": "Integrated loudness measured at -24 LKFS plus or minus 2 with a real loudness meter (not RMS); true peak at or below -2 dBTP."
+     },
+     {
+      "step": "Audio",
+      "check": "Stereo, 48 kHz, 192 kbps or better, voiceover clear over the music bed, audio and video durations matching."
+     },
+     {
+      "step": "Text and safe zones",
+      "check": "Every word on screen was added in edit; headline, logo and CTA sit inside the center 90 percent; nothing essential touches the edges."
+     },
+     {
+      "step": "Claims",
+      "check": "Every claim in the script and on the end card is true of the product and substantiated; prices and offers match the landing page; required disclosures are legible for their full hold."
+     },
+     {
+      "step": "Music and rights",
+      "check": "Music is licensed for commercial TV use or original and cleared; no uncleared samples; talent and likeness releases on file for anyone recognizable."
+     },
+     {
+      "step": "Captions",
+      "check": "Caption file prepared from the final voiceover text, timed to the finished cut."
+     },
+     {
+      "step": "End card",
+      "check": "Brand, call to action and destination held for the final 4-5 seconds; QR code (if any) scans from a TV distance in a real test."
+     },
+     {
+      "step": "Placement boundary",
+      "check": "A passing file is placement-ready, not placed. Going live still needs the advertiser's own funded account on Vibe or another DSP, its compliance review, targeting and budget. SpotBase does not place ads."
+     }
+    ],
+    "production_steps": [
+     "1. Generate one clip per shot in Higgsfield using each shot's higgsfield_prompt (16:9, 1920x1080).",
+     "2. Synthesize the voiceover from voiceover.swiftread_payload on SwiftRead.",
+     "3. Assemble picture, voiceover and the music bed in an editor (or a pipeline such as SwiftRender), end-card text typeset over the final plate.",
+     "4. Mix and master to the delivery spec: -24 LKFS plus or minus 2, true peak at or below -2 dBTP.",
+     "5. Run the finished file through POST /check-spec with its measured values before paying for any placement.",
+     "6. Place it through your own advertiser account (Vibe or another DSP): SpotBase does not place ads."
+    ],
+    "honesty": "SpotBase writes the production package; it does not render video, synthesize the voiceover, or place ads on TV. Placement requires the advertiser's own funded platform account and its compliance review.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "script_only": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "engine": "builtin",
+    "engine_note": "AI engine key not configured on this deployment yet; answered with the built-in engine.",
+    "brief": {
+     "brand_name": "Peak Roast Coffee",
+     "product": "Peak Roast cold brew coffee, ready to drink",
+     "audience": "commuters who need real energy without the coffee shop line",
+     "offer": "your first case ships free this month",
+     "call_to_action": "Order yours today",
+     "website": "peakroast.example.com",
+     "tone": "bold",
+     "duration_seconds": 30
+    },
+    "script": {
+     "duration_seconds": 30,
+     "segments": [
+      {
+       "role": "hook",
+       "start_s": 0.0,
+       "end_s": 5.0,
+       "voiceover": "Commuters who need real energy without the coffee shop line: this one is for you.",
+       "words": 15,
+       "word_target": 12
+      },
+      {
+       "role": "problem",
+       "start_s": 5.0,
+       "end_s": 11.0,
+       "voiceover": "The old way takes too long, costs too much, and still leaves the job half done.",
+       "words": 16,
+       "word_target": 15
+      },
+      {
+       "role": "product",
+       "start_s": 11.0,
+       "end_s": 19.0,
+       "voiceover": "Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line.",
+       "words": 25,
+       "word_target": 20
+      },
+      {
+       "role": "offer",
+       "start_s": 19.0,
+       "end_s": 25.0,
+       "voiceover": "Right now, your first case ships free this month.",
+       "words": 9,
+       "word_target": 14
+      },
+      {
+       "role": "end_card",
+       "start_s": 25.0,
+       "end_s": 30.0,
+       "voiceover": "Peak Roast Coffee. Order yours today. peakroast.example.com",
+       "words": 7,
+       "word_target": 10
+      }
+     ],
+     "total_words": 72,
+     "word_budget": 72,
+     "planning_pace": "150 words per minute (2.5 words per second)",
+     "estimated_read_seconds": 28.8,
+     "flags": [
+      "trimmed_product_clauses"
+     ]
+    },
+    "voiceover_text": "Commuters who need real energy without the coffee shop line: this one is for you. The old way takes too long, costs too much, and still leaves the job half done. Meet Peak Roast cold brew coffee, ready to drink from Peak Roast Coffee: made for commuters who need real energy without the coffee shop line. Right now, your first case ships free this month. Peak Roast Coffee. Order yours today. peakroast.example.com",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "shots_only": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "engine": "builtin",
+    "engine_note": "AI engine key not configured on this deployment yet; answered with the built-in engine.",
+    "brief": {
+     "brand_name": "Brightpath Tutoring",
+     "product": "Brightpath one-on-one online math tutoring for grades 6 to 12",
+     "audience": "parents who want their kids confident in math",
+     "offer": "the first session is free",
+     "call_to_action": "Book the free session",
+     "website": "brightpath.example.com",
+     "tone": "trustworthy",
+     "duration_seconds": 15
+    },
+    "shots": [
+     {
+      "shot": 1,
+      "role": "hook",
+      "start_s": 0.0,
+      "end_s": 4.0,
+      "duration_s": 4.0,
+      "visual": "Opening beat: a relatable parents who want their kids confident in math moment, mid-action, the need visible on their face before any product appears.",
+      "camera": "slow push-in from medium shot to close-up",
+      "voiceover": "For parents who want their kids confident in math.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, honest natural light, documentary realism, steady camera, real locations. Opening beat: a relatable parents who want their kids confident in math moment, mid-action, the need visible on their face before any product appears. Camera: slow push-in from medium shot to close-up. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 2,
+      "role": "pitch",
+      "start_s": 4.0,
+      "end_s": 11.0,
+      "duration_s": 7.0,
+      "visual": "The product in real use: Brightpath one-on-one online math tutoring for grades 6 to 12 in the hands of parents who want their kids confident in math, the job visibly getting done, energy building toward the close.",
+      "camera": "smooth tracking shot following the action, ending on a hero angle",
+      "voiceover": "Meet Brightpath one-on-one online math tutoring for grades 6 to 12 from Brightpath Tutoring.",
+      "higgsfield_prompt": "Cinematic 16:9 television commercial shot, honest natural light, documentary realism, steady camera, real locations. The product in real use: Brightpath one-on-one online math tutoring for grades 6 to 12 in the hands of parents who want their kids confident in math, the job visibly getting done, energy building toward the close. Camera: smooth tracking shot following the action, ending on a hero angle. Photorealistic, real people and real locations, natural expressions, broadcast quality, no text anywhere in frame",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 or Seedance 2.0",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     },
+     {
+      "shot": 3,
+      "role": "end_card",
+      "start_s": 11.0,
+      "end_s": 15.0,
+      "duration_s": 4.0,
+      "visual": "Clean end-card background plate: the product setting at rest, calm frame with open space in the center for text added in edit.",
+      "camera": "locked-off static frame, no camera movement",
+      "voiceover": "Brightpath Tutoring. Book the free session. brightpath.example.com",
+      "higgsfield_prompt": "Clean end-card background plate for a television commercial, 16:9, honest natural light, documentary realism, steady camera, real locations, the product setting at rest, calm uncluttered center of frame left open for text added in edit, photorealistic, broadcast quality",
+      "negative_prompt": "text, words, letters, numbers, captions, watermark, logo, distorted hands, extra fingers, deformed faces, cartoon, low resolution, blurry, oversaturated",
+      "model_suggestion": "Kling 3.0 (still plate or slow 5 s hold)",
+      "aspect_ratio": "16:9",
+      "resolution": "1920x1080"
+     }
+    ],
+    "end_card": {
+     "headline": "Brightpath one-on-one online math tutoring for grades 6 to 12",
+     "subline": "the first session is free.",
+     "call_to_action": "Book the free session",
+     "website": "brightpath.example.com",
+     "logo": "Brand logo, supplied by the advertiser, placed upper center or center, supplied as a file; never generated.",
+     "qr_code": "Optional: a QR code resolving to the call to action destination, large and high contrast, held for the full end card, test-scanned from TV distance.",
+     "background": "Shot 3 plate (the end-card shot in this package); all card text is typeset in edit over the plate.",
+     "hold_s": 4.0,
+     "layout": "All text and logo inside title-safe margins (center 90 percent of frame)."
+    },
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "check_spec_pass": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "overall_verdict": "pass",
+    "items": [
+     {
+      "field": "duration_seconds",
+      "verdict": "pass",
+      "detail": "30 s is an accepted streaming TV length."
+     },
+     {
+      "field": "resolution",
+      "verdict": "pass",
+      "detail": "1920x1080 meets the recommended 1920x1080."
+     },
+     {
+      "field": "aspect_ratio",
+      "verdict": "pass",
+      "detail": "Aspect ratio computes to 1.778; 16:9 is 1.778."
+     },
+     {
+      "field": "format",
+      "verdict": "pass",
+      "detail": "mp4 is the required container."
+     },
+     {
+      "field": "frame_rate",
+      "verdict": "pass",
+      "detail": "29.97 fps is an accepted constant rate."
+     },
+     {
+      "field": "constant_frame_rate",
+      "verdict": "pass",
+      "detail": "Constant frame rate confirmed."
+     },
+     {
+      "field": "bitrate_kbps",
+      "verdict": "pass",
+      "detail": "20000 kbps is in the recommended 15-30 Mbps source band."
+     },
+     {
+      "field": "file_size_mb",
+      "verdict": "pass",
+      "detail": "62 MB is within Vibe's 100 MB cap."
+     },
+     {
+      "field": "audio_channels",
+      "verdict": "pass",
+      "detail": "Stereo as required."
+     },
+     {
+      "field": "sample_rate_hz",
+      "verdict": "pass",
+      "detail": "48 kHz as required."
+     },
+     {
+      "field": "audio_bitrate_kbps",
+      "verdict": "pass",
+      "detail": "256 kbps meets the 192 kbps floor."
+     },
+     {
+      "field": "loudness_lufs",
+      "verdict": "pass",
+      "detail": "-24.1 LUFS is inside -24 plus or minus 2 (CALM Act / ATSC A/85)."
+     },
+     {
+      "field": "true_peak_dbtp",
+      "verdict": "pass",
+      "detail": "-2.4 dBTP is at or under the -2 ceiling."
+     }
+    ],
+    "fixes": [],
+    "note": "Verdicts score only the values supplied. not_checked items were not measured by this call and are never assumed to pass.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "check_spec_fail": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "overall_verdict": "fail",
+    "items": [
+     {
+      "field": "duration_seconds",
+      "verdict": "pass",
+      "detail": "34 s is an accepted streaming TV length."
+     },
+     {
+      "field": "resolution",
+      "verdict": "fail",
+      "detail": "854x480 is below the 1280x720 minimum."
+     },
+     {
+      "field": "aspect_ratio",
+      "verdict": "pass",
+      "detail": "Aspect ratio computes to 1.779; 16:9 is 1.778."
+     },
+     {
+      "field": "format",
+      "verdict": "fail",
+      "detail": "webm is not an accepted CTV container; deliver mp4."
+     },
+     {
+      "field": "frame_rate",
+      "verdict": "pass",
+      "detail": "24 fps is an accepted constant rate."
+     },
+     {
+      "field": "constant_frame_rate",
+      "verdict": "fail",
+      "detail": "Variable frame rate is rejected; re-encode constant."
+     },
+     {
+      "field": "bitrate_kbps",
+      "verdict": "fail",
+      "detail": "900 kbps is under Vibe's 2,500 kbps minimum."
+     },
+     {
+      "field": "file_size_mb",
+      "verdict": "fail",
+      "detail": "140 MB exceeds Vibe's 100 MB cap."
+     },
+     {
+      "field": "audio_channels",
+      "verdict": "fail",
+      "detail": "1 channels; CTV delivery is stereo (2)."
+     },
+     {
+      "field": "sample_rate_hz",
+      "verdict": "fail",
+      "detail": "44100 Hz; deliver 48 kHz."
+     },
+     {
+      "field": "audio_bitrate_kbps",
+      "verdict": "fail",
+      "detail": "96 kbps is under the 192 kbps floor."
+     },
+     {
+      "field": "loudness_lufs",
+      "verdict": "fail",
+      "detail": "-15.5 LUFS is outside -24 plus or minus 2; re-mix to target -24."
+     },
+     {
+      "field": "true_peak_dbtp",
+      "verdict": "fail",
+      "detail": "-0.4 dBTP exceeds the -2 dBTP ceiling; limit and re-measure."
+     }
+    ],
+    "fixes": [
+     "resolution: 854x480 is below the 1280x720 minimum.",
+     "format: webm is not an accepted CTV container; deliver mp4.",
+     "constant_frame_rate: Variable frame rate is rejected; re-encode constant.",
+     "bitrate_kbps: 900 kbps is under Vibe's 2,500 kbps minimum.",
+     "file_size_mb: 140 MB exceeds Vibe's 100 MB cap.",
+     "audio_channels: 1 channels; CTV delivery is stereo (2).",
+     "sample_rate_hz: 44100 Hz; deliver 48 kHz.",
+     "audio_bitrate_kbps: 96 kbps is under the 192 kbps floor.",
+     "loudness_lufs: -15.5 LUFS is outside -24 plus or minus 2; re-mix to target -24.",
+     "true_peak_dbtp: -0.4 dBTP exceeds the -2 dBTP ceiling; limit and re-measure."
+    ],
+    "note": "Verdicts score only the values supplied. not_checked items were not measured by this call and are never assumed to pass.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "check_spec_partial": {
+   "status": 200,
+   "body": {
+    "service": "spotbase",
+    "overall_verdict": "warn",
+    "items": [
+     {
+      "field": "duration_seconds",
+      "verdict": "pass",
+      "detail": "15 s is an accepted streaming TV length."
+     },
+     {
+      "field": "resolution",
+      "verdict": "warn",
+      "detail": "1280x720 meets the 1280x720 minimum but not the 1920x1080 recommendation."
+     },
+     {
+      "field": "aspect_ratio",
+      "verdict": "pass",
+      "detail": "Aspect ratio computes to 1.778; 16:9 is 1.778."
+     },
+     {
+      "field": "format",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "frame_rate",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "bitrate_kbps",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "file_size_mb",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "audio_channels",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "sample_rate_hz",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "audio_bitrate_kbps",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     },
+     {
+      "field": "loudness_lufs",
+      "verdict": "not_checked",
+      "detail": "Not supplied. Measure integrated loudness with a BS.1770 meter before delivery."
+     },
+     {
+      "field": "true_peak_dbtp",
+      "verdict": "not_checked",
+      "detail": "Not supplied."
+     }
+    ],
+    "fixes": [
+     "resolution: 1280x720 meets the 1280x720 minimum but not the 1920x1080 recommendation."
+    ],
+    "note": "Verdicts score only the values supplied. not_checked items were not measured by this call and are never assumed to pass.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "error_missing_brand": {
+   "status": 422,
+   "body": {
+    "error": "missing_field",
+    "detail": "brand_name is required.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "error_bad_duration": {
+   "status": 422,
+   "body": {
+    "error": "invalid_parameter",
+    "detail": "duration_seconds must be 15 or 30, the standard streaming TV spot lengths.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "error_bad_tone": {
+   "status": 422,
+   "body": {
+    "error": "invalid_parameter",
+    "detail": "tone must be one of: warm, bold, playful, premium, urgent, trustworthy.",
+    "_meta": {
+     "seconds": 0.0
+    }
+   }
+  },
+  "not_found": {
+   "status": 404,
+   "body": {
+    "error": "not_found",
+    "detail": "No endpoint at /nope. See /health for service info."
+   }
+  }
+ }
+}

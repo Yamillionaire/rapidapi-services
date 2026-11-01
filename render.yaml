@@ -94,3 +94,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: spotbase
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: "python spotbase/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
