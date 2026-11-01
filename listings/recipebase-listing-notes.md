@@ -1,8 +1,9 @@
 # RecipeBase - RapidAPI listing notes (launch, 2026-11-01)
 
 Product: RecipeBase, competitor to Tasty (Api Dojo, registry #18).
-Service: https://recipebase.onrender.com (Render, see registry entry
-for the service id). Listing package: listings/recipebase-openapi.json.
+Service: https://recipebase-t54l.onrender.com (Render; the bare
+"recipebase" subdomain was taken globally, the SwiftTranslate
+pattern). See the registry entry for the service id. Listing package: listings/recipebase-openapi.json.
 Spotlight proof doc: docs/recipebase-reliability.md.
 Publish runs under the user's 2026-10-29 FULL AUTOMATION authorization.
 

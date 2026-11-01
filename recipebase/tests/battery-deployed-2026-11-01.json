@@ -1,0 +1,127 @@
+{
+ "base": "https://recipebase-t54l.onrender.com",
+ "passed": 24,
+ "total": 24,
+ "results": [
+  {
+   "test": "health ok with corpus loaded",
+   "pass": true,
+   "detail": "501"
+  },
+  {
+   "test": "list returns 5 of 501",
+   "pass": true,
+   "detail": "(200, 501)"
+  },
+  {
+   "test": "list page 2 differs",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "test": "list carries CC BY-SA credit",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "test": "similarities returns results",
+   "pass": true,
+   "detail": "(200, 473)"
+  },
+  {
+   "test": "similarities excludes self",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "test": "similarities unknown id is structured 404",
+   "pass": true,
+   "detail": "404"
+  },
+  {
+   "test": "search 'CARBONARA' finds carbonara",
+   "pass": true,
+   "detail": "(200, 1)"
+  },
+  {
+   "test": "search 'carbonara' finds carbonara",
+   "pass": true,
+   "detail": "(200, 1)"
+  },
+  {
+   "test": "search 'Carbon' finds carbonara",
+   "pass": true,
+   "detail": "(200, 13)"
+  },
+  {
+   "test": "search 'carb' finds carbonara",
+   "pass": true,
+   "detail": "(200, 13)"
+  },
+  {
+   "test": "search 'SPAGHETTI CARB' finds carbonara",
+   "pass": true,
+   "detail": "(200, 1)"
+  },
+  {
+   "test": "search by ingredient works",
+   "pass": true,
+   "detail": "2"
+  },
+  {
+   "test": "empty search is 200 count 0",
+   "pass": true,
+   "detail": "(200, 0)"
+  },
+  {
+   "test": "search without q is structured 422",
+   "pass": true,
+   "detail": "422"
+  },
+  {
+   "test": "detail has ingredients+steps",
+   "pass": true,
+   "detail": "(200, 7)"
+  },
+  {
+   "test": "photo served with author+license",
+   "pass": true,
+   "detail": "{'url': 'https://theunitools.com/recipes/spaghetti-carbonara.jpg', 'author': 'Amin', 'license': 'CC BY-SA 4.0', 'credit': 'Photo: Amin (CC BY-SA 4.0)'}"
+  },
+  {
+   "test": "nutrition labeled planning reference",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "test": "servings scaling doubles linear qty",
+   "pass": true,
+   "detail": "(200, 400)"
+  },
+  {
+   "test": "detail unknown id is structured 404",
+   "pass": true,
+   "detail": "404"
+  },
+  {
+   "test": "diet filter vegan all vegan",
+   "pass": true,
+   "detail": "45"
+  },
+  {
+   "test": "autocomplete finds Spaghetti",
+   "pass": true,
+   "detail": "['Spaghetti carbonara', 'Spaghetti', 'Spanish tortilla', 'Spanakopita', 'Spas', 'Sparkling water']"
+  },
+  {
+   "test": "tags lists categories+diets+countries",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "test": "attribution endpoint carries license",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
