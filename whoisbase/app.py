@@ -14,6 +14,18 @@ with the served record's age; the fresh parameter (alias force, the
 incumbent's flag name) genuinely bypasses the cache and refetches
 from the registry. Errors are always structured JSON; an unregistered
 domain is a 200 with registered: false, never a blank record.
+DomainBase extension (2026-11-01): the same engine also serves
+/availability (the registered flag promoted to a first-class answer,
+with the registry source that answered and a premium field that is
+null unless the registry itself publishes a premium signal - premium
+is never guessed), /availability/bulk (comma list, cap 50, per-domain
+records in request order, per-domain structured errors instead of a
+failed batch; each domain checked counts as one request), /dns (A,
+AAAA, MX, NS, TXT, CNAME, SOA via DNS-over-HTTPS at dns.google, TTLs
+reported as returned), and /suggest (keyword and keyword-join
+candidates across common TLDs, every suggestion verified available
+through the same availability path before it is listed - an
+unverified name is never listed).
 Zero dependencies beyond the shared scaffold. Run: python3 app.py (PORT env, default 8110).
 """
 import os
@@ -65,6 +77,22 @@ SEED_RDAP = {
 }
 
 COMPLAINT_TLDS = ["dev", "at", "rs", "pl", "eu", "fi"]
+
+# DomainBase extension constants.
+DOH_URL = "https://dns.google/resolve"
+DNS_TYPES = ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA"]
+DNS_TYPE_CODES = {1: "A", 2: "NS", 5: "CNAME", 6: "SOA",
+                  15: "MX", 16: "TXT", 28: "AAAA"}
+BULK_CAP = 50
+SUGGEST_TLDS = ["com", "co", "io", "net", "org", "app", "dev"]
+SUGGEST_MAX_CHECKS = 40
+PREMIUM_NOTE_UNPUBLISHED = (
+    "Premium status is reported only when a registry publishes it in "
+    "its record; this registry did not publish a premium flag for this "
+    "domain, so premium is null rather than guessed or estimated.")
+PREMIUM_NOTE_PUBLISHED = (
+    "The registry record itself carries an explicit premium signal; "
+    "it is reflected here exactly as published, not estimated.")
 
 _bootstrap = {"map": None, "publication": None, "fetched_at": 0.0, "seeded": False}
 _bootstrap_lock = threading.Lock()
@@ -511,6 +539,245 @@ def tlds(params):
                          "port-43 whois server."}
 
 
+# ------------------------------------------------------- DomainBase extension
+
+def _now_iso():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _premium(record):
+    """Return (premium, premium_note). Premium is True only on an
+    explicit signal in the record itself; otherwise None (never guessed)."""
+    if record.get("premium") is True:
+        return True, PREMIUM_NOTE_PUBLISHED
+    for status in record.get("status") or []:
+        if "premium" in str(status).lower():
+            return True, PREMIUM_NOTE_PUBLISHED
+    return None, PREMIUM_NOTE_UNPUBLISHED
+
+
+def _availability_from_record(record):
+    premium, premium_note = _premium(record)
+    return {"domain": record["domain"],
+            "available": not record["registered"],
+            "registered": record["registered"],
+            "registry_source": record.get("registry_server") or record.get("source"),
+            "source": record.get("source"),
+            "premium": premium,
+            "premium_note": premium_note,
+            "cache": record.get("cache"),
+            "checked_at": _now_iso()}
+
+
+def _safe_lookup(domain, tld, fresh):
+    """do_lookup, with any unexpected upstream exception (for example a
+    connection reset mid-read on a port-43 route) converted to the same
+    structured error shape do_lookup itself returns, so the DomainBase
+    endpoints never surface a bare exception."""
+    try:
+        return do_lookup(domain, tld, fresh)
+    except Exception as exc:
+        return 502, {"error": "upstream_error",
+                     "detail": f"Lookup for {domain} failed: "
+                               f"{type(exc).__name__}: {exc}",
+                     "domain": domain}
+
+
+def availability(params):
+    try:
+        domain, tld = normalize_domain(params.get("domain"))
+    except LookupFailure as exc:
+        return exc.status, {"error": exc.error, "detail": exc.detail}
+    status, payload = _safe_lookup(domain, tld, _fresh_flag(params))
+    if status != 200:
+        return status, payload
+    return 200, _availability_from_record(payload)
+
+
+def availability_bulk(params):
+    raw = params.get("domains")
+    if raw is None or not str(raw).strip():
+        return 422, {"error": "missing_parameter",
+                     "detail": "Provide domains= as a comma-separated list, "
+                               "for example domains=example.com,example.org."}
+    parts = [p.strip() for p in str(raw).split(",") if p.strip()]
+    if not parts:
+        return 422, {"error": "missing_parameter",
+                     "detail": "Provide domains= as a comma-separated list, "
+                               "for example domains=example.com,example.org."}
+    if len(parts) > BULK_CAP:
+        return 422, {"error": "too_many_domains",
+                     "detail": f"Bulk availability is capped at {BULK_CAP} domains "
+                               f"per request; this request listed {len(parts)}. "
+                               "Split it into smaller batches."}
+    fresh = _fresh_flag(params)
+    results, available_count = [], 0
+    for part in parts:
+        try:
+            domain, tld = normalize_domain(part)
+        except LookupFailure as exc:
+            results.append({"domain": part.lower(), "available": None,
+                            "error": exc.error, "detail": exc.detail})
+            continue
+        status, payload = _safe_lookup(domain, tld, fresh)
+        if status != 200:
+            results.append({"domain": domain, "available": None,
+                            "error": payload.get("error"),
+                            "detail": payload.get("detail")})
+            continue
+        record = _availability_from_record(payload)
+        if record["available"]:
+            available_count += 1
+        results.append(record)
+    return 200, {"results": results,
+                 "count": len(results),
+                 "available_count": available_count,
+                 "registered_count": sum(1 for r in results
+                                         if r.get("registered") is True),
+                 "error_count": sum(1 for r in results if "error" in r),
+                 "metering": "Each domain checked counts as one request.",
+                 "checked_at": _now_iso()}
+
+
+def _doh_query(name, rtype):
+    url = f"{DOH_URL}?name={quote(name)}&type={rtype}"
+    return fetch_json(url, headers={"User-Agent": UA,
+                                    "Accept": "application/dns-json"},
+                      timeout=12)
+
+
+def _parse_doh_answers(data, rtype):
+    records = []
+    for answer in data.get("Answer") or []:
+        records.append({
+            "name": answer.get("name"),
+            "type": DNS_TYPE_CODES.get(answer.get("type"), rtype),
+            "ttl": answer.get("TTL"),
+            "data": answer.get("data"),
+        })
+    return records
+
+
+def dns(params):
+    try:
+        domain, _tld = normalize_domain(params.get("domain"))
+    except LookupFailure as exc:
+        return exc.status, {"error": exc.error, "detail": exc.detail}
+    raw_type = params.get("type")
+    if raw_type is not None and str(raw_type).strip():
+        rtype = str(raw_type).strip().upper()
+        if rtype not in DNS_TYPES:
+            return 422, {"error": "invalid_dns_type",
+                         "detail": f"'{raw_type}' is not a supported DNS record "
+                                   "type. Supported types: " + ", ".join(DNS_TYPES) + "."}
+        try:
+            data = _doh_query(domain, rtype)
+        except Exception as exc:
+            return 502, {"error": "dns_upstream_error",
+                         "detail": f"DNS-over-HTTPS lookup for {domain} {rtype} "
+                                   f"failed: {type(exc).__name__}: {exc}",
+                         "domain": domain}
+        return 200, {"domain": domain, "type": rtype,
+                     "status": data.get("Status"),
+                     "records": _parse_doh_answers(data, rtype),
+                     "resolver": "dns.google (DNS-over-HTTPS)",
+                     "checked_at": _now_iso()}
+    records_by_type, status_by_type = {}, {}
+    for rtype in DNS_TYPES:
+        try:
+            data = _doh_query(domain, rtype)
+        except Exception as exc:
+            return 502, {"error": "dns_upstream_error",
+                         "detail": f"DNS-over-HTTPS lookup for {domain} {rtype} "
+                                   f"failed: {type(exc).__name__}: {exc}",
+                         "domain": domain}
+        records_by_type[rtype] = _parse_doh_answers(data, rtype)
+        status_by_type[rtype] = data.get("Status")
+    return 200, {"domain": domain, "types": list(DNS_TYPES),
+                 "status_by_type": status_by_type,
+                 "records": records_by_type,
+                 "resolver": "dns.google (DNS-over-HTTPS)",
+                 "checked_at": _now_iso()}
+
+
+def _suggest_candidates(keywords):
+    bases, seen = [], set()
+
+    def add(base):
+        if base and base not in seen and 1 <= len(base) <= 63:
+            seen.add(base)
+            bases.append(base)
+
+    for kw in keywords:
+        add(kw)
+    for i in range(len(keywords)):
+        for j in range(len(keywords)):
+            if i != j:
+                add(keywords[i] + keywords[j])
+                add(keywords[i] + "-" + keywords[j])
+    candidates, cseen = [], set()
+    for base in bases:
+        for tld in SUGGEST_TLDS:
+            candidate = f"{base}.{tld}"
+            if candidate not in cseen:
+                cseen.add(candidate)
+                candidates.append(candidate)
+    return candidates
+
+
+def suggest(params):
+    raw = params.get("keywords")
+    if raw is None or not str(raw).strip():
+        return 422, {"error": "missing_parameter",
+                     "detail": "Provide keywords= as a comma-separated list, "
+                               "for example keywords=green,coffee."}
+    keywords = []
+    for token in str(raw).split(","):
+        slug = re.sub(r"[^a-z0-9-]", "", token.strip().lower()).strip("-")
+        slug = re.sub(r"-{2,}", "-", slug)
+        if slug and slug not in keywords:
+            keywords.append(slug)
+    if not keywords:
+        return 422, {"error": "invalid_keywords",
+                     "detail": "No usable keyword remained after cleaning; "
+                               "provide keywords with letters or digits, for "
+                               "example keywords=green,coffee."}
+    raw_limit = params.get("limit")
+    if raw_limit is None or not str(raw_limit).strip():
+        limit = 10
+    else:
+        try:
+            limit = int(str(raw_limit).strip())
+        except ValueError:
+            return 422, {"error": "invalid_parameter",
+                         "detail": f"limit= must be an integer; got '{raw_limit}'."}
+        limit = max(1, min(limit, SUGGEST_MAX_CHECKS))
+    suggestions, checked_count = [], 0
+    for candidate in _suggest_candidates(keywords):
+        if len(suggestions) >= limit or checked_count >= SUGGEST_MAX_CHECKS:
+            break
+        try:
+            domain, tld = normalize_domain(candidate)
+        except LookupFailure:
+            continue
+        checked_count += 1
+        status, payload = _safe_lookup(domain, tld, False)
+        if status != 200 or payload.get("registered") is not False:
+            continue
+        suggestions.append({"domain": domain, "available": True,
+                            "source": payload.get("source"),
+                            "registry_source": payload.get("registry_server")})
+    return 200, {"suggestions": suggestions,
+                 "count": len(suggestions),
+                 "checked_count": checked_count,
+                 "keywords": keywords,
+                 "limit": limit,
+                 "note": "Only candidates verified available through the live "
+                         "registry availability path are listed; unverified "
+                         "names are never listed as available.",
+                 "checked_at": _now_iso()}
+
+
 def health(params):
     mapping, publication = get_bootstrap()
     with _cache_lock:
@@ -524,10 +791,18 @@ def health(params):
                  "note": "Live registry lookups via RDAP (IANA bootstrap) with a "
                          "port-43 fallback. Records are cached at most 300 seconds; "
                          "every response reports its cache state and age, and "
-                         "?fresh=true always refetches from the registry."}
+                         "?fresh=true always refetches from the registry. "
+                         "DomainBase extension: /availability and "
+                         "/availability/bulk (cap 50; each domain checked counts "
+                         "as one request), /dns via DNS-over-HTTPS, and /suggest "
+                         "with availability-verified candidates only. Premium "
+                         "is reported only when a registry publishes it, "
+                         "never guessed."}
 
 
 if __name__ == "__main__":
     run({"/lookup": lookup, "/domain/{domain}": lookup_path,
+         "/availability": availability, "/availability/bulk": availability_bulk,
+         "/dns": dns, "/suggest": suggest,
          "/tlds": tlds, "/health": health},
         int(os.environ.get("PORT", "8110")), "whoisbase")

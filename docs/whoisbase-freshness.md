@@ -39,3 +39,15 @@ And the pricing answers too: the incumbent charges $10 a month for
 its entry tier. WhoisBase Pro is free at 10,000 lookups a month,
 Ultra is $20 against their $30, and Mega is $70 against their $80,
 all hard limits.
+
+## The availability extension (2026-11-01)
+
+The bulk case from the extension battery, run against the live engine:
+
+| Case | Result |
+| --- | --- |
+| Bulk check of 4 (google.com, an unregistered .com, one invalid entry, example.org) | 200 with per-domain records in request order: 2 registered, 1 available, and the invalid entry as its own named error in place - the batch never fails for one bad domain |
+| Bulk over the cap (51 domains) | A named 422, not a silent truncation |
+| Metering honesty | The response itself states each domain checked counts as one request - no hidden quota burn |
+| Suggestions | Only names verified available through the same registry path are listed; checked_count is reported, and a TLD with no registry route is checked, never verified, and never listed |
+| DNS | All seven record types for example.com via DNS-over-HTTPS, TTLs exactly as returned |

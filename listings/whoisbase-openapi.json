@@ -1,1 +1,227 @@
-{"info": {"contact": {"name": "WhoisBase Support"}, "description": "WhoisBase looks domains up live at the registry and says so honestly. RDAP is resolved through the IANA bootstrap (data.iana.org) to the TLD's authoritative registry server, and TLDs with no RDAP endpoint (.at, .rs, .eu, .de, .io, .ch) are queried live on the registry's own port-43 whois server - the TLDs other whois APIs return blank. Records are cached for at most 300 seconds, and every response carries a cache block with the record's age, so you always know how fresh your answer is; pass fresh=true (or force=1) and the cache is genuinely bypassed and the registry is re-asked before you get an answer. An unregistered domain returns registered: false with the full record schema instead of blank fields, and every failure - timeout, rate limit, unreachable registry - is a structured JSON error that names the problem, never a bare 504 or an empty 200.", "title": "WhoisBase", "version": "1.0.0"}, "openapi": "3.0.0", "paths": {"/domain/{domain}": {"get": {"parameters": [{"example": "google.com", "in": "path", "name": "domain", "required": true, "schema": {"type": "string"}}, {"example": "true", "in": "query", "name": "fresh", "required": false, "schema": {"default": "false", "type": "string"}}], "responses": {"200": {"description": "Same record as /lookup?domain="}}, "summary": "Look up a domain (path form of /lookup)"}}, "/health": {"get": {"responses": {"200": {"description": "Service health, live bootstrap state, and the freshness policy"}}, "summary": "Service status"}}, "/lookup": {"get": {"parameters": [{"example": "google.com", "in": "query", "name": "domain", "required": true, "schema": {"type": "string"}}, {"description": "true (or force=1) bypasses the cache and refetches live from the registry", "example": "true", "in": "query", "name": "fresh", "required": false, "schema": {"default": "false", "type": "string"}}], "responses": {"200": {"description": "The domain's record: registered flag, registrar, created/updated/expires, status, nameservers, dnssec, source (rdap or whois-port43), and a cache block reporting cached state, record age in seconds, TTL, and whether this answer was a fresh fetch"}}, "summary": "Look up a domain's registration record"}}, "/tlds": {"get": {"responses": {"200": {"description": "RDAP TLD count from the live IANA bootstrap, the port-43 fallback map, and the coverage route for the TLDs users report blank elsewhere (.dev, .at, .rs, .pl, .eu, .fi)"}}, "summary": "Coverage map: which TLDs answer over RDAP, which over port-43"}}}, "servers": [{"url": "https://whoisbase.onrender.com"}]}
+{
+ "info": {
+  "contact": {
+   "name": "WhoisBase Support"
+  },
+  "description": "WhoisBase looks domains up live at the registry and says so honestly. RDAP is resolved through the IANA bootstrap (data.iana.org) to the TLD's authoritative registry server, and TLDs with no RDAP endpoint (.at, .rs, .eu, .de, .io, .ch) are queried live on the registry's own port-43 whois server - the TLDs other whois APIs return blank. Records are cached for at most 300 seconds, and every response carries a cache block with the record's age, so you always know how fresh your answer is; pass fresh=true (or force=1) and the cache is genuinely bypassed and the registry is re-asked before you get an answer. An unregistered domain returns registered: false with the full record schema instead of blank fields, and every failure - timeout, rate limit, unreachable registry - is a structured JSON error that names the problem, never a bare 504 or an empty 200. Domain availability is built in: /availability promotes the unregistered answer to a first-class result with the registry source named, /availability/bulk checks up to 50 domains in one call (each domain counts as one request), /dns returns live DNS records with TTLs as returned, and /suggest lists only name variants verified available against the registry - never unverified guesses. Premium status is reported only when a registry itself publishes it.",
+  "title": "WhoisBase",
+  "version": "1.0.0"
+ },
+ "openapi": "3.0.0",
+ "paths": {
+  "/availability": {
+   "get": {
+    "parameters": [
+     {
+      "example": "google.com",
+      "in": "query",
+      "name": "domain",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "description": "true (or force=1) bypasses the cache and refetches live from the registry",
+      "example": "true",
+      "in": "query",
+      "name": "fresh",
+      "required": false,
+      "schema": {
+       "default": "false",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "available flag (true when the registry reports the domain unregistered), registered, the registry source that answered, premium only when a registry itself publishes it (otherwise null with a note saying it is never guessed), and the same cache block as /lookup"
+     }
+    },
+    "summary": "Is this domain available? (first-class unregistered answer)"
+   }
+  },
+  "/availability/bulk": {
+   "get": {
+    "parameters": [
+     {
+      "description": "Comma-separated domains, cap 50. Each domain checked counts as one request.",
+      "example": "google.com,example.org",
+      "in": "query",
+      "name": "domains",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "example": "true",
+      "in": "query",
+      "name": "fresh",
+      "required": false,
+      "schema": {
+       "default": "false",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Per-domain availability records in request order; a bad domain returns its own structured error in place instead of failing the batch; counts and the metering line included"
+     }
+    },
+    "summary": "Bulk availability check, up to 50 domains"
+   }
+  },
+  "/dns": {
+   "get": {
+    "parameters": [
+     {
+      "example": "example.com",
+      "in": "query",
+      "name": "domain",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "description": "A, AAAA, MX, NS, TXT, CNAME, or SOA; omit for all seven",
+      "example": "MX",
+      "in": "query",
+      "name": "type",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Live DNS records via DNS-over-HTTPS with TTLs exactly as returned, per type"
+     }
+    },
+    "summary": "DNS records for a domain"
+   }
+  },
+  "/domain/{domain}": {
+   "get": {
+    "parameters": [
+     {
+      "example": "google.com",
+      "in": "path",
+      "name": "domain",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "example": "true",
+      "in": "query",
+      "name": "fresh",
+      "required": false,
+      "schema": {
+       "default": "false",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Same record as /lookup?domain="
+     }
+    },
+    "summary": "Look up a domain (path form of /lookup)"
+   }
+  },
+  "/health": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Service health, live bootstrap state, and the freshness policy"
+     }
+    },
+    "summary": "Service status"
+   }
+  },
+  "/lookup": {
+   "get": {
+    "parameters": [
+     {
+      "example": "google.com",
+      "in": "query",
+      "name": "domain",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "description": "true (or force=1) bypasses the cache and refetches live from the registry",
+      "example": "true",
+      "in": "query",
+      "name": "fresh",
+      "required": false,
+      "schema": {
+       "default": "false",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The domain's record: registered flag, registrar, created/updated/expires, status, nameservers, dnssec, source (rdap or whois-port43), and a cache block reporting cached state, record age in seconds, TTL, and whether this answer was a fresh fetch"
+     }
+    },
+    "summary": "Look up a domain's registration record"
+   }
+  },
+  "/suggest": {
+   "get": {
+    "parameters": [
+     {
+      "example": "green,coffee",
+      "in": "query",
+      "name": "keywords",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "example": "10",
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": "10",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Name variants across common TLDs, each verified available through the same registry path before it is listed; unverified names are never returned as available; checked_count included"
+     }
+    },
+    "summary": "Availability-verified domain name suggestions"
+   }
+  },
+  "/tlds": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "RDAP TLD count from the live IANA bootstrap, the port-43 fallback map, and the coverage route for the TLDs users report blank elsewhere (.dev, .at, .rs, .pl, .eu, .fi)"
+     }
+    },
+    "summary": "Coverage map: which TLDs answer over RDAP, which over port-43"
+   }
+  }
+ },
+ "servers": [
+  {
+   "url": "https://whoisbase.onrender.com"
+  }
+ ]
+}
