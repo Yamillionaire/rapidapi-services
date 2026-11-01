@@ -1,0 +1,440 @@
+{
+  "base": "http://127.0.0.1:8115",
+  "cases": [
+    {
+      "id": "sample-1-generic-ai-paragraph",
+      "kind": "generic AI-sounding paragraph (composed for this test)",
+      "tone": "keep",
+      "strength": "standard",
+      "style_sample": null,
+      "original": "In today's fast-paced world, effective communication plays a crucial role in achieving success. Moreover, it is important to note that successful teams leverage a comprehensive range of tools, strategies, and techniques to foster collaboration. Furthermore, by utilizing cutting-edge technology, organizations can streamline their workflows, enhance their productivity, and elevate their overall performance. This seamless integration serves as a testament to the transformative power of innovation in the modern workplace.",
+      "score_before": {
+        "human_likeness_score": 37,
+        "assessment": "strong AI patterns",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 71,
+        "ai_tell_phrases": {
+          "total": 17,
+          "found": [
+            {
+              "phrase": "moreover",
+              "category": "stock transition",
+              "count": 1
+            },
+            {
+              "phrase": "furthermore",
+              "category": "stock transition",
+              "count": 1
+            },
+            {
+              "phrase": "it is important to note",
+              "category": "filler",
+              "count": 1
+            },
+            {
+              "phrase": "in today's fast-paced world",
+              "category": "filler opener",
+              "count": 1
+            },
+            {
+              "phrase": "plays a crucial role",
+              "category": "stock phrase",
+              "count": 1
+            },
+            {
+              "phrase": "serves as a testament",
+              "category": "stock phrase",
+              "count": 1
+            },
+            {
+              "phrase": "a testament to",
+              "category": "stock phrase",
+              "count": 1
+            },
+            {
+              "phrase": "leverage",
+              "category": "AI verb",
+              "count": 1
+            },
+            {
+              "phrase": "utilizing",
+              "category": "AI verb",
+              "count": 1
+            },
+            {
+              "phrase": "elevate",
+              "category": "AI verb",
+              "count": 1
+            },
+            {
+              "phrase": "streamline",
+              "category": "AI verb",
+              "count": 1
+            },
+            {
+              "phrase": "foster",
+              "category": "AI verb",
+              "count": 1
+            },
+            {
+              "phrase": "seamless",
+              "category": "padded adjective",
+              "count": 1
+            },
+            {
+              "phrase": "comprehensive",
+              "category": "padded adjective",
+              "count": 1
+            },
+            {
+              "phrase": "cutting-edge",
+              "category": "padded adjective",
+              "count": 1
+            },
+            {
+              "phrase": "crucial",
+              "category": "padded adjective",
+              "count": 1
+            },
+            {
+              "phrase": "transformative",
+              "category": "hype",
+              "count": 1
+            }
+          ]
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 1,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 4,
+          "mean_words": 17.8,
+          "stdev_words": 2.6,
+          "length_variation_cv": 0.146,
+          "uniformity": "very uniform (a common AI pattern)"
+        },
+        "characters": 523,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 67
+        }
+      },
+      "humanized": "Effective communication drives success. Successful teams use a full range of tools and strategies to collaborate, while new technology helps organizations streamline workflows, boost productivity, and improve performance. This kind of smooth integration shows how innovation can transform the workplace.",
+      "engine": "gemini",
+      "engine_note": null,
+      "preserved": {
+        "names": [],
+        "names_preserved": true,
+        "numbers": [],
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      },
+      "score_after": {
+        "human_likeness_score": 85,
+        "assessment": "reads human",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 40,
+        "ai_tell_phrases": {
+          "total": 1,
+          "found": [
+            {
+              "phrase": "streamline",
+              "category": "AI verb",
+              "count": 1
+            }
+          ]
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 3,
+          "mean_words": 13.3,
+          "stdev_words": 8.2,
+          "length_variation_cv": 0.616,
+          "uniformity": "varied (a common human pattern)"
+        },
+        "characters": 303,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 1
+        }
+      },
+      "checks": {
+        "no_em_dash_in_output": true,
+        "score_improved": true,
+        "names_preserved": true,
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      }
+    },
+    {
+      "id": "sample-2-business-email",
+      "kind": "short business email in stiff AI style",
+      "tone": "professional",
+      "strength": "standard",
+      "style_sample": null,
+      "original": "Dear Team, I hope this email finds you well. I am writing to inform you that our quarterly meeting has been rescheduled to March 14 at 2:30 PM in Conference Room B. Additionally, please be advised that the deadline for the Harrison project report has been extended to March 21. It is important to note that attendance is mandatory, and all team members are required to review the attached documents, complete the assigned tasks, and prepare their updates prior to the meeting. Thank you for your continued dedication and commitment to excellence. Best regards, Dana Whitfield",
+      "score_before": {
+        "human_likeness_score": 88,
+        "assessment": "reads human",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 97,
+        "ai_tell_phrases": {
+          "total": 2,
+          "found": [
+            {
+              "phrase": "additionally",
+              "category": "stock transition",
+              "count": 1
+            },
+            {
+              "phrase": "it is important to note",
+              "category": "filler",
+              "count": 1
+            }
+          ]
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 6,
+          "mean_words": 16.2,
+          "stdev_words": 9.6,
+          "length_variation_cv": 0.594,
+          "uniformity": "varied (a common human pattern)"
+        },
+        "characters": 575,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 5
+        }
+      },
+      "humanized": "Dear Team, \n\nOur quarterly meeting is moving to March 14 at 2:30 PM in Conference Room B. We also pushed the Harrison project report deadline to March 21. \n\nAttendance is mandatory. Please review the attached documents, complete your assigned tasks, and prepare your updates before we meet. \n\nThanks for your hard work.\n\nBest,\nDana Whitfield",
+      "engine": "gemini",
+      "engine_note": null,
+      "preserved": {
+        "names": [
+          "Conference Room",
+          "Dana Whitfield",
+          "Dear Team",
+          "Harrison",
+          "March"
+        ],
+        "names_preserved": true,
+        "numbers": [
+          "14",
+          "2",
+          "21",
+          "30"
+        ],
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      },
+      "score_after": {
+        "human_likeness_score": 100,
+        "assessment": "reads human",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 56,
+        "ai_tell_phrases": {
+          "total": 0,
+          "found": []
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 6,
+          "mean_words": 9.3,
+          "stdev_words": 6.1,
+          "length_variation_cv": 0.651,
+          "uniformity": "varied (a common human pattern)"
+        },
+        "characters": 341,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 1
+        }
+      },
+      "checks": {
+        "no_em_dash_in_output": true,
+        "score_improved": true,
+        "names_preserved": true,
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      }
+    },
+    {
+      "id": "sample-3-assistant-style",
+      "kind": "paragraph in typical assistant style",
+      "tone": "keep",
+      "strength": "standard",
+      "style_sample": null,
+      "original": "Here is a summary of the key points. The report covers three main areas: revenue growth, customer retention, and operational efficiency. Revenue grew by 12 percent in the fourth quarter, which is a strong result. Customer retention improved as well, rising to 94 percent. Operational efficiency also improved, with processing time reduced by 8 minutes per order. Overall, the results are positive across all three areas, and the outlook for the next quarter remains strong. Let me know if you would like me to expand on any of these points.",
+      "score_before": {
+        "human_likeness_score": 80,
+        "assessment": "mostly human, some AI patterns",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 90,
+        "ai_tell_phrases": {
+          "total": 0,
+          "found": []
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 7,
+          "mean_words": 12.9,
+          "stdev_words": 3.2,
+          "length_variation_cv": 0.247,
+          "uniformity": "very uniform (a common AI pattern)"
+        },
+        "characters": 540,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 1
+        }
+      },
+      "humanized": "Here is a summary of the key points. The report covers revenue growth, customer retention, and operational efficiency. Fourth-quarter revenue grew by 12 percent. Customer retention also improved, rising to 94 percent, while operational efficiency gains cut order processing time by 8 minutes. Results are positive across the board. The outlook for next quarter remains strong, so let me know if you would like me to expand on any of these points.",
+      "engine": "gemini",
+      "engine_note": null,
+      "preserved": {
+        "names": [],
+        "names_preserved": true,
+        "numbers": [
+          "12",
+          "8",
+          "94"
+        ],
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      },
+      "score_after": {
+        "human_likeness_score": 100,
+        "assessment": "reads human",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 73,
+        "ai_tell_phrases": {
+          "total": 0,
+          "found": []
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 6,
+          "mean_words": 12.2,
+          "stdev_words": 6.5,
+          "length_variation_cv": 0.531,
+          "uniformity": "varied (a common human pattern)"
+        },
+        "characters": 446,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 1
+        }
+      },
+      "checks": {
+        "no_em_dash_in_output": true,
+        "score_improved": true,
+        "names_preserved": true,
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      }
+    },
+    {
+      "id": "style-sample-voice-match",
+      "kind": "style_sample path: plain company note rewritten toward a blunt, short-sentence voice",
+      "tone": "keep",
+      "strength": "standard",
+      "style_sample": "Look, the numbers do not lie. We shipped late. Twice. Nobody is happy about it, least of all me. So we fix the schedule, we tell the client the truth, and we do not let it happen a third time. Simple as that.",
+      "original": "It is important to note that the delivery timeline for the Patterson order has been adjusted. Moreover, the revised schedule indicates that the shipment will arrive on November 9 rather than November 4, and the client will be notified of this change through the appropriate channels in a timely manner.",
+      "score_before": {
+        "human_likeness_score": 76,
+        "assessment": "mostly human, some AI patterns",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 50,
+        "ai_tell_phrases": {
+          "total": 2,
+          "found": [
+            {
+              "phrase": "moreover",
+              "category": "stock transition",
+              "count": 1
+            },
+            {
+              "phrase": "it is important to note",
+              "category": "filler",
+              "count": 1
+            }
+          ]
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 2,
+          "mean_words": 25.0,
+          "stdev_words": 9.0,
+          "length_variation_cv": 0.36,
+          "uniformity": "too few sentences to judge"
+        },
+        "characters": 302,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 1
+        }
+      },
+      "humanized": "We pushed back the delivery date for the Patterson order. The shipment arrives November 9 instead of November 4. We will let the client know today.",
+      "engine": "gemini",
+      "engine_note": null,
+      "preserved": {
+        "names": [
+          "November",
+          "Patterson"
+        ],
+        "names_preserved": true,
+        "numbers": [
+          "4,",
+          "9"
+        ],
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      },
+      "score_after": {
+        "human_likeness_score": 80,
+        "assessment": "mostly human, some AI patterns",
+        "method": "heuristic pattern analysis of surface features; not an AI detector verdict",
+        "words": 26,
+        "ai_tell_phrases": {
+          "total": 0,
+          "found": []
+        },
+        "em_dash_count": 0,
+        "triplet_list_patterns": 0,
+        "formatting_artifacts": 0,
+        "sentences": {
+          "count": 3,
+          "mean_words": 8.7,
+          "stdev_words": 1.2,
+          "length_variation_cv": 0.144,
+          "uniformity": "very uniform (a common AI pattern)"
+        },
+        "characters": 147,
+        "_meta": {
+          "service": "swifthumanize",
+          "latency_ms": 2
+        }
+      },
+      "checks": {
+        "no_em_dash_in_output": true,
+        "score_improved": true,
+        "names_preserved": true,
+        "numbers_preserved": true,
+        "quotes_preserved": true
+      }
+    }
+  ]
+}

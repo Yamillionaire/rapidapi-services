@@ -1,0 +1,13 @@
+[Unit]
+Description=SwiftHumanize home engine bridge (connector credential flow to Gemini, no key stored)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/hatch/workspace/rapidapi-competitors/swifthumanize
+ExecStart=/usr/bin/python3 /home/hatch/workspace/rapidapi-competitors/swifthumanize/home_bridge.py 8903
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

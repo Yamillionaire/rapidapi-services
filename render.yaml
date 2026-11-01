@@ -103,3 +103,12 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.3"
+  - type: web
+    name: swifthumanize
+    runtime: python
+    plan: free
+    buildCommand: "true"
+    startCommand: "python swifthumanize/app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"

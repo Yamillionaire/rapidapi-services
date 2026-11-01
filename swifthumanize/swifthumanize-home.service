@@ -1,0 +1,15 @@
+[Unit]
+Description=SwiftHumanize home instance (writing that reads human-written, on the user's own base)
+After=network.target swifthumanize-bridge.service
+Wants=swifthumanize-bridge.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/hatch/workspace/rapidapi-competitors/swifthumanize
+EnvironmentFile=/home/hatch/workspace/rapidapi-competitors/swifthumanize/swifthumanize-home.env
+ExecStart=/usr/bin/python3 /home/hatch/workspace/rapidapi-competitors/swifthumanize/app.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
