@@ -19,7 +19,7 @@ BASE = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8115"
 SECRET = sys.argv[2] if len(sys.argv) > 2 else ""
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROOFS = os.path.join(HERE, "..", "proofs")
-EM_DASH = "—"
+EM_DASH = "\u2014"  # escape form, keeps the literal character out of project files
 
 SAMPLES = [
     {

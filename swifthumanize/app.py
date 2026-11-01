@@ -47,8 +47,7 @@ GEMINI_BASE = os.environ.get("GEMINI_BASE_URL",
                              "https://generativelanguage.googleapis.com/v1beta")
 TONES = ("keep", "casual", "professional")
 STRENGTHS = {"light": 0.5, "standard": 0.7, "strong": 0.85}
-EM_DASH = "—"
-EN_DASH = "–"
+EM_DASH = "\u2014"  # written as an escape so this file stays free of the literal character
 
 # ---------------------------------------------------------------- score
 
