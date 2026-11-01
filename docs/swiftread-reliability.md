@@ -75,6 +75,12 @@ Verified end to end on https://swiftread.onrender.com:
   engine's NoAudioReceived on the foreign-script chunks was
   diagnosed from the structured error and produced the
   skip-and-disclose design above.
+- POST /read-url at listing verification (2026-11-01): FAILED.
+  Every call whose synthesis succeeded returned RapidAPI's
+  generic 502 and never appeared in recent_requests, while
+  /speak and every fast error path worked. Root cause and fix
+  are recorded below; fixed and redeployed the same night as
+  build 2026-11-01-readurl-fix.
 - Error paths (local and live): unknown voice 422 listing the valid
   ids, malformed rate 422, over-cap 422 naming cap and length,
   missing parameters 422, non-public URL refused (SSRF guard).
@@ -85,16 +91,54 @@ is exactly why the deadline-and-partial design exists; callers
 should still treat article reads as slow calls and use a generous
 client timeout.
 
-Two measurements are deliberately NOT claimed yet: a full
-15,000-character end-to-end load test and a complete /read-url
-article read. On launch night the build sandbox's egress proxy
-began stalling all POST traffic (proven path-side, not
-service-side: instant-422 POSTs stopped arriving at the service at
-all while GETs answered in under a second, and POSTs to unrelated
-hosts stalled identically). The service now records its own
-per-request timings in GET /health (recent_requests), and these two
-rows will be filled from that record the moment a clean test path
-runs them - before the listing's first subscriber, not after.
+## The /read-url failure and its fix (2026-11-01)
+
+Listing verification found /read-url broken in a way launch night
+never exercised: any call whose synthesis SUCCEEDED died before
+responding. The bug was one line. synthesize() returns
+((audio, meta), error); read_url unpacked that outer tuple
+directly, so meta was bound to None, and the next line -
+meta.update(...), adding the article title and URLs - raised
+AttributeError. The exception killed the request handler
+mid-response: no response bytes for the gateway (which surfaced
+its own bare 502), and no recent_requests entry, because the log
+write happens after read_url returns. Every failure path returns
+before that line, which is why /speak, the fast structured
+errors, and launch night's mixed-script test (a total synthesis
+failure, returned cleanly as a structured 502) all behaved while
+a successful read never once completed.
+
+The fix is the one line (unpack result[0]), shipped as build
+2026-11-01-readurl-fix. Proof:
+
+- The crash was reproduced locally against the pre-fix code,
+  deterministically: AttributeError at that exact line.
+- With the fix, read_url returns the audio and the full metadata
+  (title, source and final URL, source word count) in the local
+  harness, and the patched service run locally completes the
+  whole fetch-extract-synthesize cycle and records the attempt
+  in /health recent_requests: no silent deaths.
+- The deployed service reports build 2026-11-01-readurl-fix on
+  /health, engine present, catalog intact, and the proxy-secret
+  gate still returns 401 without the header.
+- The one leg this sandbox still cannot show is local audio: its
+  egress proxy mangles the speech engine's websocket handshake
+  (WSServerHandshakeError, the launch-night limitation). On
+  Render the engine connection is direct - /speak returned real
+  MP3s through the gateway during the same listing verification
+  - and a gateway /read-url read against the fixed build is the
+  listing lane's retest to run.
+
+One measurement remains deliberately NOT claimed: a full
+15,000-character end-to-end load test. On launch night the build
+sandbox's egress proxy began stalling all POST traffic (proven
+path-side, not service-side: instant-422 POSTs stopped arriving
+at the service at all while GETs answered in under a second, and
+POSTs to unrelated hosts stalled identically). The service
+records its own per-request timings in GET /health
+(recent_requests), and that row will be filled from that record
+the moment a clean test path runs it - before the listing's
+first subscriber, not after.
 
 ## Plans
 
